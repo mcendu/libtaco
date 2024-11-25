@@ -8,8 +8,11 @@
 #define YYSTYPE TJA_YYSTYPE
 %}
 
-%option bison-bridge
+%option batch
+%option never-interactive
 %option reentrant
+%option bison-bridge
+%option nounistd
 %option prefix="tja_yy"
 
 INTEGER [0-9]+
