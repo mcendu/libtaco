@@ -1,0 +1,7 @@
+---
+BasedOnStyle: LLVM
+---
+Language: Cpp
+ForEachMacros:
+  - taiko_section_foreach
+  - taiko_section_foreach_mut_

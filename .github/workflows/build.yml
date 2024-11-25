@@ -1,0 +1,45 @@
+name: Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cc:
+          - gcc
+          - clang
+        options:
+          - [--optimization=0, -Db_sanitize=address]
+          - [--optimization=2]
+          - [--optimization=2, -Db_lto=true]
+          - [--optimization=3]
+          - [--optimization=s]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Meson and dependencies
+        run: |
+          sudo apt-get install \
+            meson \
+            ninja-build \
+            check
+      - name: Configure project
+        run: |
+          CC=${{ matrix.cc }} meson setup \
+            --backend=ninja \
+            --debug \
+            --prefix=/usr \
+            --strip \
+            ${{ join(matrix.options, ' ') }} \
+            build
+      - name: Build
+        run: ninja -v -C build all
+      - name: Test
+        run: meson test -C build --verbose --no-rebuild
