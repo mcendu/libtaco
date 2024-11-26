@@ -105,6 +105,25 @@ START_TEST(test_balloon) {
   taiko_courseset_free(set);
 }
 
+START_TEST(test_division) {
+  static const int time[] = {0, 48};
+  static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON};
+
+  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/division.tja");
+  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taiko_section *s =
+      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+
+  for (int i = 0; i < 2; ++i) {
+    const taiko_event *e = taiko_section_locate(s, i);
+    ck_assert_int_eq(taiko_event_time(e), time[i]);
+    ck_assert_int_eq(taiko_event_type(e), type[i]);
+  }
+
+  taiko_courseset_free(set);
+}
+END_TEST
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -112,6 +131,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_basic);
   tcase_add_test(c, test_commands);
   tcase_add_test(c, test_crlf);
+  tcase_add_test(c, test_division);
   tcase_add_test(c, test_empty);
   return c;
 }

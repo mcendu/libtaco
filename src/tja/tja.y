@@ -354,6 +354,17 @@ unrecognized_header:
 body:
   start_command sections end_command {
     taiko_course_set_style_($2.course, $1);
+
+    int branches = taiko_course_branched($2.course) ? 3 : 1;
+
+    for (int i = 0; i < branches; ++i) {
+      taiko_section *branch =
+          taiko_course_get_branch_mut_($2.course, TAIKO_SIDE_LEFT, i);
+      branch = tja_pass_convert_time_(branch);
+      branch = tja_pass_cleanup_(branch);
+      taiko_course_attach_branch_($2.course, branch, TAIKO_SIDE_LEFT, i);
+    }
+
     $$ = $2.course;
   };
 

@@ -89,6 +89,8 @@ const taiko_event *taiko_section_end(const taiko_section *restrict s) {
 
 const taiko_event *taiko_section_locate(const taiko_section *restrict s,
                                         size_t i) {
+  if (i >= s->size)
+    return NULL;
   return s->events + i;
 }
 

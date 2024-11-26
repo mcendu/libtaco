@@ -6,15 +6,15 @@
 #include "section.h"
 #include "taiko.h"
 #include <stdbool.h>
-#include <stdlib.h>
 
-static tja_events events = {
-    .units = 0,
-    .levelhold = false,
-    .events = NULL,
-};
+static tja_events events;
 
-static void setup(void) { events.events = taiko_section_create_(); }
+static void setup(void) {
+  events.units = 0;
+  events.levelhold = false;
+  events.events = taiko_section_create_();
+  ck_assert_ptr_nonnull(events.events);
+}
 
 static void teardown(void) { taiko_section_free_(events.events); }
 

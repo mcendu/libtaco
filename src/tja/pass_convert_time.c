@@ -18,7 +18,7 @@ taiko_section *tja_pass_convert_time_(taiko_section *branch) {
   return branch;
 }
 
-taiko_section *pass_extract_tickrate(taiko_section *branch) {
+static taiko_section *pass_extract_tickrate(taiko_section *branch) {
   // ticks per 4/4 measure
   int tickrate = 96;
   int dividend = 4;
@@ -49,12 +49,14 @@ static taiko_section *pass_convert(taiko_section *branch) {
   int units = 4;
 
   taiko_section_foreach_mut_ (i, branch) {
+    // new measure
     if (tja_event_measure_(i) != current_measure) {
       start = start + measure_ticks;
       current_measure = tja_event_measure_(i);
       units = 1;
     }
 
+    // barline
     if (i->type == TAIKO_EVENT_MEASURE) {
       if (i->measure.tja_units)
         units = i->measure.tja_units;
@@ -76,11 +78,20 @@ static taiko_section *pass_convert(taiko_section *branch) {
   return branch;
 }
 
-taiko_section *pass_remove_excess_factors(taiko_section *branch) {
+static taiko_section *pass_remove_excess_factors(taiko_section *branch) {
   int divisor = 0;
 
   taiko_section_foreach (i, branch)
-    divisor = gcd(i->time, divisor);
+    divisor = gcd(i->time, divisor); // impl detail: gcd(x, 0) = x
+
+  // ensure a minimum tickrate of 96
+  if (divisor == 0) {
+    // there are no objects other than on time 0
+    taiko_section_set_tickrate_(branch, 96);
+    return branch;
+  } else if (taiko_section_tickrate(branch) / divisor < 96) {
+    divisor = taiko_section_tickrate(branch) / lcm(divisor, 96);
+  }
 
   if (divisor > 1) {
     taiko_section_set_tickrate_(branch,
@@ -92,13 +103,14 @@ taiko_section *pass_remove_excess_factors(taiko_section *branch) {
   return branch;
 }
 
-int gcd(int x, int y) {
+static int gcd(int x, int y) {
   while (y != 0) {
-    x = y;
+    int z = y;
     y = x % y;
+    x = z;
   }
 
   return x;
 }
 
-int lcm(int x, int y) { return (x * y) / gcd(x, y); }
+static int lcm(int x, int y) { return (x * y) / gcd(x, y); }
