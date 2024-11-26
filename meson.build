@@ -24,9 +24,15 @@ bison_gen = generator(
   arguments: ['-d', '-o', '@OUTPUT0@', '@INPUT@'],
   output: ['@BASENAME@.tab.c', '@BASENAME@.tab.h'],
 )
+
+flex_args = ['-o', '@OUTPUT@', '@INPUT@']
+if get_option('buildtype') == 'debug'
+  flex_args = ['-d'] + flex_args
+endif
+
 flex_gen = generator(
   find_program('flex', 'lex'),
-  arguments: ['-o', '@OUTPUT@', '@INPUT@'],
+  arguments: flex_args,
   output: ['@BASENAME@.yy.c'],
 )
 

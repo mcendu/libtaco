@@ -18,7 +18,7 @@
 INTEGER [0-9]+
 EXPONENT [eE][+-]?{INTEGER}
 REAL {INTEGER}\.{INTEGER}{EXPONENT}?
-SPACE [\s\t]
+SPACE [ \t]
 NEWLINE [\r\n]
 
 COLON \:{SPACE}*
@@ -109,7 +109,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
   return ',';
 }
 
-<INITIAL,header_numeric,header_pretext>{SPACE}
+<INITIAL,header_numeric,header_pretext>{SPACE}+
 <INITIAL>{NEWLINE}
 
 <header_pretext>{COLON} {
@@ -214,7 +214,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(body_text);
 }
 
-<body_command>{SPACE}
+<body,body_command>{SPACE}+
 <body_command>\/ { return '/'; }
 
 <body_command>{INTEGER} {
@@ -258,6 +258,11 @@ IDENTIFIER {IDSTART}{IDCONT}*
   yylval->text = taiko_strndup_(yyextra, yytext + 1, yyleng - 1);
   BEGIN(body_pretext);
   return COMMAND;
+}
+
+<*>. {
+  // fallback; feed into token stream, potentially causing parser to yell
+  return *yytext;
 }
 %%
 

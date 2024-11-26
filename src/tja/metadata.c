@@ -99,12 +99,16 @@ int tja_metadata_update_(tja_metadata *meta, tja_metadata *updates) {
   meta->style = updates->style;
   meta->papamama = updates->papamama;
 
+  // move balloons to updated struct
   taiko_free_(meta->alloc, meta->balloon_n);
   taiko_free_(meta->alloc, meta->balloon_a);
   taiko_free_(meta->alloc, meta->balloon_m);
   meta->balloon_n = updates->balloon_n;
   meta->balloon_a = updates->balloon_a;
   meta->balloon_m = updates->balloon_m;
+  updates->balloon_n = NULL;
+  updates->balloon_a = NULL;
+  updates->balloon_m = NULL;
 
   return 0;
 }
