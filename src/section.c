@@ -138,13 +138,14 @@ static taiko_event *reserve(taiko_section *restrict s, size_t count) {
 }
 
 int taiko_section_trim_(taiko_section *restrict s) {
+  size_t size = s->size < INITIAL_CAPACITY ? INITIAL_CAPACITY : s->size;
   taiko_event *events =
-      taiko_realloc_(s->alloc, s->events, s->size * sizeof(taiko_event));
+      taiko_realloc_(s->alloc, s->events, size * sizeof(taiko_event));
   if (!events)
     return -1;
 
   s->events = events;
-  s->capacity = s->size;
+  s->capacity = size;
   return 0;
 }
 

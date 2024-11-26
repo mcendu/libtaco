@@ -41,14 +41,6 @@ struct branch_info_ {
 
 typedef void *yyscan_t;
 
-struct tja_parser_ {
-  taiko_allocator *alloc;
-  yyscan_t lexer;
-  taiko_file *error_stream;
-  taiko_courseset *set;
-  tja_metadata *metadata;
-};
-
 #define PURPOSE_MEASURE 0
 #define PURPOSE_SEGMENT 1
 #define PURPOSE_BRANCH_COMMON 2
@@ -56,12 +48,22 @@ struct tja_parser_ {
 #define PURPOSE_BRANCH_ADVANCED 4
 #define PURPOSE_BRANCH_MASTER 5
 #define PURPOSE_MEASURESTART_EVENTS 6
+#define PURPOSE_MAX 7
 
 #define PURPOSE_BRANCH(n) (3 + n)
 
+struct tja_parser_ {
+  taiko_allocator *alloc;
+  yyscan_t lexer;
+  taiko_file *error_stream;
+  taiko_courseset *set;
+  tja_metadata *metadata;
+
+  taiko_section *tmpsections[PURPOSE_MAX];
+};
+
 static taiko_section *get_section_(tja_parser *parser, int purpose);
-static void put_section_(tja_parser *parser, taiko_section *section,
-                         int purpose);
+static void put_section_(tja_parser *parser, taiko_section *section);
 
 static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
                     const char *msg);
@@ -385,20 +387,20 @@ sections:
   measures {
     tja_coursebody_init_(&$$, parser->alloc);
     tja_coursebody_append_common_(&$$, &$1);
-    put_section_(parser, $1.segment, PURPOSE_SEGMENT);
+    put_section_(parser, $1.segment);
   }
   | sections branched_section {
     tja_coursebody_append_branched_(&$1, &$2);
     $$ = $1;
 
-    put_section_(parser, $2.common, PURPOSE_BRANCH_COMMON);
+    put_section_(parser, $2.common);
     for (int i = 0; i < 3; ++i)
-      put_section_(parser, $2.branches[i], PURPOSE_BRANCH(i));
+      put_section_(parser, $2.branches[i]);
   }
   | sections common_section {
     tja_coursebody_append_common_(&$1, &$2);
     $$ = $1;
-    put_section_(parser, $2.segment, PURPOSE_SEGMENT);
+    put_section_(parser, $2.segment);
   };
 
 branched_section:
@@ -416,7 +418,7 @@ branched_section:
 
     tja_branched_assign_(&$1, &$3, $2);
     $$ = $1;
-    put_section_(parser, $3.segment, PURPOSE_SEGMENT);
+    put_section_(parser, $3.segment);
   };
 
 branchstart_command:
@@ -450,20 +452,20 @@ measures:
   measurestart_events {
     tja_segment_init_(&$$, get_section_(parser, PURPOSE_SEGMENT));
     tja_segment_push_events_(&$$, &$1);
-    put_section_(parser, $1.events, PURPOSE_MEASURESTART_EVENTS);
+    put_section_(parser, $1.events);
   }
   | measures ',' measurestart_events {
     tja_segment_push_barline_(&$1, 0);
     tja_segment_push_events_(&$1, &$3);
-    put_section_(parser, $3.events, PURPOSE_MEASURESTART_EVENTS);
+    put_section_(parser, $3.events);
     $$ = $1;
   }
   | measures note_events ',' measurestart_events {
     tja_segment_push_barline_(&$1, $2.units);
     tja_segment_push_events_(&$1, &$2);
-    put_section_(parser, $2.events, PURPOSE_MEASURE);
+    put_section_(parser, $2.events);
     tja_segment_push_events_(&$1, &$4);
-    put_section_(parser, $4.events, PURPOSE_MEASURESTART_EVENTS);
+    put_section_(parser, $4.events);
     $$ = $1;
   };
 
@@ -605,12 +607,18 @@ tja_parser *tja_parser_create2_(taiko_allocator *alloc) {
   parser->lexer = scanner;
   tja_yyset_extra(parser->alloc, scanner);
   parser->error_stream = error;
+
+  for (int i = 0; i < PURPOSE_MAX; ++i)
+    parser->tmpsections[i] = taiko_section_create2_(parser->alloc);
+
   return parser;
 }
 
 void tja_parser_free_(tja_parser *parser) {
   tja_yylex_destroy(parser->lexer);
   taiko_file_close_(parser->error_stream);
+  for (int i = 0; i < PURPOSE_MAX; ++i)
+    taiko_section_free_(parser->tmpsections[i]);
   taiko_free_(parser->alloc, parser);
 }
 
@@ -673,10 +681,11 @@ static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
 }
 
 static taiko_section *get_section_(tja_parser *parser, int purpose) {
-  return taiko_section_create2_(parser->alloc);
+  taiko_section *s = parser->tmpsections[purpose];
+  return s;
 }
 
-static void put_section_(tja_parser *parser, taiko_section *section,
-                  int purpose) {
-  taiko_section_free_(section);
+static void put_section_(tja_parser *parser, taiko_section *section) {
+  taiko_section_clear_(section);
+  taiko_section_trim_(section);
 }
