@@ -43,12 +43,11 @@ typedef void *yyscan_t;
 
 #define PURPOSE_MEASURE 0
 #define PURPOSE_SEGMENT 1
-#define PURPOSE_BRANCH_COMMON 2
-#define PURPOSE_BRANCH_NORMAL 3
-#define PURPOSE_BRANCH_ADVANCED 4
-#define PURPOSE_BRANCH_MASTER 5
-#define PURPOSE_MEASURESTART_EVENTS 6
-#define PURPOSE_MAX 7
+#define PURPOSE_BRANCH_NORMAL 2
+#define PURPOSE_BRANCH_ADVANCED 3
+#define PURPOSE_BRANCH_MASTER 4
+#define PURPOSE_MEASURESTART_EVENTS 5
+#define PURPOSE_MAX 6
 
 #define PURPOSE_BRANCH(n) (3 + n)
 
@@ -372,7 +371,7 @@ body:
 
 start_command:
   START_CMD text '\n' {
-    if ($2 && strcmp($2, "P2") == 0) {
+    if (strcmp($2, "P2") == 0) {
       $$ = TAIKO_STYLE_TJA_R_;
     } else {
       $$ = TAIKO_STYLE_TJA_L_;
@@ -393,7 +392,6 @@ sections:
     tja_coursebody_append_branched_(&$1, &$2);
     $$ = $1;
 
-    put_section_(parser, $2.common);
     for (int i = 0; i < 3; ++i)
       put_section_(parser, $2.branches[i]);
   }
@@ -456,6 +454,7 @@ measures:
   }
   | measures ',' measurestart_events {
     tja_segment_push_barline_(&$1, 0);
+    tja_segment_finish_measure_(&$1);
     tja_segment_push_events_(&$1, &$3);
     put_section_(parser, $3.events);
     $$ = $1;
@@ -464,6 +463,7 @@ measures:
     tja_segment_push_barline_(&$1, $2.units);
     tja_segment_push_events_(&$1, &$2);
     put_section_(parser, $2.events);
+    tja_segment_finish_measure_(&$1);
     tja_segment_push_events_(&$1, &$4);
     put_section_(parser, $4.events);
     $$ = $1;
@@ -624,9 +624,10 @@ void tja_parser_free_(tja_parser *parser) {
 
 static taiko_courseset *tja_parser_parse_(tja_parser *parser) {
 #ifdef YYDEBUG
-  tja_yydebug = 1;
-  tja_yyset_debug(1, parser->lexer);
+  if (tja_yydebug)
+    tja_yyset_debug(1, parser->lexer);
 #endif
+
   int errcode = tja_yyparse(parser, parser->lexer);
   tja_metadata_free_(parser->metadata);
 
@@ -687,5 +688,4 @@ static taiko_section *get_section_(tja_parser *parser, int purpose) {
 
 static void put_section_(tja_parser *parser, taiko_section *section) {
   taiko_section_clear_(section);
-  taiko_section_trim_(section);
 }

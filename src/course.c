@@ -140,6 +140,8 @@ taiko_section *taiko_course_get_branch_mut_(taiko_course *restrict course,
   if (side < 2 && branch < 3) {
     if (course->style == TAIKO_STYLE_SINGLE)
       side = TAIKO_SIDE_LEFT;
+    if (!course->branched)
+      branch = TAIKO_BRANCH_NORMAL;
     return course->branches[side][branch];
   }
   return NULL;

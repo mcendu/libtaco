@@ -142,7 +142,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
   return '\n';
 }
 
-<INITIAL>#START{SPACE}* {
+<INITIAL>#START {
   BEGIN(body_pretext);
   return START_CMD;
 }
@@ -225,6 +225,11 @@ IDENTIFIER {IDSTART}{IDCONT}*
 <body_command>{REAL} {
   yylval->real = strtod(yytext, NULL);
   return REAL;
+}
+
+<body_command>{IDENTIFIER} {
+  yylval->text = taiko_strndup_(yyextra, yytext, yyleng);
+  return IDENTIFIER;
 }
 
 <body_text>[^\r\n]* {

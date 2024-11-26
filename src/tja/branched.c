@@ -41,8 +41,9 @@ static void pad_measures_(tja_branched *restrict branched, int branch_measures,
         continue;
       section_pad_measures_(branched->branches[b], branched->measures,
                             branch_measures);
-      branched->measures = branch_measures;
     }
+
+    branched->measures = branch_measures;
   }
 }
 

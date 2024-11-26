@@ -54,6 +54,8 @@ int tja_coursebody_append_common_(tja_coursebody *restrict c,
 
 int tja_coursebody_append_branched_(tja_coursebody *restrict c,
                                     tja_branched *restrict branched) {
+  taiko_course_setup_branching_(c->course);
+
   for (int b = TAIKO_BRANCH_NORMAL; b <= TAIKO_BRANCH_MASTER; ++b) {
     taiko_section *section = branched->branches[b];
     taiko_section_foreach_mut_ (i, section) {

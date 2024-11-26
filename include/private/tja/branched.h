@@ -7,7 +7,6 @@
 typedef struct tja_branched_ tja_branched;
 
 struct tja_branched_ {
-  taiko_section *common;
   taiko_section *branches[3];
   int branchtype;
   int threshold_advanced;
