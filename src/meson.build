@@ -5,6 +5,7 @@ libtaiko_src = files(
   'courseset.c',
   'io.c',
   'note.c',
+  'parser.c',
   'section.c',
 )
 

@@ -2,6 +2,7 @@
 #ifndef TJA_PARSER_H_
 #define TJA_PARSER_H_
 
+#include "io.h"
 #include "taiko.h"
 #include <stdio.h>
 
@@ -15,10 +16,8 @@ extern taiko_courseset *tja_parser_parse_file_(tja_parser *parser,
                                                const char *file);
 extern taiko_courseset *tja_parser_parse_stdio_(tja_parser *parser,
                                                 FILE *stream);
-extern taiko_courseset *tja_parser_parse_memory_(tja_parser *parser,
-                                                 const void *data, size_t size);
 
-extern int tja_parser_set_error_(tja_parser *parser, FILE *stream);
+extern int tja_parser_set_error_(tja_parser *parser, taiko_file *file);
 extern void tja_parser_error_(tja_parser *parser, const char *format, ...);
 
 extern taiko_section *tja_pass_convert_time_(taiko_section *section);

@@ -4,14 +4,14 @@
 
 #include "taiko.h"
 
-static tja_parser *parser;
+static taiko_parser *parser;
 
-static void setup(void) { parser = tja_parser_create_(); }
+static void setup(void) { parser = taiko_parser_tja_create(); }
 
-static void teardown(void) { tja_parser_free_(parser); }
+static void teardown(void) { taiko_parser_free(parser); }
 
 START_TEST(test_basic) {
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/basic.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/basic.tja");
   ck_assert_ptr_nonnull(set);
   ck_assert_str_eq(taiko_courseset_title(set), "Example");
 
@@ -35,7 +35,7 @@ START_TEST(test_basic) {
 END_TEST
 
 START_TEST(test_empty) {
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/empty.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/empty.tja");
   ck_assert_ptr_nonnull(set);
   ck_assert_ptr_null(taiko_courseset_title(set));
   ck_assert_ptr_null(taiko_courseset_get_course(set, TAIKO_CLASS_ONI));
@@ -44,7 +44,7 @@ START_TEST(test_empty) {
 END_TEST
 
 START_TEST(test_crlf) {
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/crlf.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/crlf.tja");
   ck_assert_ptr_nonnull(set);
   ck_assert_str_eq(taiko_courseset_title(set), "Example");
 
@@ -69,7 +69,7 @@ END_TEST
 
 START_TEST(test_whitespace) {
   taiko_courseset *set =
-      tja_parser_parse_file_(parser, "assets/whitespace.tja");
+      taiko_parser_parse_file(parser, "assets/whitespace.tja");
   ck_assert_ptr_nonnull(set);
   ck_assert_str_eq(taiko_courseset_title(set), "I don't have whitespaces");
 
@@ -88,7 +88,7 @@ START_TEST(test_commands) {
       TAIKO_EVENT_KAT_BIG,
   };
 
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/commands.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/commands.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
   const taiko_section *s =
       taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
@@ -102,7 +102,7 @@ END_TEST
 START_TEST(test_balloon) {
   static const int count[] = {10, 20};
 
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/balloon.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/balloon.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
   const taiko_section *s =
       taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
@@ -124,7 +124,7 @@ START_TEST(test_division) {
   static const int time[] = {0, 48};
   static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON};
 
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/division.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/division.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
   const taiko_section *s =
       taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
@@ -145,7 +145,7 @@ START_TEST(test_measures) {
   static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON,
                              TAIKO_EVENT_MEASURE, TAIKO_EVENT_KAT};
 
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/measures.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/measures.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
   const taiko_section *s =
       taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
@@ -164,7 +164,7 @@ END_TEST
 START_TEST(test_branch) {
   static const int lengths[] = {8, 9, 10};
 
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/branch.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/branch.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
 
   for (int i = 0; i < 3; ++i) {
@@ -178,7 +178,7 @@ START_TEST(test_branch) {
 END_TEST
 
 START_TEST(test_double) {
-  taiko_courseset *set = tja_parser_parse_file_(parser, "assets/double.tja");
+  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/double.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
   ck_assert_int_eq(taiko_course_style(c), TAIKO_STYLE_COUPLE);
 

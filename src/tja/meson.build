@@ -7,6 +7,7 @@ libtaiko_src += files(
   'enums.c',
   'events.c',
   'metadata.c',
+  'parser.c',
   'pass_cleanup.c',
   'pass_convert_time.c',
   'segment.c',

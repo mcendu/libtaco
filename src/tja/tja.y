@@ -615,6 +615,9 @@ tja_parser *tja_parser_create2_(taiko_allocator *alloc) {
 }
 
 void tja_parser_free_(tja_parser *parser) {
+  if (!parser)
+    return;
+
   tja_yylex_destroy(parser->lexer);
   taiko_file_close_(parser->error_stream);
   for (int i = 0; i < PURPOSE_MAX; ++i)

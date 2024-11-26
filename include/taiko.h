@@ -174,6 +174,7 @@ extern "C" {
 
 typedef struct taiko_allocator_ taiko_allocator;
 
+typedef struct taiko_parser_ taiko_parser;
 typedef struct taiko_courseset_ taiko_courseset;
 typedef struct taiko_course_ taiko_course;
 typedef struct taiko_section_ taiko_section;
@@ -204,7 +205,21 @@ struct taiko_allocator_ {
   void *heap;
 };
 
-/* Core functions */
+/* Functions */
+
+TAIKO_PUBLIC taiko_parser *taiko_parser_tja_create();
+TAIKO_PUBLIC taiko_parser *taiko_parser_tja_create2(taiko_allocator *allocator);
+
+TAIKO_PUBLIC void taiko_parser_free(taiko_parser *parser);
+
+TAIKO_PUBLIC taiko_courseset *
+taiko_parser_parse_file(taiko_parser *restrict parser,
+                        const char *restrict file);
+TAIKO_PUBLIC taiko_courseset *
+taiko_parser_parse_stdio(taiko_parser *restrict parser, FILE *file);
+
+TAIKO_PUBLIC int
+taiko_parser_set_error_output_stdio(taiko_parser *restrict parser, FILE *file);
 
 TAIKO_PUBLIC void taiko_courseset_free(taiko_courseset *set);
 
