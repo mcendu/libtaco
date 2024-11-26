@@ -9,9 +9,8 @@ tests_tja_src = files(
 tests_tja_bin = executable(
   'tests_tja',
   tests_tja_src,
-  include_directories: [libtaiko_include, libtaiko_include_private],
-  link_with: [tests_main, libtaiko_lib.get_static_lib()],
-  dependencies: check_dep,
+  link_with: [tests_main],
+  dependencies: [libtaiko_dep, check_dep],
   install: false,
 )
 
