@@ -236,9 +236,9 @@ taiko_parser_parse_file(taiko_parser *restrict parser,
 /* Parse a courseset from an open <stdio.h> stream. */
 TAIKO_PUBLIC taiko_courseset *
 taiko_parser_parse_stdio(taiko_parser *restrict parser, FILE *file);
-/* Redirect output to an open <stdio.h> stream. */
-TAIKO_PUBLIC int
-taiko_parser_set_error_output_stdio(taiko_parser *restrict parser, FILE *file);
+
+TAIKO_PUBLIC int taiko_parser_set_error_stdio(taiko_parser *restrict parser,
+                                              FILE *file);
 
 /* Destroys a courseset. */
 TAIKO_PUBLIC void taiko_courseset_free(taiko_courseset *set);

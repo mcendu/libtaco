@@ -649,6 +649,12 @@ taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file) {
   return set;
 }
 
+int tja_parser_set_error_(tja_parser *parser, taiko_file *file) {
+  taiko_file_close_(parser->error_stream);
+  parser->error_stream = file;
+  return 0;
+}
+
 void tja_parser_error_(tja_parser *parser, const char *format, ...) {
   va_list ap;
 

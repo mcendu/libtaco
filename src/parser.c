@@ -45,3 +45,14 @@ taiko_courseset *taiko_parser_parse_stdio(taiko_parser *restrict parser,
   taiko_file_close_(f);
   return result;
 }
+
+int taiko_parser_set_error_stdio(taiko_parser *restrict parser, FILE *file) {
+  taiko_file *f;
+  if (file) {
+    f = taiko_file_open_stdio_(file);
+  } else {
+    f = taiko_file_open_null_(parser->alloc);
+  }
+
+  return parser->vtable->set_error(parser->parser, f);
+}
