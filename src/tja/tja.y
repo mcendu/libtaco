@@ -13,7 +13,6 @@
 #include "note.h"
 #include <stdbool.h>
 
-typedef struct tja_parser_ tja_parser;
 typedef struct branch_info_ branch_info;
 typedef void *yyscan_t;
 
@@ -41,6 +40,14 @@ struct branch_info_ {
 
 typedef void *yyscan_t;
 
+static taiko_section *get_section_(tja_parser *parser, int purpose);
+static void put_section_(tja_parser *parser, taiko_section *section);
+
+static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
+                    const char *msg);
+%}
+
+%code provides {
 #define PURPOSE_MEASURE 0
 #define PURPOSE_SEGMENT 1
 #define PURPOSE_BRANCH_NORMAL 2
@@ -54,6 +61,7 @@ typedef void *yyscan_t;
 struct tja_parser_ {
   taiko_allocator *alloc;
   yyscan_t lexer;
+  taiko_file *input;
   taiko_file *error_stream;
   taiko_courseset *set;
   tja_metadata *metadata;
@@ -61,14 +69,6 @@ struct tja_parser_ {
   taiko_section *tmpsections[PURPOSE_MAX];
 };
 
-static taiko_section *get_section_(tja_parser *parser, int purpose);
-static void put_section_(tja_parser *parser, taiko_section *section);
-
-static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
-                    const char *msg);
-%}
-
-%code provides {
 extern int tja_yylex(TJA_YYSTYPE *lvalp, yyscan_t lexer);
 }
 
@@ -605,7 +605,7 @@ tja_parser *tja_parser_create2_(taiko_allocator *alloc) {
   memset(parser, 0, sizeof(tja_parser));
   parser->alloc = alloc;
   parser->lexer = scanner;
-  tja_yyset_extra(parser->alloc, scanner);
+  tja_yyset_extra(parser, scanner);
   parser->error_stream = error;
 
   for (int i = 0; i < PURPOSE_MAX; ++i)
@@ -625,7 +625,11 @@ void tja_parser_free_(tja_parser *parser) {
   taiko_free_(parser->alloc, parser);
 }
 
-static taiko_courseset *tja_parser_parse_(tja_parser *parser) {
+taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file) {
+  if (!file)
+    return NULL;
+  parser->input = file;
+
 #ifdef YYDEBUG
   if (tja_yydebug)
     tja_yyset_debug(1, parser->lexer);
@@ -641,22 +645,8 @@ static taiko_courseset *tja_parser_parse_(tja_parser *parser) {
 
   taiko_courseset *set = parser->set;
   parser->set = NULL;
+  parser->input = NULL;
   return set;
-}
-
-taiko_courseset *tja_parser_parse_file_(tja_parser *parser, const char *file) {
-  FILE *f = fopen(file, "r");
-  taiko_courseset *result = tja_parser_parse_stdio_(parser, f);
-  fclose(f);
-  return result;
-}
-
-taiko_courseset *tja_parser_parse_stdio_(tja_parser *parser, FILE *stream) {
-  if (!stream)
-    return NULL;
-  tja_yyrestart(stream, parser->lexer);
-
-  return tja_parser_parse_(parser);
 }
 
 void tja_parser_error_(tja_parser *parser, const char *format, ...) {

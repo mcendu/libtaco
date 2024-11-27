@@ -1,11 +1,16 @@
 %{
 /* SPDX-License-Identifier: BSD-2-Clause */
+#include "tja/parser.h"
 #include "tja.tab.h"
 
 #include "alloc.h"
+#include "io.h"
 #include <stdlib.h>
 
 #define YYSTYPE TJA_YYSTYPE
+
+#define YY_INPUT(buf, result, max_size) \
+  (result = taiko_file_read_(yyextra->input, buf, max_size))
 %}
 
 %option batch
@@ -14,6 +19,7 @@
 %option bison-bridge
 %option nounistd
 %option prefix="tja_yy"
+%option extra-type="tja_parser *"
 
 INTEGER [0-9]+
 EXPONENT [eE][+-]?{INTEGER}
@@ -118,7 +124,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <header_text>[^\r\n]* {
-  yylval->text = taiko_strndup_(yyextra, yytext, yyleng);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(header_numeric);
   return TEXT;
 }
@@ -228,12 +234,12 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <body_command>{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra, yytext, yyleng);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
   return IDENTIFIER;
 }
 
 <body_text>[^\r\n]* {
-  yylval->text = taiko_strndup_(yyextra, yytext, yyleng);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(body_command);
   return TEXT;
 }
@@ -248,19 +254,19 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <INITIAL>^{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra, yytext, yyleng);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(header_pretext);
   return IDENTIFIER;
 }
 
 <INITIAL>#{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra, yytext + 1, yyleng - 1);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
   BEGIN(header_pretext);
   return COMMAND;
 }
 
 <body>#{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra, yytext + 1, yyleng - 1);
+  yylval->text = taiko_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
   BEGIN(body_pretext);
   return COMMAND;
 }

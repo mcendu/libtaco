@@ -4,7 +4,6 @@
 
 #include "io.h"
 #include "taco.h"
-#include <stdio.h>
 
 typedef struct tja_parser_ tja_parser;
 
@@ -12,10 +11,7 @@ extern tja_parser *tja_parser_create_();
 extern tja_parser *tja_parser_create2_(taiko_allocator *alloc);
 extern void tja_parser_free_(tja_parser *parser);
 
-extern taiko_courseset *tja_parser_parse_file_(tja_parser *parser,
-                                               const char *file);
-extern taiko_courseset *tja_parser_parse_stdio_(tja_parser *parser,
-                                                FILE *stream);
+extern taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file);
 
 extern int tja_parser_set_error_(tja_parser *parser, taiko_file *file);
 extern void tja_parser_error_(tja_parser *parser, const char *format, ...);

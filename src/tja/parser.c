@@ -6,8 +6,7 @@
 
 static taiko_parser_vfuncs vfuncs = {
     .free = (taiko_parser_free_fn)tja_parser_free_,
-    .parse_file = (taiko_parser_parse_file_fn)tja_parser_parse_file_,
-    .parse_stdio = (taiko_parser_parser_stdio_fn)tja_parser_parse_stdio_,
+    .parse = (taiko_parser_parse_fn)tja_parser_parse_,
 };
 
 taiko_parser *taiko_parser_tja_create() {
