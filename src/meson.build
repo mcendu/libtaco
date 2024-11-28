@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: 0BSD
-libtaiko_src = files(
+libtaco_src = files(
   'alloc.c',
   'course.c',
   'courseset.c',
@@ -11,20 +11,20 @@ libtaiko_src = files(
 
 subdir('tja')
 
-libtaiko_deps = []
+libtaco_deps = []
 
 # link libm for math functions, if separate library
 cc = meson.get_compiler('c')
 libm_dep = cc.find_library('m', required: false)
 if libm_dep.found()
-  libtaiko_deps += libm_dep
+  libtaco_deps += libm_dep
 endif
 
-libtaiko_lib = both_libraries(
-  'taiko',
-  libtaiko_src,
-  include_directories: [libtaiko_include, libtaiko_include_private],
-  dependencies: libtaiko_deps,
+libtaco_lib = both_libraries(
+  'taco',
+  libtaco_src,
+  include_directories: [libtaco_include, libtaco_include_private],
+  dependencies: libtaco_deps,
   version: meson.project_version(),
   install: true,
   pic: true,
@@ -33,7 +33,7 @@ libtaiko_lib = both_libraries(
 
 # dep for unit tests
 libtaiko_dep = declare_dependency(
-  include_directories: [libtaiko_include, libtaiko_include_private],
-  dependencies: libtaiko_deps,
-  link_with: libtaiko_lib.get_static_lib(),
+  include_directories: [libtaco_include, libtaco_include_private],
+  dependencies: libtaco_deps,
+  link_with: libtaco_lib.get_static_lib(),
 )

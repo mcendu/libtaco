@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: 0BSD
-libtaiko_src += files(
+libtaco_src += files(
   'balloon.c',
   'branched.c',
   'branchtype.c',
@@ -14,5 +14,5 @@ libtaiko_src += files(
   'timestamp.c',
 )
 
-libtaiko_src += bison_gen.process('tja.y')
-libtaiko_src += flex_gen.process('tja.l')
+libtaco_src += bison_gen.process('tja.y')
+libtaco_src += flex_gen.process('tja.l')

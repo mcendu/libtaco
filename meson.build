@@ -11,7 +11,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 project(
-  'libtaiko',
+  'libtaco',
   'c',
   version: '0.1.0',
   default_options: [
