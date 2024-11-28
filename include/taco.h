@@ -267,11 +267,11 @@ taiko_courseset_demo_time(const taiko_courseset *restrict set) TAIKO_PURE;
 /* Gets a course with the difficulty class specified. */
 TAIKO_PUBLIC const taiko_course *
 taiko_courseset_get_course(const taiko_courseset *restrict set,
-                           int class) TAIKO_PURE;
+                           int diffclass) TAIKO_PURE;
 
 /* Gets difficulty info. */
 TAIKO_PUBLIC void taiko_course_difficulty(const taiko_course *restrict course,
-                                          int *restrict class,
+                                          int *restrict diffclass,
                                           int *restrict level);
 /* Gets the difficulty class. */
 TAIKO_PUBLIC int
