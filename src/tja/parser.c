@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "parser.h"
 #include "alloc.h"
-#include "taiko.h"
+#include "taco.h"
 #include "tja/parser.h"
 
 static taiko_parser_vfuncs vfuncs = {

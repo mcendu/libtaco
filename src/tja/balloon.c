@@ -2,7 +2,7 @@
 #include "tja/metadata.h"
 
 #include "alloc.h"
-#include "taiko.h"
+#include "taco.h"
 #include <string.h>
 
 #define COUNTED_BY(count) TAIKO_ATTRIBUTE_GNU_(counted_by(count))

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "tja/branchtype.h"
 
-#include "taiko.h"
+#include "taco.h"
 #include <math.h>
 #include <stdint.h>
 #include <stdlib.h>

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "parser.h"
 #include "alloc.h"
-#include "taiko.h"
+#include "taco.h"
 
 struct taiko_parser_ {
   taiko_allocator *alloc;

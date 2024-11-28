@@ -3,7 +3,7 @@
 %}
 
 %code requires {
-#include "taiko.h"
+#include "taco.h"
 #include "tja/branched.h"
 #include "tja/coursebody.h"
 #include "tja/events.h"

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "note.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include <stdlib.h>
 
 taiko_section *tja_pass_cleanup_(taiko_section *branch) {

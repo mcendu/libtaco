@@ -3,7 +3,7 @@
 
 #include "alloc.h"
 #include "note.h" /* IWYU pragma: keep; struct size taken */
-#include "taiko.h"
+#include "taco.h"
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>

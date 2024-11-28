@@ -3,7 +3,7 @@
 
 #include "course.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 
 START_TEST(test_attach_branch) {
   static const taiko_event e[3] = {

@@ -3,7 +3,7 @@
 
 #include "note.h" // IWYU pragma: keep; for definition of taiko_event
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 
 START_TEST(test_create) {
   taiko_section *s = taiko_section_create_();

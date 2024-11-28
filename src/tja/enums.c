@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "tja/metadata.h"
 
-#include "taiko.h"
+#include "taco.h"
 #include <stdlib.h>
 #include <string.h>
 

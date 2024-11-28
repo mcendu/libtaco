@@ -3,7 +3,7 @@
 
 #include "alloc.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include <assert.h>
 #include <stdbool.h>
 #include <string.h>

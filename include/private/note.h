@@ -2,7 +2,7 @@
 #ifndef TAIKO_NOTE_H_
 #define TAIKO_NOTE_H_
 
-#include "taiko.h"
+#include "taco.h"
 #include <stdbool.h>
 #include <stdint.h>
 

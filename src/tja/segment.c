@@ -3,7 +3,7 @@
 
 #include "note.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include "tja/events.h"
 #include "tja/timestamp.h"
 #include <stddef.h>

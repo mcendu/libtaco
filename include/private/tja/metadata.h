@@ -2,7 +2,7 @@
 #ifndef TJA_METADATA_H_
 #define TJA_METADATA_H_
 
-#include "taiko.h"
+#include "taco.h"
 
 enum tja_metadata_enum_ {
   TJA_METADATA_UNRECOGNIZED,

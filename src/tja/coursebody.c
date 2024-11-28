@@ -4,7 +4,7 @@
 #include "course.h"
 #include "note.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include "tja/segment.h"
 #include "tja/timestamp.h"
 

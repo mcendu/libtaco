@@ -2,7 +2,7 @@
 #ifndef TJA_SEGMENT_H_
 #define TJA_SEGMENT_H_
 
-#include "taiko.h"
+#include "taco.h"
 #include "tja/events.h"
 #include <stdbool.h>
 

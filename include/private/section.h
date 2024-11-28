@@ -3,7 +3,7 @@
 #define TAIKO_SECTION_H_
 
 #include "note.h" /* IWYU pragma: keep; required by macros */
-#include "taiko.h"
+#include "taco.h"
 
 extern taiko_section *taiko_section_create_() TAIKO_MALLOC;
 extern taiko_section *

@@ -4,7 +4,7 @@
 #include "alloc.h"
 #include "course.h"
 #include "courseset.h"
-#include "taiko.h"
+#include "taco.h"
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "note.h"
 
-#include "taiko.h"
+#include "taco.h"
 #include <math.h>
 
 int taiko_event_time(const taiko_event *event) { return event->time; }

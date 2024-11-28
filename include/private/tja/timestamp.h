@@ -2,7 +2,7 @@
 #ifndef TJA_TIMESTAMP_H_
 #define TJA_TIMESTAMP_H_
 
-#include "taiko.h"
+#include "taco.h"
 
 extern void tja_event_get_timestamp_(const taiko_event *restrict event,
                                      int *restrict measure, int *restrict unit);

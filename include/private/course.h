@@ -2,7 +2,7 @@
 #ifndef TAIKO_COURSE_H_
 #define TAIKO_COURSE_H_
 
-#include "taiko.h"
+#include "taco.h"
 
 extern taiko_course *taiko_course_create_() TAIKO_MALLOC;
 extern taiko_course *taiko_course_create2_(taiko_allocator *alloc) TAIKO_MALLOC;

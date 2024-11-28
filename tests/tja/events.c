@@ -4,7 +4,7 @@
 
 #include "note.h"
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include <stdbool.h>
 
 static tja_events events;

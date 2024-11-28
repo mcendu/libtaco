@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "section.h"
-#include "taiko.h"
+#include "taco.h"
 #include "tja/timestamp.h"
 #include <assert.h>
 

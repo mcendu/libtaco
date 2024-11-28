@@ -2,7 +2,7 @@
 #include "tja/parser.h"
 #include <check.h>
 
-#include "taiko.h"
+#include "taco.h"
 
 static taiko_parser *parser;
 
