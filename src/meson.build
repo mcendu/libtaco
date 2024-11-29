@@ -31,9 +31,7 @@ libtaco_lib = both_libraries(
   gnu_symbol_visibility: 'hidden',
 )
 
-# dep for unit tests
-libtaiko_dep = declare_dependency(
-  include_directories: [libtaco_include, libtaco_include_private],
-  dependencies: libtaco_deps,
-  link_with: libtaco_lib.get_static_lib(),
+libtaco_dep = declare_dependency(
+  include_directories: [libtaco_include],
+  link_with: libtaco_lib,
 )

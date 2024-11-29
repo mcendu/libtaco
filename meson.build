@@ -38,4 +38,5 @@ flex_gen = generator(
 
 subdir('include')
 subdir('src')
+subdir('utils')
 subdir('tests')

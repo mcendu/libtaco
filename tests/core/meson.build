@@ -9,7 +9,7 @@ tests_core_bin = executable(
   'tests_core',
   tests_core_src,
   link_with: [tests_main],
-  dependencies: [libtaiko_dep, check_dep],
+  dependencies: [libtaco_tests_dep, check_dep],
   install: false,
 )
 
