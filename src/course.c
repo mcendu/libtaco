@@ -180,6 +180,9 @@ taiko_section *taiko_course_attach_branch_(taiko_course *restrict course,
   taiko_section *old = *target;
   *target = content;
 
+  // apply bpm data
+  taiko_section_set_bpm_(content, course->basebpm);
+
   // apply balloon hitcount if stored
   balloon_data_ *balloons = &(course->balloons[side][branch]);
   if (balloons) {

@@ -176,6 +176,33 @@ START_TEST(test_delete) {
 }
 END_TEST
 
+START_TEST(test_time) {
+  static const taiko_event events[] = {
+      {0, TAIKO_EVENT_BPM, .detail_float = {120.0}},
+      {0, TAIKO_EVENT_MEASURE},
+      {96, TAIKO_EVENT_MEASURE},
+      {192, TAIKO_EVENT_BPM, .detail_float = {180.0}},
+      {192, TAIKO_EVENT_MEASURE},
+      {288, TAIKO_EVENT_MEASURE},
+      {384, TAIKO_EVENT_MEASURE},
+      {480, TAIKO_EVENT_MEASURE},
+  };
+
+  taiko_section *s = taiko_section_create_();
+  taiko_section_push_many_(s, events, 8);
+  taiko_section_set_bpm_(s, 120.0);
+
+  const taiko_event *i = taiko_section_locate(s, 1);
+  ck_assert_double_eq(taiko_event_seconds(i, s), 0.0);
+  i = taiko_section_locate(s, 2);
+  ck_assert_double_eq(taiko_event_seconds(i, s), 2.0);
+  i = taiko_section_locate(s, 4);
+  ck_assert_double_eq(taiko_event_seconds(i, s), 4.0);
+  i = taiko_section_locate(s, 7);
+  ck_assert_double_eq(taiko_event_seconds(i, s), 8.0);
+}
+END_TEST
+
 TCase *case_section(void) {
   TCase *c = tcase_create("section");
   tcase_add_test(c, test_create);
@@ -187,5 +214,6 @@ TCase *case_section(void) {
   tcase_add_test(c, test_trim);
   tcase_add_test(c, test_balloons);
   tcase_add_test(c, test_delete);
+  tcase_add_test(c, test_time);
   return c;
 }

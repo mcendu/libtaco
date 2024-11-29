@@ -333,6 +333,11 @@ taiko_event_detail_float(const taiko_event *restrict event) TAIKO_PURE;
 TAIKO_PUBLIC int taiko_event_compare(const taiko_event *restrict a,
                                      const taiko_event *restrict b);
 
+/* Gets the time of an event in seconds. */
+TAIKO_PUBLIC double
+taiko_event_seconds(const taiko_event *restrict event,
+                    const taiko_section *restrict section) TAIKO_PURE;
+
 /* Gets the next event. */
 TAIKO_PUBLIC const taiko_event *
 taiko_event_next(const taiko_event *restrict event) TAIKO_PURE;

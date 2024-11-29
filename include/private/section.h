@@ -19,6 +19,7 @@ extern taiko_event *taiko_section_locate_mut_(taiko_section *restrict s,
 
 extern void taiko_section_set_tickrate_(taiko_section *restrict section,
                                         int tickrate);
+void taiko_section_set_bpm_(taiko_section *restrict s, double bpm);
 
 extern int taiko_section_push_(taiko_section *restrict section,
                                const taiko_event *restrict event);
