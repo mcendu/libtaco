@@ -21,9 +21,10 @@
 %option prefix="tja_yy"
 %option extra-type="tja_parser *"
 
-INTEGER [0-9]+
-EXPONENT [eE][+-]?{INTEGER}
-REAL {INTEGER}\.{INTEGER}{EXPONENT}?
+NATURAL [0-9]+
+INTEGER [+-]?{NATURAL}
+EXPONENT [eE]{INTEGER}
+REAL [+-]?{NATURAL}\.{NATURAL}{EXPONENT}?
 SPACE [ \t]
 NEWLINE [\r\n]
 
