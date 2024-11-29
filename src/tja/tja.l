@@ -44,60 +44,60 @@ IDENTIFIER {IDSTART}{IDCONT}*
 
 %%
 
-<INITIAL>^TITLE {
+<INITIAL>TITLE {
   BEGIN(header_pretext);
   return TITLE;
 }
-<INITIAL>^SUBTITLE {
+<INITIAL>SUBTITLE {
   BEGIN(header_pretext);
   return SUBTITLE;
 }
-<INITIAL>^GENRE {
+<INITIAL>GENRE {
   BEGIN(header_pretext);
   return GENRE;
 }
-<INITIAL>^MAKER {
+<INITIAL>MAKER {
   BEGIN(header_pretext);
   return MAKER;
 }
-<INITIAL>^AUDIO {
+<INITIAL>AUDIO {
   BEGIN(header_pretext);
   return AUDIO;
 }
-<INITIAL>^BPM {
+<INITIAL>BPM {
   return BPM;
 }
-<INITIAL>^OFFSET {
+<INITIAL>OFFSET {
   return OFFSET;
 }
-<INITIAL>^DEMOSTART {
+<INITIAL>DEMOSTART {
   return DEMOSTART;
 }
-<INITIAL>^SIDE {
+<INITIAL>SIDE {
   BEGIN(header_pretext);
   return SIDE;
 }
-<INITIAL>^COURSE {
+<INITIAL>COURSE {
   BEGIN(header_pretext);
   return COURSE;
 }
-<INITIAL>^LEVEL {
+<INITIAL>LEVEL {
   return LEVEL;
 }
-<INITIAL>^STYLE {
+<INITIAL>STYLE {
   BEGIN(header_pretext);
   return STYLE;
 }
-<INITIAL>^BALLOON {
+<INITIAL>BALLOON {
   return BALLOON;
 }
-<INITIAL>^BALLOONNOR {
+<INITIAL>BALLOONNOR {
   return BALLOONNOR;
 }
-<INITIAL>^BALLOONEXP {
+<INITIAL>BALLOONEXP {
   return BALLOONEXP;
 }
-<INITIAL>^BALLOONMAS {
+<INITIAL>BALLOONMAS {
   return BALLOONMAS;
 }
 
@@ -270,6 +270,9 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(body_pretext);
   return COMMAND;
 }
+
+\/\/[^\r\n]* { /* discard comments */ }
+\xef\xbb\xbf { /* discard U+FEFF */ }
 
 <*>. {
   // fallback; feed into token stream, potentially causing parser to yell
