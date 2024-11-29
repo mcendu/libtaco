@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  build:
-    name: Build
+  build-linux:
+    name: Build (Linux)
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -37,6 +37,49 @@ jobs:
       - name: Configure project
         run: |
           CC=${{ matrix.cc }} meson setup \
+            --backend=ninja \
+            --debug \
+            --prefix=/usr \
+            --strip \
+            ${{ join(matrix.options, ' ') }} \
+            build
+      - name: Build
+        run: ninja -v -C build all
+      - name: Test
+        run: meson test -C build --verbose --no-rebuild
+  build-mingw:
+    name: Build (Windows)
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        options:
+          - [--optimization=0]
+          - [--optimization=2]
+          - [--optimization=2, -Db_lto=true]
+          - [--optimization=3]
+          - [--optimization=3, -Db_lto=true]
+          - [--optimization=s]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: msys2/setup-msys2@v2
+        with:
+          release: false
+          msystem: clang64
+          pacboy: >-
+            toolchain:p
+            meson:p
+            ninja:p
+            check:p
+            bison:
+            flex:
+      - name: Configure project
+        run: |
+          meson setup \
             --backend=ninja \
             --debug \
             --prefix=/usr \
