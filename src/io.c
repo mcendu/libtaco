@@ -102,5 +102,18 @@ int taiko_file_printf_(taiko_file *file, const char *format, ...) {
 }
 
 int taiko_file_vprintf_(taiko_file *file, const char *format, va_list arg) {
-  return file->printf(file->stream, format, arg);
+  if (file->printf)
+    return file->printf(file->stream, format, arg);
+
+  // without a dedicated printf, format in memory and dump to stream
+  va_list ap_lencheck;
+  va_copy(ap_lencheck, arg);
+  int len = vsnprintf(NULL, 0, format, ap_lencheck);
+  va_end(ap_lencheck);
+
+  char *str = taiko_malloc_(file->alloc, len + 1);
+  vsnprintf(str, len + 1, format, arg);
+  int result = taiko_file_write_(file, str, len);
+  taiko_free_(file->alloc, str);
+  return result;
 }
