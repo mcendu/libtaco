@@ -3,13 +3,14 @@
 %}
 
 %code requires {
-#include "taco.h"
+#include "tja/parser.h"
+
 #include "tja/branched.h"
 #include "tja/coursebody.h"
 #include "tja/events.h"
 #include "tja/metadata.h"
-#include "tja/parser.h"
 #include "tja/segment.h"
+#include "taco.h"
 
 #include "note.h"
 #include <stdbool.h>
@@ -25,9 +26,11 @@ struct branch_info_ {
 }
 
 %{
+#include "tja/parser.h"
+
 #include "tja/branchtype.h"
 #include "tja/metadata.h"
-#include "tja/parser.h"
+#include "tja/postproc.h"
 #include "alloc.h"
 #include "course.h"
 #include "courseset.h"

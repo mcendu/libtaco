@@ -21,7 +21,4 @@ extern int tja_parser_set_error_(tja_parser *parser, taiko_file *file);
 extern void tja_parser_diagnose_(tja_parser *parser, int line, int level,
                                  const char *format, ...);
 
-extern taiko_section *tja_pass_convert_time_(taiko_section *section);
-extern taiko_section *tja_pass_cleanup_(taiko_section *section);
-
 #endif /* !TJA_PARSER_H_ */
