@@ -25,10 +25,9 @@ jobs:
         include:
           - cc: gcc
             options: [--optimization=0, -Db_sanitize=address]
+            shorthand: O0-asan
           - options: [--optimization=0]
             shorthand: O0
-          - options: [--optimization=0, -Db_sanitize=address]
-            shorthand: O0-asan
           - options: [--optimization=2]
             shorthand: O2
           - options: [--optimization=2, -Db_lto=true]
