@@ -17,10 +17,11 @@ static const short note_types_[128] = {
     ['C'] = TAIKO_EVENT_LANDMINE,
 };
 
-int tja_events_push_note_(tja_events *restrict events, int note) {
+int tja_events_push_note_(tja_events *restrict events, int note, int line) {
   taiko_event e = {
       .time = 0,
       .type = note < 128 ? note_types_[note] : 0,
+      .line = line,
   };
 
   int result = tja_events_push_event_(events, &e);

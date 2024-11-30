@@ -46,7 +46,8 @@ struct measure_length_event_ {
 
 struct taiko_event_ {
   uint32_t time;
-  int32_t type;
+  int16_t type;
+  uint16_t line;
   union {
     uint8_t raw_params[8];
     struct int_event_ detail_int;

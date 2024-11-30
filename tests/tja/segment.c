@@ -23,7 +23,7 @@ START_TEST(test_segment) {
       .levelhold = false,
       .events = section,
   };
-  tja_events_push_note_(&measure, '1');
+  tja_events_push_note_(&measure, '1', 2);
 
   tja_segment_push_barline_(&segment, 1);
   tja_segment_push_events_(&segment, &measure);
@@ -44,7 +44,7 @@ START_TEST(test_segment_multi) {
       .levelhold = false,
       .events = section,
   };
-  tja_events_push_note_(&measure, '1');
+  tja_events_push_note_(&measure, '1', 2);
 
   tja_segment_push_barline_(&segment, 1);
   tja_segment_push_events_(&segment, &measure);

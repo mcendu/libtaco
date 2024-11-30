@@ -19,11 +19,11 @@ static void setup(void) {
 static void teardown(void) { taiko_section_free_(events.events); }
 
 START_TEST(test_push_note) {
-  tja_events_push_note_(&events, '0');
+  tja_events_push_note_(&events, '0', 2);
   ck_assert_int_eq(events.units, 1);
   ck_assert_int_eq(taiko_section_size(events.events), 0);
 
-  tja_events_push_note_(&events, '1');
+  tja_events_push_note_(&events, '1', 2);
   ck_assert_int_eq(events.units, 2);
   ck_assert_int_eq(taiko_section_size(events.events), 1);
   ck_assert_int_eq(taiko_event_type(taiko_section_begin(events.events)),
@@ -45,7 +45,7 @@ START_TEST(test_push_event) {
   ck_assert_int_eq(taiko_event_type(taiko_section_begin(events.events)),
                    TAIKO_EVENT_SCROLL);
 
-  tja_events_push_note_(&events, '3');
+  tja_events_push_note_(&events, '3', 2);
   ck_assert_int_eq(events.units, 1);
   ck_assert_int_eq(taiko_section_size(events.events), 2);
 }

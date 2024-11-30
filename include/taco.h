@@ -126,7 +126,11 @@
 #define TAIKO_BRANCH_ADVANCED 1
 #define TAIKO_BRANCH_MASTER 2
 
-/* Event types, including both notes and events. */
+/* Event types. Positive numbers indicate interactive events, ones the
+   players can react to; this include normal notes and drum roll notes.
+   Negative numbers are for things that are not interacted with, like
+   measure lines and speed changes. Event IDs fall between -32768 and
+   32767.  */
 #define TAIKO_EVENT_NONE 0
 #define TAIKO_EVENT_DON 1
 #define TAIKO_EVENT_KAT 2
@@ -150,10 +154,10 @@
 #define TAIKO_EVENT_BRANCH_JUMP (-66)
 #define TAIKO_EVENT_BRANCH_CHECK (-67)
 
-#define TAIKO_EVENT_TJA_MEASURE_LENGTH (-0x10001)
-#define TAIKO_EVENT_TJA_BRANCH_THRESHOLD (-0x10002)
-#define TAIKO_EVENT_TJA_BRANCH_TYPE (-0x10003)
-#define TAIKO_EVENT_TJA_LEVELHOLD (-0x10004)
+#define TAIKO_EVENT_TJA_MEASURE_LENGTH (-0x4001)
+#define TAIKO_EVENT_TJA_BRANCH_THRESHOLD (-0x4002)
+#define TAIKO_EVENT_TJA_BRANCH_TYPE (-0x4003)
+#define TAIKO_EVENT_TJA_LEVELHOLD (-0x4004)
 
 /* Branch conditions. */
 #define TAIKO_BRANCHTYPE_NONE 0

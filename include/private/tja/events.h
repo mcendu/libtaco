@@ -7,7 +7,8 @@
 
 typedef struct tja_events_ tja_events;
 
-extern int tja_events_push_note_(tja_events *restrict events, int note);
+extern int tja_events_push_note_(tja_events *restrict events, int note,
+                                 int line);
 extern int tja_events_push_event_(tja_events *restrict events,
                                   const taiko_event *restrict event);
 
