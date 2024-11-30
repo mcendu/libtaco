@@ -6,6 +6,6 @@ tacoscore_src = files(
 executable(
   'tacoscore',
   tacoscore_src,
-  dependencies: [libm_dep, libtaco_dep, utils_common_dep],
+  dependencies: [libc_deps, libtaco_dep, utils_common_dep],
   install: true,
 )
