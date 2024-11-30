@@ -657,7 +657,13 @@ int tja_parser_set_error_(tja_parser *parser, taiko_file *file) {
   return 0;
 }
 
-void tja_parser_error_(tja_parser *parser, int line, const char *format, ...) {
+void tja_parser_diagnose_(tja_parser *parser, int line, int level,
+                          const char *format, ...) {
+  const char *const templates[] = {
+    "%s:%d: fatal error: %s\n",
+    "%s:%d: error: %s\n",
+    "%s:%d: warning: %s\n",
+  };
   va_list ap;
 
   // format input
@@ -673,14 +679,14 @@ void tja_parser_error_(tja_parser *parser, int line, const char *format, ...) {
 
   // forward to error output
   if (formatted)
-    taiko_file_printf_(parser->error_stream, "%s:%d: error: %s\n",
+    taiko_file_printf_(parser->error_stream, templates[level],
                        taiko_file_name_(parser->input), line, formatted);
   taiko_free_(parser->alloc, formatted);
 }
 
 void tja_yyerror(TJA_YYLTYPE *lloc, tja_parser *parser, yyscan_t lexer,
                  const char *msg) {
-  tja_parser_error_(parser, lloc->first_line, "%s", msg);
+  tja_parser_diagnose_(parser, lloc->first_line, TJA_DIAG_ERROR, "%s", msg);
 }
 
 static taiko_section *get_section_(tja_parser *parser, int purpose) {
