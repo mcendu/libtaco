@@ -22,7 +22,7 @@ endif
 
 libtaco_deps = [libc_deps]
 
-libtaco_lib = both_libraries(
+libtaco_lib = library(
   'taco',
   libtaco_src,
   include_directories: [libtaco_include, libtaco_include_private],
