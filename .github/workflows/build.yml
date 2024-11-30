@@ -25,6 +25,20 @@ jobs:
         include:
           - cc: gcc
             options: [--optimization=0, -Db_sanitize=address]
+          - options: [--optimization=0]
+            shorthand: O0
+          - options: [--optimization=0, -Db_sanitize=address]
+            shorthand: O0-asan
+          - options: [--optimization=2]
+            shorthand: O2
+          - options: [--optimization=2, -Db_lto=true]
+            shorthand: O2-lto
+          - options: [--optimization=3]
+            shorthand: O3
+          - options: [--optimization=3, -Db_lto=true]
+            shorthand: O3-lto
+          - options: [--optimization=s]
+            shorthand: Os
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,6 +61,20 @@ jobs:
         run: ninja -v -C build all
       - name: Test
         run: meson test -C build --verbose --no-rebuild
+      - name: Upload test log
+        uses: actions/upload-artifact@v4
+        with:
+          name: testlog-${{ github.sha }}-ubuntu-${{ matrix.shorthand }}
+          path: build/meson-logs/testlog.txt
+      - name: Install
+        run: |
+          mkdir destdir
+          DESTDIR=destdir ninja install
+      - name: Upload installed tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: libtaco-${{ github.sha }}-ubuntu-${{ matrix.shorthand }}
+          path: destdir
   build-mingw:
     name: Build (Windows)
     runs-on: windows-latest
@@ -60,6 +88,19 @@ jobs:
           - [--optimization=3]
           - [--optimization=3, -Db_lto=true]
           - [--optimization=s]
+        include:
+          - options: [--optimization=0]
+            shorthand: O0
+          - options: [--optimization=2]
+            shorthand: O2
+          - options: [--optimization=2, -Db_lto=true]
+            shorthand: O2-lto
+          - options: [--optimization=3]
+            shorthand: O3
+          - options: [--optimization=3, -Db_lto=true]
+            shorthand: O3-lto
+          - options: [--optimization=s]
+            shorthand: Os
     defaults:
       run:
         shell: msys2 {0}
@@ -90,3 +131,17 @@ jobs:
         run: ninja -v -C build all
       - name: Test
         run: meson test -C build --verbose --no-rebuild
+      - name: Upload test log
+        uses: actions/upload-artifact@v4
+        with:
+          name: testlog-${{ github.sha }}-mingw-w64-${{ matrix.shorthand }}
+          path: build/meson-logs/testlog.txt
+      - name: Install
+        run: |
+          mkdir destdir
+          DESTDIR=destdir ninja install
+      - name: Upload installed tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: libtaco-${{ github.sha }}-mingw-w64-${{ matrix.shorthand }}
+          path: destdir
