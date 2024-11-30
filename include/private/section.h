@@ -28,8 +28,8 @@ extern int taiko_section_push_many_(taiko_section *restrict section,
                                     size_t count);
 extern int taiko_section_concat_(taiko_section *restrict section,
                                  const taiko_section *restrict other);
+extern int taiko_section_pop_(taiko_section *restrict section, size_t count);
 
-extern int taiko_section_delete_(taiko_section *section, taiko_event *i);
 extern void taiko_section_clear_(taiko_section *restrict section);
 extern int taiko_section_trim_(taiko_section *restrict section);
 

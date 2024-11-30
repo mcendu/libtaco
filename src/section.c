@@ -211,14 +211,11 @@ int taiko_section_concat_(taiko_section *restrict s,
   return taiko_section_push_many_(s, other->events, other->size);
 }
 
-int taiko_section_delete_(taiko_section *s, taiko_event *i) {
+int taiko_section_pop_(taiko_section *s, size_t count) {
   invalidate_bpm_times_(s);
-  if (i < taiko_section_begin(s) || i >= taiko_section_end(s))
-    return -1;
-
-  size_t len = taiko_section_end(s) - (i + 1);
-  memmove(i, i + 1, len * sizeof(taiko_event));
-  s->size -= 1;
+  if (count > s->size)
+    count = s->size;
+  s->size -= count;
   return 0;
 }
 
