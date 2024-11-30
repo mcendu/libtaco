@@ -10,13 +10,17 @@
 typedef struct taiko_file_ taiko_file;
 
 extern taiko_file *taiko_file_open_(taiko_allocator *alloc, void *stream,
-                                    taiko_read_fn *read, taiko_write_fn *write,
+                                    const char *filename, taiko_read_fn *read,
+                                    taiko_write_fn *write,
                                     taiko_close_fn *close,
                                     taiko_printf_fn *printf);
 extern taiko_file *taiko_file_open_path_(const char *path, const char *mode);
 extern taiko_file *taiko_file_open_stdio_(FILE *file);
 extern taiko_file *taiko_file_open_null_(taiko_allocator *alloc);
 extern void taiko_file_close_(taiko_file *file);
+
+extern const char *taiko_file_name_(const taiko_file *file);
+extern void taiko_file_set_name_(taiko_file *file, const char *filename);
 
 extern size_t taiko_file_read_(taiko_file *file, void *dst, size_t size);
 extern size_t taiko_file_write_(taiko_file *file, const void *src, size_t size);
