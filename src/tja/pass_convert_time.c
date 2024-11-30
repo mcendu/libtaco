@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: BSD-2-Clause
+#include "tja/postproc.h"
+
 #include "section.h"
 #include "taco.h"
 #include "tja/timestamp.h"
 #include <assert.h>
 
-static taiko_section *pass_extract_tickrate(taiko_section *branch);
-static taiko_section *pass_convert(taiko_section *branch);
-static taiko_section *pass_remove_excess_factors(taiko_section *branch);
+static void pass_extract_tickrate(taiko_section *branch);
+static void pass_convert(taiko_section *branch);
+static void pass_remove_excess_factors(taiko_section *branch);
 
 static int gcd(int x, int y);
 static int lcm(int x, int y);
 
-taiko_section *tja_pass_convert_time_(taiko_section *branch) {
-  branch = pass_extract_tickrate(branch);
-  branch = pass_convert(branch);
-  branch = pass_remove_excess_factors(branch);
-  return branch;
+void tja_pass_convert_time_(taiko_section *branch) {
+  pass_extract_tickrate(branch);
+  pass_convert(branch);
+  pass_remove_excess_factors(branch);
 }
 
-static taiko_section *pass_extract_tickrate(taiko_section *branch) {
+static void pass_extract_tickrate(taiko_section *branch) {
   // ticks per 4/4 measure
   int tickrate = 96;
   int dividend = 4;
@@ -39,10 +40,9 @@ static taiko_section *pass_extract_tickrate(taiko_section *branch) {
   }
 
   taiko_section_set_tickrate_(branch, tickrate);
-  return branch;
 }
 
-static taiko_section *pass_convert(taiko_section *branch) {
+static void pass_convert(taiko_section *branch) {
   int start = 0;
   int measure_ticks = taiko_section_tickrate(branch);
   int current_measure = 0;
@@ -74,11 +74,9 @@ static taiko_section *pass_convert(taiko_section *branch) {
 
     i->time = start + (measure_ticks / units) * u;
   }
-
-  return branch;
 }
 
-static taiko_section *pass_remove_excess_factors(taiko_section *branch) {
+static void pass_remove_excess_factors(taiko_section *branch) {
   int divisor = 0;
 
   taiko_section_foreach (i, branch)
@@ -88,7 +86,7 @@ static taiko_section *pass_remove_excess_factors(taiko_section *branch) {
   if (divisor == 0) {
     // there are no objects other than on time 0
     taiko_section_set_tickrate_(branch, 96);
-    return branch;
+    return;
   } else if (taiko_section_tickrate(branch) / divisor < 96) {
     divisor = taiko_section_tickrate(branch) / lcm(divisor, 96);
   }
@@ -99,8 +97,6 @@ static taiko_section *pass_remove_excess_factors(taiko_section *branch) {
     taiko_section_foreach_mut_ (i, branch)
       i->time /= divisor;
   }
-
-  return branch;
 }
 
 static int gcd(int x, int y) {
