@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include "parser.h"
 #include "alloc.h"
+#include "courseset.h"
 #include "io.h"
 #include "taco.h"
 
@@ -30,11 +31,20 @@ void taiko_parser_free(taiko_parser *parser) {
   taiko_free_(parser->alloc, parser);
 }
 
+static void post_parse_cleanup_(taiko_courseset *restrict c,
+                                taiko_file *restrict f) {
+  if (c) {
+    taiko_courseset_set_filename_(c, taiko_file_name_(f));
+  }
+
+  taiko_file_close_(f);
+}
+
 taiko_courseset *taiko_parser_parse_file(taiko_parser *restrict parser,
                                          const char *restrict path) {
   taiko_file *f = taiko_file_open_path_(path, "r");
   taiko_courseset *result = parser->vtable->parse(parser->parser, f);
-  taiko_file_close_(f);
+  post_parse_cleanup_(result, f);
   return result;
 }
 
@@ -42,7 +52,7 @@ taiko_courseset *taiko_parser_parse_stdio(taiko_parser *restrict parser,
                                           FILE *file) {
   taiko_file *f = taiko_file_open_stdio_(file);
   taiko_courseset *result = parser->vtable->parse(parser->parser, f);
-  taiko_file_close_(f);
+  post_parse_cleanup_(result, f);
   return result;
 }
 

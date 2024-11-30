@@ -18,7 +18,7 @@ extern int taiko_courseset_set_maker_(taiko_courseset *restrict set,
                                       const char *restrict maker);
 
 extern int taiko_courseset_set_filename_(taiko_courseset *restrict set,
-                                         const char *restrict maker);
+                                         const char *restrict filename);
 extern int taiko_courseset_set_audio_(taiko_courseset *restrict set,
                                       const char *restrict path);
 
