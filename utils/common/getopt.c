@@ -92,7 +92,7 @@ int getopt(int argc, char *const argv[], const char *optstring) {
   if (d != c || c == ':') {
     optopt = c;
     if (optstring[0] != ':' && opterr)
-      fprintf(stderr, "%s: unrecognized option: %*s", argv[0], k, optchar);
+      fprintf(stderr, "%s: unrecognized option: %*s\n", argv[0], k, optchar);
     return '?';
   }
   if (optstring[i] == ':') {
@@ -108,7 +108,7 @@ int getopt(int argc, char *const argv[], const char *optstring) {
       if (optstring[0] == ':')
         return ':';
       if (opterr)
-        fprintf(stderr, "%s: option requires an argument: %*s", argv[0], k,
+        fprintf(stderr, "%s: option requires an argument: %*s\n", argv[0], k,
                 optchar);
       return '?';
     }

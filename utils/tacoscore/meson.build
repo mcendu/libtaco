@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: 0BSD
 tacoscore_src = files(
+  'ac16.c',
+  'calc.c',
   'main.c',
 )
 

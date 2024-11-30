@@ -126,7 +126,7 @@ static int __getopt_long_core(int argc, char *const *argv,
           optopt = longopts[i].val;
           if (colon || !opterr)
             return '?';
-          fprintf(stderr, "%s: option does not take an argument: %s", argv[0],
+          fprintf(stderr, "%s: option does not take an argument: %s\n", argv[0],
                   longopts[i].name);
           return '?';
         }
@@ -138,7 +138,7 @@ static int __getopt_long_core(int argc, char *const *argv,
             return ':';
           if (!opterr)
             return '?';
-          fprintf(stderr, "%s: option requires an argument: %s", argv[0],
+          fprintf(stderr, "%s: option requires an argument: %s\n", argv[0],
                   longopts[i].name);
           return '?';
         }
