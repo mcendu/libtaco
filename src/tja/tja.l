@@ -8,15 +8,25 @@
 #include <stdlib.h>
 
 #define YYSTYPE TJA_YYSTYPE
+#define YYLTYPE TJA_YYLTYPE
 
 #define YY_INPUT(buf, result, max_size) \
   (result = taiko_file_read_(yyextra->input, buf, max_size))
+
+#define YY_USER_ACTION do { \
+  yylloc->first_line = yylineno; \
+  yylloc->first_column = 1; \
+  yylloc->last_line = yylineno; \
+  yylloc->last_column = 1; \
+} while (0);
 %}
 
 %option batch
 %option never-interactive
 %option reentrant
 %option bison-bridge
+%option bison-locations
+%option yylineno
 %option nounistd
 %option prefix="tja_yy"
 %option extra-type="tja_parser *"

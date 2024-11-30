@@ -8,6 +8,7 @@
 #include "tja/coursebody.h"
 #include "tja/events.h"
 #include "tja/metadata.h"
+#include "tja/parser.h"
 #include "tja/segment.h"
 
 #include "note.h"
@@ -24,10 +25,9 @@ struct branch_info_ {
 }
 
 %{
-#include "tja/parser.h"
-
 #include "tja/branchtype.h"
 #include "tja/metadata.h"
+#include "tja/parser.h"
 #include "alloc.h"
 #include "course.h"
 #include "courseset.h"
@@ -42,9 +42,6 @@ typedef void *yyscan_t;
 
 static taiko_section *get_section_(tja_parser *parser, int purpose);
 static void put_section_(tja_parser *parser, taiko_section *section);
-
-static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
-                    const char *msg);
 %}
 
 %code provides {
@@ -69,11 +66,14 @@ struct tja_parser_ {
   taiko_section *tmpsections[PURPOSE_MAX];
 };
 
-extern int tja_yylex(TJA_YYSTYPE *lvalp, yyscan_t lexer);
+extern int tja_yylex(TJA_YYSTYPE *lvalp, TJA_YYLTYPE *llocp, yyscan_t lexer);
+extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
+                        const char *msg);
 }
 
 %define api.pure full
 %define api.prefix {tja_yy}
+%locations
 
 %parse-param {tja_parser *parser}
 %parse-param {yyscan_t lexer}
@@ -655,7 +655,7 @@ int tja_parser_set_error_(tja_parser *parser, taiko_file *file) {
   return 0;
 }
 
-void tja_parser_error_(tja_parser *parser, const char *format, ...) {
+void tja_parser_error_(tja_parser *parser, int line, const char *format, ...) {
   va_list ap;
 
   // format input
@@ -671,13 +671,14 @@ void tja_parser_error_(tja_parser *parser, const char *format, ...) {
 
   // forward to error output
   if (formatted)
-    taiko_file_printf_(parser->error_stream, "TJA parser error: %s\n", formatted);
+    taiko_file_printf_(parser->error_stream, "%s:%d: error: %s\n", "<input>",
+                       line, formatted);
   taiko_free_(parser->alloc, formatted);
 }
 
-static void tja_yyerror(tja_parser *parser, yyscan_t lexer,
-                    const char *msg) {
-  tja_parser_error_(parser, "%s", msg);
+void tja_yyerror(TJA_YYLTYPE *lloc, tja_parser *parser, yyscan_t lexer,
+                 const char *msg) {
+  tja_parser_error_(parser, lloc->first_line, "%s", msg);
 }
 
 static taiko_section *get_section_(tja_parser *parser, int purpose) {

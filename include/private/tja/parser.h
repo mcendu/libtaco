@@ -14,7 +14,7 @@ extern void tja_parser_free_(tja_parser *parser);
 extern taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file);
 
 extern int tja_parser_set_error_(tja_parser *parser, taiko_file *file);
-extern void tja_parser_error_(tja_parser *parser, const char *format, ...);
+extern void tja_parser_error_(tja_parser *parser, int line, const char *format, ...);
 
 extern taiko_section *tja_pass_convert_time_(taiko_section *section);
 extern taiko_section *tja_pass_cleanup_(taiko_section *section);

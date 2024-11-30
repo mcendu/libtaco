@@ -222,9 +222,14 @@ START_TEST(test_double) {
 }
 END_TEST
 
+START_TEST(test_badmeasure) {
+  ck_assert_ptr_null(taiko_parser_parse_file(parser, "assets/badmeasure.tja"));
+}
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
+  tcase_add_test(c, test_badmeasure);
   tcase_add_test(c, test_balloon);
   tcase_add_test(c, test_basic);
   tcase_add_test(c, test_bom);
