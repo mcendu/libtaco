@@ -671,8 +671,8 @@ void tja_parser_error_(tja_parser *parser, int line, const char *format, ...) {
 
   // forward to error output
   if (formatted)
-    taiko_file_printf_(parser->error_stream, "%s:%d: error: %s\n", "<input>",
-                       line, formatted);
+    taiko_file_printf_(parser->error_stream, "%s:%d: error: %s\n",
+                       taiko_file_name_(parser->input), line, formatted);
   taiko_free_(parser->alloc, formatted);
 }
 
