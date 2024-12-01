@@ -16,6 +16,7 @@ project(
   version: '0.1.0',
   default_options: [
     'c_std=c11',
+    'pkgconfig.relocatable=true',
   ],
 )
 

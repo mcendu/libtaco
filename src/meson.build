@@ -33,6 +33,12 @@ libtaco_lib = library(
   gnu_symbol_visibility: 'hidden',
 )
 
+pkgconf = import('pkgconfig')
+pkgconf.generate(
+  libtaco_lib,
+  description: 'Library for processing levels for a certain drum game'
+)
+
 libtaco_dep = declare_dependency(
   include_directories: [libtaco_include],
   link_with: libtaco_lib,
