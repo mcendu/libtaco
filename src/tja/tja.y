@@ -102,6 +102,18 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
   tja_events measure;
 }
 
+%destructor { taiko_free_(parser->alloc, $$); } <text>
+%destructor { taiko_course_free_($$); } <course>
+%destructor { tja_metadata_free_($$); } <metadata>
+%destructor { tja_balloon_free_($$); } <balloon>
+%destructor { taiko_course_free_($$.course); } <coursebody>
+%destructor {
+  for (int i = 0; i < 3; ++i)
+    put_section_(parser, $$.branches[i]);
+} <branched>
+%destructor { put_section_(parser, $$.segment); } <segment>
+%destructor { put_section_(parser, $$.events); } <measure>
+
 %type <set> set
 
 %type <metadata> headers

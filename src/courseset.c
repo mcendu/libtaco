@@ -46,6 +46,7 @@ void taiko_courseset_free(taiko_courseset *set) {
   taiko_free_(set->alloc, set->genre);
   taiko_free_(set->alloc, set->maker);
   taiko_free_(set->alloc, set->audio);
+  taiko_free_(set->alloc, set->filename);
 
   for (int i = 0; i < 8; ++i)
     taiko_course_free_(set->courses[i]);
@@ -132,7 +133,7 @@ int taiko_courseset_set_filename_(taiko_courseset *restrict set,
   char *buf = taiko_strdup_(set->alloc, filename);
 
   if (buf) {
-    taiko_free_(set->alloc, set->maker);
+    taiko_free_(set->alloc, set->filename);
     set->filename = buf;
     return 0;
   }

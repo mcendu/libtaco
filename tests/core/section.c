@@ -173,6 +173,8 @@ START_TEST(test_time) {
   ck_assert_double_eq(taiko_event_seconds(i, s), 4.0);
   i = taiko_section_locate(s, 7);
   ck_assert_double_eq(taiko_event_seconds(i, s), 8.0);
+
+  taiko_section_free_(s);
 }
 END_TEST
 
