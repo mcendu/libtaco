@@ -359,6 +359,8 @@ papamama_command:
 
 unrecognized_header:
   IDENTIFIER ':' text '\n' {
+    tja_parser_diagnose_(parser, @1.first_line, TJA_DIAG_WARN,
+                         "unrecognized header: %s", $1);
     taiko_free_(parser->alloc, $1);
     taiko_free_(parser->alloc, $3);
     $$.key = TJA_METADATA_UNRECOGNIZED;
@@ -575,6 +577,8 @@ bpmchange_command:
 
 unrecognized_command:
   COMMAND text '\n' {
+    tja_parser_diagnose_(parser, @1.first_line, TJA_DIAG_WARN,
+                         "unrecognized command: %s", $1);
     $$.type = TAIKO_EVENT_NONE;
     taiko_free_(parser->alloc, $1);
     taiko_free_(parser->alloc, $2);
