@@ -8,6 +8,7 @@ libtaco_src += files(
   'events.c',
   'metadata.c',
   'parser.c',
+  'pass_checkpoint_rolls.c',
   'pass_cleanup.c',
   'pass_convert_time.c',
   'segment.c',

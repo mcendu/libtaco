@@ -4,7 +4,7 @@
 #include <taco.h>
 
 int score_branch_ac16(const taiko_section *b, const taiko_course *c, int *base,
-                 int *bonus, int *ceil_score, int *combo) {
+                      int *bonus, int *ceil_score, int *combo) {
   static const double roll_rates[8] = {7.0, 8.5, 11.0, 17.0,
                                        7.0, 8.5, 11.0, 17.0};
 
@@ -39,9 +39,6 @@ int score_branch_ac16(const taiko_section *b, const taiko_course *c, int *base,
         current_roll_start = NAN;
         break;
       }
-      case TAIKO_EVENT_ROLL:
-      case TAIKO_EVENT_BALLOON:
-      case TAIKO_EVENT_KUSUDAMA:
       case TAIKO_EVENT_ROLL_CHECKPOINT:
         break;
       default:

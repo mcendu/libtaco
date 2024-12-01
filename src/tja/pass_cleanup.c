@@ -16,7 +16,7 @@ static int cmp(taiko_event *a, taiko_event *b) {
   return result;
 }
 
-void tja_pass_cleanup_(taiko_section *branch) {
+void tja_pass_cleanup_(tja_parser *parser, taiko_section *branch) {
   // sort events
   qsort(taiko_section_begin_mut_(branch), taiko_section_size(branch),
         sizeof(taiko_event), (int (*)(const void *, const void *))cmp);

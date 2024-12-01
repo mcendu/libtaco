@@ -13,7 +13,7 @@ static void pass_remove_excess_factors(taiko_section *branch);
 static int gcd(int x, int y);
 static int lcm(int x, int y);
 
-void tja_pass_convert_time_(taiko_section *branch) {
+void tja_pass_convert_time_(tja_parser *parser, taiko_section *branch) {
   pass_extract_tickrate(branch);
   pass_convert(branch);
   pass_remove_excess_factors(branch);

@@ -226,6 +226,31 @@ START_TEST(test_badmeasure) {
   ck_assert_ptr_null(taiko_parser_parse_file(parser, "assets/badmeasure.tja"));
 }
 
+START_TEST(test_checkpoint) {
+  taiko_courseset *set =
+      taiko_parser_parse_file(parser, "assets/checkpoint.tja");
+  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taiko_section *s = taiko_course_get_branch(c, 0, 0);
+
+  ck_assert_int_eq(taiko_section_size(s), 8);
+
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 1)),
+                   TAIKO_EVENT_BALLOON);
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 2)),
+                   TAIKO_EVENT_ROLL_END);
+
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 4)),
+                   TAIKO_EVENT_KUSUDAMA);
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 5)),
+                   TAIKO_EVENT_ROLL_CHECKPOINT);
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 6)),
+                   TAIKO_EVENT_ROLL_CHECKPOINT);
+  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 7)),
+                   TAIKO_EVENT_ROLL_END);
+
+  taiko_courseset_free(set);
+}
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -235,6 +260,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_bom);
   tcase_add_test(c, test_branch);
   tcase_add_test(c, test_commands);
+  tcase_add_test(c, test_checkpoint);
   tcase_add_test(c, test_crlf);
   tcase_add_test(c, test_division);
   tcase_add_test(c, test_double);
