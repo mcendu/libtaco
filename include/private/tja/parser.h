@@ -23,4 +23,9 @@ extern void tja_parser_diagnose_(tja_parser *parser, int line, int level,
 
 extern taiko_allocator *tja_parser_allocator_(tja_parser *parser);
 
+#define TAIKO_EVENT_TJA_MEASURE_LENGTH (-0x4001)
+#define TAIKO_EVENT_TJA_BRANCH_THRESHOLD (-0x4002)
+#define TAIKO_EVENT_TJA_BRANCH_TYPE (-0x4003)
+#define TAIKO_EVENT_TJA_LEVELHOLD (-0x4004)
+
 #endif /* !TJA_PARSER_H_ */

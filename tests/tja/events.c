@@ -5,6 +5,7 @@
 #include "note.h"
 #include "section.h"
 #include "taco.h"
+#include "tja/parser.h"
 #include <stdbool.h>
 
 static tja_events events;

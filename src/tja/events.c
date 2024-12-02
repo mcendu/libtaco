@@ -4,6 +4,7 @@
 #include "note.h"
 #include "section.h"
 #include "taco.h"
+#include "tja/parser.h"
 #include "tja/timestamp.h"
 #include <string.h>
 
