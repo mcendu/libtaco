@@ -14,9 +14,9 @@ project(
   'libtaco',
   'c',
   version: '0.1.0',
+  meson_version: '>=0.61.0',
   default_options: [
     'c_std=c11',
-    'pkgconfig.relocatable=true',
   ],
 )
 
