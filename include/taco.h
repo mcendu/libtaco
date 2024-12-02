@@ -70,14 +70,14 @@
 #endif
 
 /* TAIKO_PUBLIC declares things usable for programs. */
-#ifdef __GNUC__
-#define TAIKO_PUBLIC TAIKO_ATTRIBUTE_GNU_(visibility("default")) extern
-#elif defined(_MSC_VER) && !defined(TAIKO_STATIC)
+#if defined(_WIN32) && !defined(TAIKO_TESTS_)
 #ifdef TAIKO_BUILDING_
 #define TAIKO_PUBLIC __declspec(dllexport)
 #else
 #define TAIKO_PUBLIC __declspec(dllimport)
 #endif
+#elif defined(__GNUC__)
+#define TAIKO_PUBLIC TAIKO_ATTRIBUTE_GNU_(visibility("default")) extern
 #else
 #define TAIKO_PUBLIC extern
 #endif

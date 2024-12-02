@@ -25,6 +25,7 @@ libtaco_deps = [libc_deps]
 libtaco_lib = library(
   'taco',
   libtaco_src,
+  c_args: ['-DTAIKO_BUILDING_'],
   include_directories: [libtaco_include, libtaco_include_private],
   dependencies: libtaco_deps,
   version: meson.project_version(),

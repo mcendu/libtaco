@@ -4,6 +4,7 @@ check_dep = dependency('check', required: false)
 libtaco_tests_lib = static_library(
   'taco_tests',
   libtaco_src,
+  c_args: ['-DTAIKO_BUILDING_', '-DTAIKO_TESTS_'],
   include_directories: [libtaco_include, libtaco_include_private],
   dependencies: libtaco_deps,
   install: false,
