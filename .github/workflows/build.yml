@@ -182,7 +182,7 @@ jobs:
             msystem: clang64
             meson-cfg: --optimization=3
           - name: clang -O3 -flto
-            short: clang-o2-lto
+            short: clang-o3-lto
             msystem: clang64
             meson-cfg: --optimization=3 -Db_lto=true
           - name: clang -Os
