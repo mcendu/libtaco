@@ -8,7 +8,7 @@ endif
 libtaco_tests_lib = static_library(
   'taco_tests',
   libtaco_src,
-  c_args: ['-DTAIKO_BUILDING_', '-DTAIKO_TESTS_'],
+  c_args: ['-DTACO_BUILDING_', '-DTACO_TESTS_'],
   include_directories: [libtaco_include, libtaco_include_private],
   dependencies: libtaco_deps,
   install: false,
@@ -16,7 +16,7 @@ libtaco_tests_lib = static_library(
 )
 
 libtaco_tests_dep = declare_dependency(
-  compile_args: ['-DTAIKO_TESTS_'],
+  compile_args: ['-DTACO_TESTS_'],
   include_directories: [libtaco_include, libtaco_include_private],
   dependencies: libtaco_deps,
   link_with: libtaco_tests_lib,
