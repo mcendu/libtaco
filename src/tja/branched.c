@@ -11,7 +11,7 @@
 
 static void pad_measures_(tja_branched *restrict branched, int branch_measures,
                           int branch);
-static void section_pad_measures_(taiko_section *restrict section, int from,
+static void section_pad_measures_(taco_section *restrict section, int from,
                                   int to);
 
 void tja_branched_assign_(tja_branched *restrict branched,
@@ -19,9 +19,9 @@ void tja_branched_assign_(tja_branched *restrict branched,
   assert((branched->branches[branch]));
 
   // assign
-  if (taiko_section_size(branched->branches[branch]))
-    taiko_section_clear_(branched->branches[branch]);
-  taiko_section_concat_(branched->branches[branch], segment->segment);
+  if (taco_section_size(branched->branches[branch]))
+    taco_section_clear_(branched->branches[branch]);
+  taco_section_concat_(branched->branches[branch], segment->segment);
   if (segment->levelhold)
     branched->levelhold |= (segment->levelhold) << branch;
 
@@ -47,12 +47,12 @@ static void pad_measures_(tja_branched *restrict branched, int branch_measures,
   }
 }
 
-static void section_pad_measures_(taiko_section *restrict section, int from,
+static void section_pad_measures_(taco_section *restrict section, int from,
                                   int to) {
   for (int m = from; m < to; ++m) {
-    taiko_event e = {
+    taco_event e = {
         .time = 0,
-        .type = TAIKO_EVENT_MEASURE,
+        .type = TACO_EVENT_MEASURE,
         .measure =
             {
                 .hidden = false,
@@ -60,6 +60,6 @@ static void section_pad_measures_(taiko_section *restrict section, int from,
             },
     };
     tja_event_set_measure_(&e, m);
-    taiko_section_push_(section, &e);
+    taco_section_push_(section, &e);
   }
 }

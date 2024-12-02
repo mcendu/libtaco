@@ -12,7 +12,7 @@
 #include <string.h>
 
 struct tja_metadata_ {
-  taiko_allocator *alloc;
+  taco_allocator *alloc;
   double bpm;
   double offset;
   double demostart;
@@ -35,8 +35,8 @@ typedef int (*metadata_setter)(tja_metadata *meta, tja_metadata_field *field);
 
 static metadata_setter setter(int index);
 
-tja_metadata *tja_metadata_create2_(taiko_allocator *a) {
-  tja_metadata *m = taiko_malloc_(a, sizeof(tja_metadata));
+tja_metadata *tja_metadata_create2_(taco_allocator *a) {
+  tja_metadata *m = taco_malloc_(a, sizeof(tja_metadata));
   if (!m)
     return NULL;
   memset(m, 0, sizeof(*m));
@@ -55,15 +55,15 @@ void tja_metadata_free_(tja_metadata *meta) {
   if (!meta)
     return;
 
-  taiko_free_(meta->alloc, meta->title);
-  taiko_free_(meta->alloc, meta->subtitle);
-  taiko_free_(meta->alloc, meta->genre);
-  taiko_free_(meta->alloc, meta->maker);
-  taiko_free_(meta->alloc, meta->audio);
-  taiko_free_(meta->alloc, meta->balloon_n);
-  taiko_free_(meta->alloc, meta->balloon_a);
-  taiko_free_(meta->alloc, meta->balloon_m);
-  taiko_free_(meta->alloc, meta);
+  taco_free_(meta->alloc, meta->title);
+  taco_free_(meta->alloc, meta->subtitle);
+  taco_free_(meta->alloc, meta->genre);
+  taco_free_(meta->alloc, meta->maker);
+  taco_free_(meta->alloc, meta->audio);
+  taco_free_(meta->alloc, meta->balloon_n);
+  taco_free_(meta->alloc, meta->balloon_a);
+  taco_free_(meta->alloc, meta->balloon_m);
+  taco_free_(meta->alloc, meta);
 }
 
 int tja_metadata_add_field_(tja_metadata *meta, tja_metadata_field *field) {
@@ -73,9 +73,9 @@ int tja_metadata_add_field_(tja_metadata *meta, tja_metadata_field *field) {
   return setter(field->key)(meta, field);
 }
 
-static inline void add_text_field_fn_(taiko_allocator *alloc, char **dst,
+static inline void add_text_field_fn_(taco_allocator *alloc, char **dst,
                                       char **src) {
-  taiko_free_(alloc, *dst);
+  taco_free_(alloc, *dst);
   *dst = *src;
   *src = NULL;
 }
@@ -83,9 +83,9 @@ static inline void add_text_field_fn_(taiko_allocator *alloc, char **dst,
 #define add_text_field(meta, updates, field)                                   \
   add_text_field_fn_((meta)->alloc, &(meta)->field, &(updates)->field)
 
-static inline void move_balloon_fn_(taiko_allocator *alloc, tja_balloon **dst,
+static inline void move_balloon_fn_(taco_allocator *alloc, tja_balloon **dst,
                                     tja_balloon **src) {
-  taiko_free_(alloc, *dst);
+  taco_free_(alloc, *dst);
   *dst = *src;
   *src = NULL;
 }
@@ -124,39 +124,39 @@ int tja_metadata_update_(tja_metadata *meta, tja_metadata *updates) {
   return 0;
 }
 
-int tja_courseset_apply_metadata_(taiko_courseset *set, tja_metadata *meta) {
-  if (meta->title && !taiko_courseset_title(set))
-    taiko_courseset_set_title_(set, meta->title);
-  if (meta->subtitle && !taiko_courseset_subtitle(set))
-    taiko_courseset_set_subtitle_(set, meta->subtitle);
-  if (meta->genre && !taiko_courseset_genre(set))
-    taiko_courseset_set_genre_(set, meta->genre);
-  if (meta->maker && !taiko_courseset_maker(set))
-    taiko_courseset_set_maker_(set, meta->maker);
-  if (meta->audio && !taiko_courseset_audio(set))
-    taiko_courseset_set_audio_(set, meta->audio);
-  if (isnan(taiko_courseset_demo_time(set)))
-    taiko_courseset_set_demo_time_(set, meta->demostart);
+int tja_courseset_apply_metadata_(taco_courseset *set, tja_metadata *meta) {
+  if (meta->title && !taco_courseset_title(set))
+    taco_courseset_set_title_(set, meta->title);
+  if (meta->subtitle && !taco_courseset_subtitle(set))
+    taco_courseset_set_subtitle_(set, meta->subtitle);
+  if (meta->genre && !taco_courseset_genre(set))
+    taco_courseset_set_genre_(set, meta->genre);
+  if (meta->maker && !taco_courseset_maker(set))
+    taco_courseset_set_maker_(set, meta->maker);
+  if (meta->audio && !taco_courseset_audio(set))
+    taco_courseset_set_audio_(set, meta->audio);
+  if (isnan(taco_courseset_demo_time(set)))
+    taco_courseset_set_demo_time_(set, meta->demostart);
   return 0;
 }
 
-int tja_course_apply_metadata_(taiko_course *course, tja_metadata *meta) {
-  taiko_course_set_class_(course, meta->course);
-  taiko_course_set_level_(course, meta->level);
-  taiko_course_set_papamama_(course, meta->papamama);
+int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
+  taco_course_set_class_(course, meta->course);
+  taco_course_set_level_(course, meta->level);
+  taco_course_set_papamama_(course, meta->papamama);
 
   if (meta->balloon_n)
-    taiko_course_set_balloons_(course, tja_balloon_data_(meta->balloon_n),
+    taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_n),
                                tja_balloon_size_(meta->balloon_n),
-                               TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+                               TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   if (meta->balloon_a)
-    taiko_course_set_balloons_(course, tja_balloon_data_(meta->balloon_a),
+    taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_a),
                                tja_balloon_size_(meta->balloon_a),
-                               TAIKO_SIDE_LEFT, TAIKO_BRANCH_ADVANCED);
+                               TACO_SIDE_LEFT, TACO_BRANCH_ADVANCED);
   if (meta->balloon_m)
-    taiko_course_set_balloons_(course, tja_balloon_data_(meta->balloon_m),
+    taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_m),
                                tja_balloon_size_(meta->balloon_m),
-                               TAIKO_SIDE_LEFT, TAIKO_BRANCH_MASTER);
+                               TACO_SIDE_LEFT, TACO_BRANCH_MASTER);
 
   return 0;
 }

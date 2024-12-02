@@ -29,20 +29,20 @@ typedef struct tja_metadata_ tja_metadata;
 typedef struct tja_metadata_field_ tja_metadata_field;
 typedef struct tja_balloon_ tja_balloon;
 
-extern tja_metadata *tja_metadata_create2_(taiko_allocator *alloc);
+extern tja_metadata *tja_metadata_create2_(taco_allocator *alloc);
 extern void tja_metadata_free_(tja_metadata *meta);
 extern int tja_metadata_add_field_(tja_metadata *meta,
                                    tja_metadata_field *field);
 extern int tja_metadata_update_(tja_metadata *old, tja_metadata *updates);
-extern int tja_courseset_apply_metadata_(taiko_courseset *set,
+extern int tja_courseset_apply_metadata_(taco_courseset *set,
                                          tja_metadata *meta);
-extern int tja_course_apply_metadata_(taiko_course *course, tja_metadata *meta);
+extern int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta);
 
 extern int tja_interpret_side_(const char *str);
 extern int tja_interpret_course_(const char *str);
 extern int tja_interpret_style_(const char *str);
 
-extern tja_balloon *tja_balloon_create2_(taiko_allocator *alloc);
+extern tja_balloon *tja_balloon_create2_(taco_allocator *alloc);
 extern tja_balloon *tja_balloon_append_(tja_balloon *balloon, int hits);
 extern const int *tja_balloon_data_(tja_balloon *balloon);
 extern size_t tja_balloon_size_(tja_balloon *balloon);

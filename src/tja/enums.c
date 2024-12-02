@@ -29,36 +29,36 @@ static const int *lookup_enumerator_(const char *key, const enumerator *list,
 
 int tja_interpret_side_(const char *str) {
   static const enumerator side_enum[] = {
-      {"Both", TAIKO_CLASS_EASY},   {"Ex", TAIKO_CLASS_EX_EASY},
-      {"Normal", TAIKO_CLASS_EASY}, {"both", TAIKO_CLASS_EASY},
-      {"ex", TAIKO_CLASS_EX_EASY},  {"normal", TAIKO_CLASS_EASY},
+      {"Both", TACO_CLASS_EASY},   {"Ex", TACO_CLASS_EX_EASY},
+      {"Normal", TACO_CLASS_EASY}, {"both", TACO_CLASS_EASY},
+      {"ex", TACO_CLASS_EX_EASY},  {"normal", TACO_CLASS_EASY},
   };
 
   // numeric
   char *end;
   if (strtol(str, &end, 10) == 2 && *end == '\0')
-    return TAIKO_CLASS_EX_EASY;
+    return TACO_CLASS_EX_EASY;
 
   // textual
   const int *e = lookup_enumerator_(str, side_enum, lenof_(side_enum));
   if (e)
     return *e;
 
-  return TAIKO_CLASS_EASY;
+  return TACO_CLASS_EASY;
 }
 
 int tja_interpret_course_(const char *str) {
   static const enumerator course_enum[] = {
-      {"Easy", TAIKO_CLASS_EASY},     {"Edit", TAIKO_CLASS_EX},
-      {"Hard", TAIKO_CLASS_HARD},     {"Normal", TAIKO_CLASS_NORMAL},
-      {"Oni", TAIKO_CLASS_ONI},       {"easy", TAIKO_CLASS_EASY},
-      {"edit", TAIKO_CLASS_EX},       {"hard", TAIKO_CLASS_HARD},
-      {"normal", TAIKO_CLASS_NORMAL}, {"oni", TAIKO_CLASS_ONI},
+      {"Easy", TACO_CLASS_EASY},     {"Edit", TACO_CLASS_EX},
+      {"Hard", TACO_CLASS_HARD},     {"Normal", TACO_CLASS_NORMAL},
+      {"Oni", TACO_CLASS_ONI},       {"easy", TACO_CLASS_EASY},
+      {"edit", TACO_CLASS_EX},       {"hard", TACO_CLASS_HARD},
+      {"normal", TACO_CLASS_NORMAL}, {"oni", TACO_CLASS_ONI},
   };
 
   static const int course_numeric[] = {
-      TAIKO_CLASS_EASY, TAIKO_CLASS_NORMAL, TAIKO_CLASS_HARD,
-      TAIKO_CLASS_ONI,  TAIKO_CLASS_EX,
+      TACO_CLASS_EASY, TACO_CLASS_NORMAL, TACO_CLASS_HARD,
+      TACO_CLASS_ONI,  TACO_CLASS_EX,
   };
 
   // numeric
@@ -73,10 +73,10 @@ int tja_interpret_course_(const char *str) {
   if (e)
     return *e;
 
-  return TAIKO_CLASS_ONI;
+  return TACO_CLASS_ONI;
 }
 
 int tja_interpret_style_(const char *str) {
   // do not trust the given style, for now
-  return TAIKO_STYLE_SINGLE;
+  return TACO_STYLE_SINGLE;
 }

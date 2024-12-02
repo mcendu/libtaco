@@ -11,16 +11,16 @@ static const struct branchtype_info_ {
   const char *code;
   int type;
 } branchtype_names[] = {
-    {"b", TAIKO_BRANCHTYPE_ACCURACY_BIG},
-    {"p", TAIKO_BRANCHTYPE_ACCURACY},
-    {"r", TAIKO_BRANCHTYPE_ROLL},
+    {"b", TACO_BRANCHTYPE_ACCURACY_BIG},
+    {"p", TACO_BRANCHTYPE_ACCURACY},
+    {"r", TACO_BRANCHTYPE_ROLL},
 };
 
 static const int branchtype_classes_[] = {
-    [TAIKO_BRANCHTYPE_NONE] = BRANCHTYPE_CLASS_INTEGER,
-    [TAIKO_BRANCHTYPE_ACCURACY] = BRANCHTYPE_CLASS_PERCENTAGE,
-    [TAIKO_BRANCHTYPE_ACCURACY_BIG] = BRANCHTYPE_CLASS_PERCENTAGE,
-    [TAIKO_BRANCHTYPE_ROLL] = BRANCHTYPE_CLASS_INTEGER,
+    [TACO_BRANCHTYPE_NONE] = BRANCHTYPE_CLASS_INTEGER,
+    [TACO_BRANCHTYPE_ACCURACY] = BRANCHTYPE_CLASS_PERCENTAGE,
+    [TACO_BRANCHTYPE_ACCURACY_BIG] = BRANCHTYPE_CLASS_PERCENTAGE,
+    [TACO_BRANCHTYPE_ROLL] = BRANCHTYPE_CLASS_INTEGER,
 };
 
 static int cmp_branchtype_info_(const void *key, const void *entry_void) {
@@ -33,7 +33,7 @@ int tja_branch_type_(const char *code) {
       bsearch(code, branchtype_names,
               sizeof(branchtype_names) / sizeof(struct branchtype_info_),
               sizeof(struct branchtype_info_), cmp_branchtype_info_);
-  return entry ? entry->type : TAIKO_BRANCHTYPE_NONE;
+  return entry ? entry->type : TACO_BRANCHTYPE_NONE;
 }
 
 int tja_branchtype_convert_threshold_(int type, double value) {

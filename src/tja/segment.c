@@ -8,7 +8,7 @@
 #include "tja/timestamp.h"
 #include <stddef.h>
 
-int tja_segment_init_(tja_segment *segment, taiko_section *buf) {
+int tja_segment_init_(tja_segment *segment, taco_section *buf) {
   segment->segment = buf;
   segment->measures = 0;
   segment->levelhold = false;
@@ -17,9 +17,9 @@ int tja_segment_init_(tja_segment *segment, taiko_section *buf) {
 
 int tja_segment_push_barline_(tja_segment *segment, int units) {
   int retval = 0;
-  taiko_event barline = {
+  taco_event barline = {
       .time = 0,
-      .type = TAIKO_EVENT_MEASURE,
+      .type = TACO_EVENT_MEASURE,
       .measure =
           {
               .real = true,
@@ -29,7 +29,7 @@ int tja_segment_push_barline_(tja_segment *segment, int units) {
   };
   tja_event_set_measure_(&barline, segment->measures);
 
-  retval = taiko_section_push_(segment->segment, &barline);
+  retval = taco_section_push_(segment->segment, &barline);
   return retval;
 }
 
@@ -38,9 +38,9 @@ void tja_segment_finish_measure_(tja_segment *segment) {
 }
 
 int tja_segment_push_events_(tja_segment *segment, tja_events *events) {
-  taiko_section_foreach_mut_ (i, events->events) {
+  taco_section_foreach_mut_ (i, events->events) {
     tja_event_set_measure_(i, segment->measures);
   }
   segment->levelhold = segment->levelhold || events->levelhold;
-  return taiko_section_concat_(segment->segment, events->events);
+  return taco_section_concat_(segment->segment, events->events);
 }

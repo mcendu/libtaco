@@ -9,13 +9,13 @@
 typedef struct tja_coursebody_ tja_coursebody;
 
 struct tja_coursebody_ {
-  taiko_course *course;
+  taco_course *course;
   int measures;
   unsigned char levelhold;
 };
 
 extern int tja_coursebody_init_(tja_coursebody *restrict c,
-                                taiko_allocator *allocator);
+                                taco_allocator *allocator);
 extern int tja_coursebody_append_common_(tja_coursebody *restrict c,
                                          tja_segment *restrict common);
 extern int tja_coursebody_append_branched_(tja_coursebody *restrict c,

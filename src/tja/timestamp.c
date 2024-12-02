@@ -11,24 +11,24 @@ struct tja_timestamp_ {
   uint16_t unit;
 };
 
-void tja_event_set_timestamp_(taiko_event *restrict event, int measure,
+void tja_event_set_timestamp_(taco_event *restrict event, int measure,
                               int dividend) {
   tja_timestamp *t = (tja_timestamp *)&event->time;
   t->measure = measure;
   t->unit = dividend;
 }
 
-void tja_event_set_measure_(taiko_event *restrict event, int measure) {
+void tja_event_set_measure_(taco_event *restrict event, int measure) {
   tja_timestamp *t = (tja_timestamp *)&event->time;
   t->measure = measure;
 }
 
-void tja_event_set_unit_(taiko_event *restrict event, int unit) {
+void tja_event_set_unit_(taco_event *restrict event, int unit) {
   tja_timestamp *t = (tja_timestamp *)&event->time;
   t->unit = unit;
 }
 
-void tja_event_get_timestamp_(const taiko_event *restrict event,
+void tja_event_get_timestamp_(const taco_event *restrict event,
                               int *restrict measure, int *restrict dividend) {
   const tja_timestamp *t = (const tja_timestamp *)&event->time;
   if (measure)
@@ -37,12 +37,12 @@ void tja_event_get_timestamp_(const taiko_event *restrict event,
     *dividend = t->unit;
 }
 
-int tja_event_measure_(const taiko_event *restrict event) {
+int tja_event_measure_(const taco_event *restrict event) {
   const tja_timestamp *t = (const tja_timestamp *)&event->time;
   return t->measure;
 }
 
-int tja_event_unit_(const taiko_event *restrict event) {
+int tja_event_unit_(const taco_event *restrict event) {
   const tja_timestamp *t = (const tja_timestamp *)&event->time;
   return t->unit;
 }

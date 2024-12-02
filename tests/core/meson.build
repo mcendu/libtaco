@@ -14,7 +14,7 @@ tests_core_bin = executable(
 )
 
 test(
-  'libtaiko',
+  'libtaco',
   tests_core_bin,
   protocol: 'tap',
   workdir: meson.current_source_dir(),

@@ -1,12 +1,12 @@
 /* SPDX-License-Identifier: BSD-2-Clause */
-#ifndef TAIKO_NOTE_H_
-#define TAIKO_NOTE_H_
+#ifndef TACO_NOTE_H_
+#define TACO_NOTE_H_
 
 #include "taco.h"
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct taiko_event_ taiko_event;
+typedef struct taco_event_ taco_event;
 
 struct int_event_ {
   uint32_t value;
@@ -44,7 +44,7 @@ struct measure_length_event_ {
   int32_t divisor;
 };
 
-struct taiko_event_ {
+struct taco_event_ {
   uint32_t time;
   int16_t type;
   uint16_t line;
@@ -59,7 +59,7 @@ struct taiko_event_ {
   };
 };
 
-extern taiko_event *taiko_event_next_mut_(taiko_event *event);
-extern taiko_event *taiko_event_prev_mut_(taiko_event *event);
+extern taco_event *taco_event_next_mut_(taco_event *event);
+extern taco_event *taco_event_prev_mut_(taco_event *event);
 
-#endif /* !TAIKO_NOTE_H_ */
+#endif /* !TACO_NOTE_H_ */

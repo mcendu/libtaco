@@ -4,197 +4,197 @@
 
 #include "taco.h"
 
-static taiko_parser *parser;
+static taco_parser *parser;
 
-static void setup(void) { parser = taiko_parser_tja_create(); }
+static void setup(void) { parser = taco_parser_tja_create(); }
 
-static void teardown(void) { taiko_parser_free(parser); }
+static void teardown(void) { taco_parser_free(parser); }
 
 START_TEST(test_basic) {
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/basic.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/basic.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_str_eq(taiko_courseset_title(set), "Example");
+  ck_assert_str_eq(taco_courseset_title(set), "Example");
 
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   ck_assert_ptr_nonnull(c);
-  ck_assert_double_eq(taiko_course_bpm(c), 130);
-  ck_assert_int_eq(taiko_course_class(c), TAIKO_CLASS_ONI);
-  ck_assert_double_eq(taiko_course_level(c), 1);
+  ck_assert_double_eq(taco_course_bpm(c), 130);
+  ck_assert_int_eq(taco_course_class(c), TACO_CLASS_ONI);
+  ck_assert_double_eq(taco_course_level(c), 1);
 
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(s);
-  ck_assert_int_eq(taiko_section_size(s), 2);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 0)),
-                   TAIKO_EVENT_MEASURE);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 1)),
-                   TAIKO_EVENT_DON);
+  ck_assert_int_eq(taco_section_size(s), 2);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
+                   TACO_EVENT_MEASURE);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
+                   TACO_EVENT_DON);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_empty) {
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/empty.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/empty.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_ptr_null(taiko_courseset_title(set));
-  ck_assert_ptr_null(taiko_courseset_get_course(set, TAIKO_CLASS_ONI));
-  taiko_courseset_free(set);
+  ck_assert_ptr_null(taco_courseset_title(set));
+  ck_assert_ptr_null(taco_courseset_get_course(set, TACO_CLASS_ONI));
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_bom) {
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/bom.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/bom.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_str_eq(taiko_courseset_title(set), "Example");
+  ck_assert_str_eq(taco_courseset_title(set), "Example");
 
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   ck_assert_ptr_nonnull(c);
-  ck_assert_double_eq(taiko_course_bpm(c), 130);
-  ck_assert_int_eq(taiko_course_class(c), TAIKO_CLASS_ONI);
-  ck_assert_double_eq(taiko_course_level(c), 1);
+  ck_assert_double_eq(taco_course_bpm(c), 130);
+  ck_assert_int_eq(taco_course_class(c), TACO_CLASS_ONI);
+  ck_assert_double_eq(taco_course_level(c), 1);
 
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(s);
-  ck_assert_int_eq(taiko_section_size(s), 2);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 0)),
-                   TAIKO_EVENT_MEASURE);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 1)),
-                   TAIKO_EVENT_DON);
+  ck_assert_int_eq(taco_section_size(s), 2);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
+                   TACO_EVENT_MEASURE);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
+                   TACO_EVENT_DON);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_crlf) {
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/crlf.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/crlf.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_str_eq(taiko_courseset_title(set), "Example");
+  ck_assert_str_eq(taco_courseset_title(set), "Example");
 
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   ck_assert_ptr_nonnull(c);
-  ck_assert_double_eq(taiko_course_bpm(c), 130);
-  ck_assert_int_eq(taiko_course_class(c), TAIKO_CLASS_ONI);
-  ck_assert_double_eq(taiko_course_level(c), 1);
+  ck_assert_double_eq(taco_course_bpm(c), 130);
+  ck_assert_int_eq(taco_course_class(c), TACO_CLASS_ONI);
+  ck_assert_double_eq(taco_course_level(c), 1);
 
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(s);
-  ck_assert_int_eq(taiko_section_size(s), 2);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 0)),
-                   TAIKO_EVENT_MEASURE);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 1)),
-                   TAIKO_EVENT_DON);
+  ck_assert_int_eq(taco_section_size(s), 2);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
+                   TACO_EVENT_MEASURE);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
+                   TACO_EVENT_DON);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_whitespace) {
-  taiko_courseset *set =
-      taiko_parser_parse_file(parser, "assets/whitespace.tja");
+  taco_courseset *set =
+      taco_parser_parse_file(parser, "assets/whitespace.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_str_eq(taiko_courseset_title(set), "I don't have whitespaces");
+  ck_assert_str_eq(taco_courseset_title(set), "I don't have whitespaces");
 
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   ck_assert_ptr_nonnull(c);
-  ck_assert_int_eq(taiko_course_class(c), TAIKO_CLASS_ONI);
+  ck_assert_int_eq(taco_course_class(c), TACO_CLASS_ONI);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_commands) {
   static const int types[] = {
-      TAIKO_EVENT_SCROLL,  TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON,
-      TAIKO_EVENT_KAT,     TAIKO_EVENT_DON_BIG, TAIKO_EVENT_SCROLL,
-      TAIKO_EVENT_KAT_BIG,
+      TACO_EVENT_SCROLL,  TACO_EVENT_MEASURE, TACO_EVENT_DON,
+      TACO_EVENT_KAT,     TACO_EVENT_DON_BIG, TACO_EVENT_SCROLL,
+      TACO_EVENT_KAT_BIG,
   };
 
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/commands.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/commands.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   for (int i = 0; i < 7; ++i) {
-    ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, i)), types[i]);
+    ck_assert_int_eq(taco_event_type(taco_section_locate(s, i)), types[i]);
   }
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_balloon) {
   static const int count[] = {10, 20};
 
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/balloon.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/balloon.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
   int j = 0;
-  taiko_section_foreach (i, s) {
-    if (taiko_event_type(i) == TAIKO_EVENT_BALLOON) {
-      ck_assert_int_eq(taiko_event_hits(i), count[j]);
+  taco_section_foreach (i, s) {
+    if (taco_event_type(i) == TACO_EVENT_BALLOON) {
+      ck_assert_int_eq(taco_event_hits(i), count[j]);
       j += 1;
     }
   }
   ck_assert_int_eq(j, 2);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_division) {
   static const int time[] = {0, 48};
-  static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON};
+  static const int type[] = {TACO_EVENT_MEASURE, TACO_EVENT_DON};
 
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/division.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/division.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
-  ck_assert_int_eq(taiko_section_size(s), 2);
-  for (int i = 0; i < taiko_section_size(s); ++i) {
-    const taiko_event *e = taiko_section_locate(s, i);
-    ck_assert_int_eq(taiko_event_time(e), time[i]);
-    ck_assert_int_eq(taiko_event_type(e), type[i]);
+  ck_assert_int_eq(taco_section_size(s), 2);
+  for (int i = 0; i < taco_section_size(s); ++i) {
+    const taco_event *e = taco_section_locate(s, i);
+    ck_assert_int_eq(taco_event_time(e), time[i]);
+    ck_assert_int_eq(taco_event_type(e), type[i]);
   }
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_emptymeasures) {
   static const int time[] = {0, 96};
-  taiko_courseset *set =
-      taiko_parser_parse_file(parser, "assets/emptymeasures.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s = taiko_course_get_branch(c, 0, 0);
-  for (int i = 0; i < taiko_section_size(s); ++i) {
-    const taiko_event *e = taiko_section_locate(s, i);
-    ck_assert_int_eq(taiko_event_time(e), time[i]);
+  taco_courseset *set =
+      taco_parser_parse_file(parser, "assets/emptymeasures.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s = taco_course_get_branch(c, 0, 0);
+  for (int i = 0; i < taco_section_size(s); ++i) {
+    const taco_event *e = taco_section_locate(s, i);
+    ck_assert_int_eq(taco_event_time(e), time[i]);
   }
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 
 START_TEST(test_measures) {
   static const int time[] = {0, 0, 96, 96};
-  static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON,
-                             TAIKO_EVENT_MEASURE, TAIKO_EVENT_KAT};
+  static const int type[] = {TACO_EVENT_MEASURE, TACO_EVENT_DON,
+                             TACO_EVENT_MEASURE, TACO_EVENT_KAT};
 
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/measures.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/measures.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
-  ck_assert_int_eq(taiko_section_size(s), 4);
-  for (int i = 0; i < taiko_section_size(s); ++i) {
-    const taiko_event *e = taiko_section_locate(s, i);
-    ck_assert_int_eq(taiko_event_time(e), time[i]);
-    ck_assert_int_eq(taiko_event_type(e), type[i]);
+  ck_assert_int_eq(taco_section_size(s), 4);
+  for (int i = 0; i < taco_section_size(s); ++i) {
+    const taco_event *e = taco_section_locate(s, i);
+    ck_assert_int_eq(taco_event_time(e), time[i]);
+    ck_assert_int_eq(taco_event_type(e), type[i]);
   }
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
@@ -202,76 +202,76 @@ START_TEST(test_branch) {
   static const int lengths[] = {11, 12, 13};
 
   static const int types[] = {
-      TAIKO_EVENT_BRANCH_START, TAIKO_EVENT_MEASURE,      TAIKO_EVENT_DON,
-      TAIKO_EVENT_KAT,          TAIKO_EVENT_BRANCH_CHECK, TAIKO_EVENT_MEASURE,
-      TAIKO_EVENT_BRANCH_JUMP,  TAIKO_EVENT_MEASURE,
+      TACO_EVENT_BRANCH_START, TACO_EVENT_MEASURE,      TACO_EVENT_DON,
+      TACO_EVENT_KAT,          TACO_EVENT_BRANCH_CHECK, TACO_EVENT_MEASURE,
+      TACO_EVENT_BRANCH_JUMP,  TACO_EVENT_MEASURE,
   };
 
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/branch.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/branch.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
 
   for (int i = 0; i < 3; ++i) {
-    const taiko_section *s = taiko_course_get_branch(c, TAIKO_SIDE_LEFT, i);
+    const taco_section *s = taco_course_get_branch(c, TACO_SIDE_LEFT, i);
     ck_assert_ptr_nonnull(s);
-    ck_assert_int_eq(taiko_section_size(s), lengths[i]);
+    ck_assert_int_eq(taco_section_size(s), lengths[i]);
 
     for (int i = 0; i < 8; ++i) {
-      ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, i)), types[i]);
+      ck_assert_int_eq(taco_event_type(taco_section_locate(s, i)), types[i]);
     }
   }
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_double) {
-  taiko_courseset *set = taiko_parser_parse_file(parser, "assets/double.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  ck_assert_int_eq(taiko_course_style(c), TAIKO_STYLE_COUPLE);
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/double.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  ck_assert_int_eq(taco_course_style(c), TACO_STYLE_COUPLE);
 
-  const taiko_section *l =
-      taiko_course_get_branch(c, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
+  const taco_section *l =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(l);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(l, 1)),
-                   TAIKO_EVENT_DON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(l, 1)),
+                   TACO_EVENT_DON);
 
-  const taiko_section *r =
-      taiko_course_get_branch(c, TAIKO_SIDE_RIGHT, TAIKO_BRANCH_NORMAL);
+  const taco_section *r =
+      taco_course_get_branch(c, TACO_SIDE_RIGHT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(r);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(r, 1)),
-                   TAIKO_EVENT_KAT);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(r, 1)),
+                   TACO_EVENT_KAT);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_badmeasure) {
-  ck_assert_ptr_null(taiko_parser_parse_file(parser, "assets/badmeasure.tja"));
+  ck_assert_ptr_null(taco_parser_parse_file(parser, "assets/badmeasure.tja"));
 }
 
 START_TEST(test_checkpoint) {
-  taiko_courseset *set =
-      taiko_parser_parse_file(parser, "assets/checkpoint.tja");
-  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
-  const taiko_section *s = taiko_course_get_branch(c, 0, 0);
+  taco_courseset *set =
+      taco_parser_parse_file(parser, "assets/checkpoint.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s = taco_course_get_branch(c, 0, 0);
 
-  ck_assert_int_eq(taiko_section_size(s), 8);
+  ck_assert_int_eq(taco_section_size(s), 8);
 
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 1)),
-                   TAIKO_EVENT_BALLOON);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 2)),
-                   TAIKO_EVENT_ROLL_END);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
+                   TACO_EVENT_BALLOON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 2)),
+                   TACO_EVENT_ROLL_END);
 
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 4)),
-                   TAIKO_EVENT_KUSUDAMA);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 5)),
-                   TAIKO_EVENT_ROLL_CHECKPOINT);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 6)),
-                   TAIKO_EVENT_ROLL_CHECKPOINT);
-  ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, 7)),
-                   TAIKO_EVENT_ROLL_END);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 4)),
+                   TACO_EVENT_KUSUDAMA);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 5)),
+                   TACO_EVENT_ROLL_CHECKPOINT);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 6)),
+                   TACO_EVENT_ROLL_CHECKPOINT);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 7)),
+                   TACO_EVENT_ROLL_END);
 
-  taiko_courseset_free(set);
+  taco_courseset_free(set);
 }
 
 TCase *case_parser(void) {

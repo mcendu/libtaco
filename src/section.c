@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <string.h>
 
-#define INITIAL_CAPACITY (4096 / sizeof(taiko_event))
+#define INITIAL_CAPACITY (4096 / sizeof(taco_event))
 
 typedef struct bpm_entry_ bpm_entry;
 
@@ -20,36 +20,36 @@ struct bpm_entry_ {
   double time;
 };
 
-struct taiko_section_ {
-  taiko_allocator *alloc;
+struct taco_section_ {
+  taco_allocator *alloc;
   size_t size;
   size_t capacity;
   int tickrate;
-  taiko_event *events;
+  taco_event *events;
 
   double bpm;
   bpm_entry *bpm_times;
   size_t bpms;
 };
 
-static inline void invalidate_bpm_times_(taiko_section *restrict s);
+static inline void invalidate_bpm_times_(taco_section *restrict s);
 
-taiko_section *taiko_section_create_(void) {
-  return taiko_section_create2_(&taiko_default_allocator_);
+taco_section *taco_section_create_(void) {
+  return taco_section_create2_(&taco_default_allocator_);
 }
 
-taiko_section *taiko_section_create2_(taiko_allocator *a) {
-  taiko_section *section = taiko_malloc_(a, sizeof(taiko_section));
-  taiko_event *events =
-      taiko_malloc_(a, INITIAL_CAPACITY * sizeof(taiko_event));
+taco_section *taco_section_create2_(taco_allocator *a) {
+  taco_section *section = taco_malloc_(a, sizeof(taco_section));
+  taco_event *events =
+      taco_malloc_(a, INITIAL_CAPACITY * sizeof(taco_event));
 
   if (!section || !events) {
-    taiko_free_(a, section);
-    taiko_free_(a, events);
+    taco_free_(a, section);
+    taco_free_(a, events);
     return NULL;
   }
 
-  memset(section, 0, sizeof(taiko_section));
+  memset(section, 0, sizeof(taco_section));
   section->alloc = a;
   section->events = events;
   section->size = 0;
@@ -61,20 +61,20 @@ taiko_section *taiko_section_create2_(taiko_allocator *a) {
   return section;
 }
 
-taiko_section *taiko_section_clone_(const taiko_section *restrict other) {
-  taiko_allocator *a = other->alloc;
-  taiko_section *section = taiko_malloc_(a, sizeof(taiko_section));
-  taiko_event *events = taiko_malloc_(a, other->capacity * sizeof(taiko_event));
+taco_section *taco_section_clone_(const taco_section *restrict other) {
+  taco_allocator *a = other->alloc;
+  taco_section *section = taco_malloc_(a, sizeof(taco_section));
+  taco_event *events = taco_malloc_(a, other->capacity * sizeof(taco_event));
 
   if (!section || !events) {
-    taiko_free_(a, section);
-    taiko_free_(a, events);
+    taco_free_(a, section);
+    taco_free_(a, events);
     return NULL;
   }
 
-  memcpy(events, other->events, other->size * sizeof(taiko_event));
+  memcpy(events, other->events, other->size * sizeof(taco_event));
 
-  memset(section, 0, sizeof(taiko_section));
+  memset(section, 0, sizeof(taco_section));
   section->alloc = a;
   section->events = events;
   section->size = other->size;
@@ -86,60 +86,60 @@ taiko_section *taiko_section_clone_(const taiko_section *restrict other) {
   return section;
 }
 
-void taiko_section_free_(taiko_section *section) {
+void taco_section_free_(taco_section *section) {
   if (section) {
-    taiko_free_(section->alloc, section->events);
-    taiko_free_(section->alloc, section->bpm_times);
-    taiko_free_(section->alloc, section);
+    taco_free_(section->alloc, section->events);
+    taco_free_(section->alloc, section->bpm_times);
+    taco_free_(section->alloc, section);
   }
 }
 
-size_t taiko_section_size(const taiko_section *restrict s) { return s->size; }
+size_t taco_section_size(const taco_section *restrict s) { return s->size; }
 
-int taiko_section_tickrate(const taiko_section *restrict s) {
+int taco_section_tickrate(const taco_section *restrict s) {
   return s->tickrate;
 }
 
-void taiko_section_set_tickrate_(taiko_section *restrict s, int tickrate) {
+void taco_section_set_tickrate_(taco_section *restrict s, int tickrate) {
   s->tickrate = tickrate;
 }
 
-void taiko_section_set_bpm_(taiko_section *restrict s, double bpm) {
+void taco_section_set_bpm_(taco_section *restrict s, double bpm) {
   invalidate_bpm_times_(s);
   s->bpm = bpm;
 }
 
-const taiko_event *taiko_section_begin(const taiko_section *restrict s) {
+const taco_event *taco_section_begin(const taco_section *restrict s) {
   return s->events;
 }
 
-const taiko_event *taiko_section_end(const taiko_section *restrict s) {
+const taco_event *taco_section_end(const taco_section *restrict s) {
   return s->events + s->size;
 }
 
-const taiko_event *taiko_section_locate(const taiko_section *restrict s,
+const taco_event *taco_section_locate(const taco_section *restrict s,
                                         size_t i) {
   if (i >= s->size)
     return NULL;
   return s->events + i;
 }
 
-taiko_event *taiko_section_begin_mut_(taiko_section *restrict s) {
+taco_event *taco_section_begin_mut_(taco_section *restrict s) {
   invalidate_bpm_times_(s);
   return s->events;
 }
 
-taiko_event *taiko_section_end_mut_(taiko_section *restrict s) {
+taco_event *taco_section_end_mut_(taco_section *restrict s) {
   invalidate_bpm_times_(s);
   return s->events + s->size;
 }
 
-taiko_event *taiko_section_locate_mut_(taiko_section *restrict s, size_t i) {
+taco_event *taco_section_locate_mut_(taco_section *restrict s, size_t i) {
   invalidate_bpm_times_(s);
   return s->events + i;
 }
 
-static taiko_event *reserve(taiko_section *restrict s, size_t count) {
+static taco_event *reserve(taco_section *restrict s, size_t count) {
   size_t oldsize = s->size;
   size_t newsize = s->size + count;
 
@@ -159,8 +159,8 @@ static taiko_event *reserve(taiko_section *restrict s, size_t count) {
   }
 
   /* realloc */
-  taiko_event *events =
-      taiko_realloc_(s->alloc, s->events, newcap * sizeof(taiko_event));
+  taco_event *events =
+      taco_realloc_(s->alloc, s->events, newcap * sizeof(taco_event));
   if (!events)
     return NULL;
 
@@ -170,10 +170,10 @@ static taiko_event *reserve(taiko_section *restrict s, size_t count) {
   return s->events + oldsize;
 }
 
-int taiko_section_trim_(taiko_section *restrict s) {
+int taco_section_trim_(taco_section *restrict s) {
   size_t size = s->size < INITIAL_CAPACITY ? INITIAL_CAPACITY : s->size;
-  taiko_event *events =
-      taiko_realloc_(s->alloc, s->events, size * sizeof(taiko_event));
+  taco_event *events =
+      taco_realloc_(s->alloc, s->events, size * sizeof(taco_event));
   if (!events)
     return -1;
 
@@ -182,10 +182,10 @@ int taiko_section_trim_(taiko_section *restrict s) {
   return 0;
 }
 
-int taiko_section_push_(taiko_section *restrict s,
-                        const taiko_event *restrict event) {
+int taco_section_push_(taco_section *restrict s,
+                        const taco_event *restrict event) {
   invalidate_bpm_times_(s);
-  taiko_event *start = reserve(s, 1);
+  taco_event *start = reserve(s, 1);
   if (!start)
     return -1;
 
@@ -193,25 +193,25 @@ int taiko_section_push_(taiko_section *restrict s,
   return 0;
 }
 
-extern int taiko_section_push_many_(taiko_section *restrict s,
-                                    const taiko_event *restrict events,
+extern int taco_section_push_many_(taco_section *restrict s,
+                                    const taco_event *restrict events,
                                     size_t count) {
   invalidate_bpm_times_(s);
-  taiko_event *start = reserve(s, count);
+  taco_event *start = reserve(s, count);
   if (!start)
     return -1;
 
-  memcpy(start, events, count * sizeof(taiko_event));
+  memcpy(start, events, count * sizeof(taco_event));
   return 0;
 }
 
-int taiko_section_concat_(taiko_section *restrict s,
-                          const taiko_section *restrict other) {
+int taco_section_concat_(taco_section *restrict s,
+                          const taco_section *restrict other) {
   invalidate_bpm_times_(s);
-  return taiko_section_push_many_(s, other->events, other->size);
+  return taco_section_push_many_(s, other->events, other->size);
 }
 
-int taiko_section_pop_(taiko_section *s, size_t count) {
+int taco_section_pop_(taco_section *s, size_t count) {
   invalidate_bpm_times_(s);
   if (count > s->size)
     count = s->size;
@@ -219,18 +219,18 @@ int taiko_section_pop_(taiko_section *s, size_t count) {
   return 0;
 }
 
-void taiko_section_clear_(taiko_section *restrict s) {
+void taco_section_clear_(taco_section *restrict s) {
   invalidate_bpm_times_(s);
   s->size = 0;
 }
 
-int taiko_section_set_balloons_(taiko_section *restrict section,
+int taco_section_set_balloons_(taco_section *restrict section,
                                 const int *restrict balloons, size_t count) {
   const int *j = balloons;
   const int *end = balloons + count;
 
-  taiko_section_foreach_mut_ (i, section) {
-    if (i->type != TAIKO_EVENT_BALLOON && i->type != TAIKO_EVENT_KUSUDAMA)
+  taco_section_foreach_mut_ (i, section) {
+    if (i->type != TACO_EVENT_BALLOON && i->type != TACO_EVENT_KUSUDAMA)
       continue;
 
     if (j != end) {
@@ -248,19 +248,19 @@ int taiko_section_set_balloons_(taiko_section *restrict section,
   ((60.0 / (double)(bpm)*4.0) * ((double)(ticks) / (double)(tickrate)))
 
 // generate a sorted tick-to-time array for binary search
-static int init_bpm_times_(taiko_section *restrict s) {
+static int init_bpm_times_(taco_section *restrict s) {
   assert((!s->bpm_times));
   if (isnan(s->bpm))
     return -1;
 
   // scan
   int bpms = 1;
-  taiko_section_foreach (i, s) {
-    if (taiko_event_type(i) == TAIKO_EVENT_BPM)
+  taco_section_foreach (i, s) {
+    if (taco_event_type(i) == TACO_EVENT_BPM)
       bpms += 1;
   }
 
-  s->bpm_times = taiko_malloc_(s->alloc, bpms * sizeof(bpm_entry));
+  s->bpm_times = taco_malloc_(s->alloc, bpms * sizeof(bpm_entry));
   if (!s->bpm_times)
     return -1;
   s->bpms = bpms;
@@ -277,18 +277,18 @@ static int init_bpm_times_(taiko_section *restrict s) {
   entry += 1;
 
   // calculate time for _BPM events
-  taiko_section_foreach (i, s) {
-    if (taiko_event_type(i) == TAIKO_EVENT_BPM) {
+  taco_section_foreach (i, s) {
+    if (taco_event_type(i) == TACO_EVENT_BPM) {
       // special case time 0 BPM change to overwrite default first entry
-      if (taiko_event_time(i) == 0) {
+      if (taco_event_time(i) == 0) {
         s->bpms -= 1;
         entry = s->bpm_times;
       }
 
-      int delta = taiko_event_time(i) - ticks;
+      int delta = taco_event_time(i) - ticks;
       time += TIME(bpm, delta, s->tickrate);
-      ticks = taiko_event_time(i);
-      bpm = taiko_event_bpm(i);
+      ticks = taco_event_time(i);
+      bpm = taco_event_bpm(i);
 
       entry->ticks = ticks;
       entry->time = time;
@@ -300,8 +300,8 @@ static int init_bpm_times_(taiko_section *restrict s) {
   return 0;
 }
 
-static inline void invalidate_bpm_times_(taiko_section *restrict s) {
-  taiko_free_(s->alloc, s->bpm_times);
+static inline void invalidate_bpm_times_(taco_section *restrict s) {
+  taco_free_(s->alloc, s->bpm_times);
 }
 
 static const bpm_entry *find_bpm_section_start_(int ticks,
@@ -317,17 +317,17 @@ static const bpm_entry *find_bpm_section_start_(int ticks,
     return find_bpm_section_start_(ticks, mid, end);
 }
 
-TAIKO_PUBLIC double taiko_event_seconds(const taiko_event *restrict e,
-                                        const taiko_section *restrict s) {
+TACO_PUBLIC double taco_event_seconds(const taco_event *restrict e,
+                                        const taco_section *restrict s) {
   if (e < s->events || e >= s->events + s->size)
     return NAN;
 
   if (!s->bpm_times)
-    init_bpm_times_((taiko_section *)s);
+    init_bpm_times_((taco_section *)s);
 
   const bpm_entry *entry = find_bpm_section_start_(
-      taiko_event_time(e), s->bpm_times, s->bpm_times + s->bpms);
+      taco_event_time(e), s->bpm_times, s->bpm_times + s->bpms);
   double start = entry->time;
-  int delta = taiko_event_time(e) - entry->ticks;
+  int delta = taco_event_time(e) - entry->ticks;
   return start + TIME(entry->bpm, delta, s->tickrate);
 }

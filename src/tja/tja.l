@@ -11,7 +11,7 @@
 #define YYLTYPE TJA_YYLTYPE
 
 #define YY_INPUT(buf, result, max_size) \
-  (result = taiko_file_read_(yyextra->input, buf, max_size))
+  (result = taco_file_read_(yyextra->input, buf, max_size))
 
 #define YY_USER_ACTION do { \
   yylloc->first_line = yylineno; \
@@ -135,7 +135,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <header_text>[^\r\n]* {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(header_numeric);
   return TEXT;
 }
@@ -245,12 +245,12 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <body_command>{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
   return IDENTIFIER;
 }
 
 <body_text>[^\r\n]* {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(body_command);
   return TEXT;
 }
@@ -265,19 +265,19 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <INITIAL>^{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext, yyleng);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
   BEGIN(header_pretext);
   return IDENTIFIER;
 }
 
 <INITIAL>#{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
   BEGIN(header_pretext);
   return COMMAND;
 }
 
 <body>#{IDENTIFIER} {
-  yylval->text = taiko_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
+  yylval->text = taco_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
   BEGIN(body_pretext);
   return COMMAND;
 }

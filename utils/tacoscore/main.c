@@ -75,9 +75,9 @@ int main(int argc, char **argv) {
     filename = argv[optind];
   }
 
-  taiko_parser *parser = taiko_parser_tja_create();
+  taco_parser *parser = taco_parser_tja_create();
   int result = score_set(parser, input, filename, score_fn);
-  taiko_parser_free(parser);
+  taco_parser_free(parser);
 
   exit(result);
 }
@@ -95,4 +95,4 @@ static void help(const char *arg0) {
          arg0);
 }
 
-static void version(void) { printf("tacoscore 0.1.0\n"); }
+static void version(void) { printf("tacoscore 0.2.0\n"); }

@@ -15,7 +15,7 @@ tests_tja_bin = executable(
 )
 
 test(
-  'libtaiko_tja',
+  'libtaco_tja',
   tests_tja_bin,
   protocol: 'tap',
   workdir: meson.current_source_dir(),

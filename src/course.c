@@ -15,8 +15,8 @@ struct balloon_data_ {
   size_t count;
 };
 
-struct taiko_course_ {
-  taiko_allocator *alloc;
+struct taco_course_ {
+  taco_allocator *alloc;
 
   double basebpm;
   double offset;
@@ -29,16 +29,16 @@ struct taiko_course_ {
   bool papamama : 1;
   bool branched : 1;
 
-  taiko_section *branches[2][3];
+  taco_section *branches[2][3];
   balloon_data_ balloons[2][3];
 };
 
-taiko_course *taiko_course_create_(void) {
-  return taiko_course_create2_(&taiko_default_allocator_);
+taco_course *taco_course_create_(void) {
+  return taco_course_create2_(&taco_default_allocator_);
 }
 
-taiko_course *taiko_course_create2_(taiko_allocator *a) {
-  taiko_course *c = taiko_malloc_(a, sizeof(taiko_course));
+taco_course *taco_course_create2_(taco_allocator *a) {
+  taco_course *c = taco_malloc_(a, sizeof(taco_course));
   if (!c)
     return NULL;
 
@@ -48,21 +48,21 @@ taiko_course *taiko_course_create2_(taiko_allocator *a) {
   return c;
 }
 
-void taiko_course_free_(taiko_course *restrict c) {
+void taco_course_free_(taco_course *restrict c) {
   if (!c)
     return;
 
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 3; ++j) {
-      taiko_section_free_(c->branches[i][j]);
-      taiko_free_(c->alloc, c->balloons[i][j].data);
+      taco_section_free_(c->branches[i][j]);
+      taco_free_(c->alloc, c->balloons[i][j].data);
     }
   }
 
-  taiko_free_(c->alloc, c);
+  taco_free_(c->alloc, c);
 }
 
-extern void taiko_course_difficulty(const taiko_course *restrict course,
+extern void taco_course_difficulty(const taco_course *restrict course,
                                     int *restrict class, int *restrict level) {
   if (class)
     *class = course->class;
@@ -70,124 +70,124 @@ extern void taiko_course_difficulty(const taiko_course *restrict course,
     *level = course->level;
 }
 
-int taiko_course_class(const taiko_course *restrict course) {
+int taco_course_class(const taco_course *restrict course) {
   return course->class;
 }
 
-double taiko_course_level(const taiko_course *restrict course) {
+double taco_course_level(const taco_course *restrict course) {
   return course->level;
 }
 
-int taiko_course_style(const taiko_course *restrict course) {
+int taco_course_style(const taco_course *restrict course) {
   return course->style;
 }
 
-int taiko_course_papamama(const taiko_course *restrict course) {
+int taco_course_papamama(const taco_course *restrict course) {
   return course->papamama;
 }
 
-int taiko_course_branched(const taiko_course *restrict course) {
+int taco_course_branched(const taco_course *restrict course) {
   return course->branched;
 }
 
-double taiko_course_bpm(const taiko_course *restrict course) {
+double taco_course_bpm(const taco_course *restrict course) {
   return course->basebpm;
 }
 
-double taiko_course_offset(const taiko_course *restrict course) {
+double taco_course_offset(const taco_course *restrict course) {
   return course->offset;
 }
 
-void taiko_course_set_class_(taiko_course *restrict course, int class) {
+void taco_course_set_class_(taco_course *restrict course, int class) {
   course->class = class;
 }
 
-void taiko_course_set_level_(taiko_course *restrict course, double level) {
+void taco_course_set_level_(taco_course *restrict course, double level) {
   course->level = level;
 }
 
-void taiko_course_set_style_(taiko_course *restrict course, int style) {
+void taco_course_set_style_(taco_course *restrict course, int style) {
   course->style = style;
 }
 
-void taiko_course_set_papamama_(taiko_course *restrict course, int papamama) {
+void taco_course_set_papamama_(taco_course *restrict course, int papamama) {
   course->papamama = papamama;
 }
 
-void taiko_course_set_bpm_(taiko_course *restrict course, double bpm) {
+void taco_course_set_bpm_(taco_course *restrict course, double bpm) {
   course->basebpm = bpm;
 }
 
-void taiko_course_set_offset_(taiko_course *restrict course, double offset) {
+void taco_course_set_offset_(taco_course *restrict course, double offset) {
   course->offset = offset;
 }
 
-const taiko_section *
-taiko_course_get_branch(const taiko_course *restrict course, int side,
+const taco_section *
+taco_course_get_branch(const taco_course *restrict course, int side,
                         int branch) {
   if (side < 2 && branch < 3) {
-    if (course->style == TAIKO_STYLE_SINGLE)
-      side = TAIKO_SIDE_LEFT;
+    if (course->style == TACO_STYLE_SINGLE)
+      side = TACO_SIDE_LEFT;
     if (!course->branched)
-      branch = TAIKO_BRANCH_NORMAL;
+      branch = TACO_BRANCH_NORMAL;
     return course->branches[side][branch];
   }
   return NULL;
 }
 
-taiko_section *taiko_course_get_branch_mut_(taiko_course *restrict course,
+taco_section *taco_course_get_branch_mut_(taco_course *restrict course,
                                             int side, int branch) {
   if (side < 2 && branch < 3) {
-    if (course->style == TAIKO_STYLE_SINGLE)
-      side = TAIKO_SIDE_LEFT;
+    if (course->style == TACO_STYLE_SINGLE)
+      side = TACO_SIDE_LEFT;
     if (!course->branched)
-      branch = TAIKO_BRANCH_NORMAL;
+      branch = TACO_BRANCH_NORMAL;
     return course->branches[side][branch];
   }
   return NULL;
 }
 
-int taiko_course_setup_branching_(taiko_course *restrict course) {
+int taco_course_setup_branching_(taco_course *restrict course) {
   if (course->branched)
     return 0;
 
-  taiko_section **branches = course->branches[TAIKO_SIDE_LEFT];
+  taco_section **branches = course->branches[TACO_SIDE_LEFT];
 
-  const taiko_section *normal = branches[TAIKO_BRANCH_NORMAL];
-  taiko_section *advanced = taiko_section_clone_(normal);
-  taiko_section *master = taiko_section_clone_(normal);
+  const taco_section *normal = branches[TACO_BRANCH_NORMAL];
+  taco_section *advanced = taco_section_clone_(normal);
+  taco_section *master = taco_section_clone_(normal);
 
   if (!advanced || !master) {
-    taiko_section_free_(advanced);
-    taiko_section_free_(master);
+    taco_section_free_(advanced);
+    taco_section_free_(master);
     return -1;
   }
 
-  branches[TAIKO_BRANCH_ADVANCED] = advanced;
-  branches[TAIKO_BRANCH_MASTER] = master;
+  branches[TACO_BRANCH_ADVANCED] = advanced;
+  branches[TACO_BRANCH_MASTER] = master;
 
   course->branched = true;
   return 0;
 }
 
-taiko_section *taiko_course_attach_branch_(taiko_course *restrict course,
-                                           taiko_section *restrict content,
+taco_section *taco_course_attach_branch_(taco_course *restrict course,
+                                           taco_section *restrict content,
                                            int side, int branch) {
   assert((side < 2 && branch < 3));
 
   // attach
-  taiko_section **target = &(course->branches[side][branch]);
-  taiko_section *old = *target;
+  taco_section **target = &(course->branches[side][branch]);
+  taco_section *old = *target;
   *target = content;
 
   // apply bpm data
-  taiko_section_set_bpm_(content, course->basebpm);
+  taco_section_set_bpm_(content, course->basebpm);
 
   // apply balloon hitcount if stored
   balloon_data_ *balloons = &(course->balloons[side][branch]);
   if (balloons) {
-    taiko_section_set_balloons_(content, balloons->data, balloons->count);
-    taiko_free_(course->alloc, balloons->data);
+    taco_section_set_balloons_(content, balloons->data, balloons->count);
+    taco_free_(course->alloc, balloons->data);
     balloons->data = NULL;
     balloons->count = 0;
   }
@@ -195,20 +195,20 @@ taiko_section *taiko_course_attach_branch_(taiko_course *restrict course,
   return old;
 }
 
-int taiko_course_set_balloons_(taiko_course *restrict course,
+int taco_course_set_balloons_(taco_course *restrict course,
                                const int *restrict balloons, size_t count,
                                int side, int branch) {
   assert((balloons));
 
   // apply hitcount immediately if section is attached
-  taiko_section *s = course->branches[side][branch];
+  taco_section *s = course->branches[side][branch];
   if (s) {
-    taiko_section_set_balloons_(s, balloons, count);
+    taco_section_set_balloons_(s, balloons, count);
     return 0;
   }
 
   // copy balloon hitcount array for later use
-  int *b = taiko_malloc_(course->alloc, count * sizeof(int));
+  int *b = taco_malloc_(course->alloc, count * sizeof(int));
   if (!b)
     return -1;
 
@@ -218,18 +218,18 @@ int taiko_course_set_balloons_(taiko_course *restrict course,
   return 0;
 }
 
-int taiko_course_merge_(taiko_course *restrict s,
-                        taiko_course *restrict other) {
+int taco_course_merge_(taco_course *restrict s,
+                        taco_course *restrict other) {
   int src_side;
   int dst_side;
 
-  if (s->style != TAIKO_STYLE_2P_ONLY && other->style == TAIKO_STYLE_2P_ONLY) {
-    src_side = TAIKO_SIDE_LEFT;
-    dst_side = TAIKO_SIDE_RIGHT;
-  } else if (s->style == TAIKO_STYLE_2P_ONLY &&
-             other->style != TAIKO_STYLE_2P_ONLY) {
-    src_side = TAIKO_SIDE_RIGHT;
-    dst_side = TAIKO_SIDE_LEFT;
+  if (s->style != TACO_STYLE_2P_ONLY && other->style == TACO_STYLE_2P_ONLY) {
+    src_side = TACO_SIDE_LEFT;
+    dst_side = TACO_SIDE_RIGHT;
+  } else if (s->style == TACO_STYLE_2P_ONLY &&
+             other->style != TACO_STYLE_2P_ONLY) {
+    src_side = TACO_SIDE_RIGHT;
+    dst_side = TACO_SIDE_LEFT;
     s->style = other->style;
   } else {
     return -1;
@@ -237,22 +237,22 @@ int taiko_course_merge_(taiko_course *restrict s,
 
   for (int i = 0; i < 3; ++i) {
     // move data of this side
-    if (src_side != TAIKO_SIDE_LEFT) {
-      s->branches[src_side][i] = s->branches[TAIKO_SIDE_LEFT][i];
-      memcpy(&s->balloons[src_side][i], &s->balloons[TAIKO_SIDE_LEFT][i],
+    if (src_side != TACO_SIDE_LEFT) {
+      s->branches[src_side][i] = s->branches[TACO_SIDE_LEFT][i];
+      memcpy(&s->balloons[src_side][i], &s->balloons[TACO_SIDE_LEFT][i],
              sizeof(balloon_data_));
     }
 
     // move data in from the other side course
-    s->branches[dst_side][i] = other->branches[TAIKO_SIDE_LEFT][i];
-    memcpy(&s->balloons[dst_side][i], &other->balloons[TAIKO_SIDE_LEFT][i],
+    s->branches[dst_side][i] = other->branches[TACO_SIDE_LEFT][i];
+    memcpy(&s->balloons[dst_side][i], &other->balloons[TACO_SIDE_LEFT][i],
            sizeof(balloon_data_));
-    other->branches[TAIKO_SIDE_LEFT][i] = NULL;
-    other->balloons[TAIKO_SIDE_LEFT][i].data = NULL;
+    other->branches[TACO_SIDE_LEFT][i] = NULL;
+    other->balloons[TACO_SIDE_LEFT][i].data = NULL;
   }
 
   if (!s->style)
-    s->style = TAIKO_STYLE_COUPLE;
-  taiko_course_free_(other);
+    s->style = TACO_STYLE_COUPLE;
+  taco_course_free_(other);
   return 0;
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
 #include <check.h>
 
-const char suite_name[] = "libtaiko_tja";
+const char suite_name[] = "libtaco_tja";
 
 extern TCase *case_events();
 extern TCase *case_parser();

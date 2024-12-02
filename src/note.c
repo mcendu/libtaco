@@ -4,35 +4,35 @@
 #include "taco.h"
 #include <math.h>
 
-int taiko_event_time(const taiko_event *event) { return event->time; }
+int taco_event_time(const taco_event *event) { return event->time; }
 
-int taiko_event_type(const taiko_event *event) { return event->type; }
+int taco_event_type(const taco_event *event) { return event->type; }
 
-int taiko_event_detail_int(const taiko_event *event) {
+int taco_event_detail_int(const taco_event *event) {
   switch (event->type) {
-  case TAIKO_EVENT_DON:
-  case TAIKO_EVENT_DON_BIG:
-  case TAIKO_EVENT_KAT:
-  case TAIKO_EVENT_KAT_BIG:
-  case TAIKO_EVENT_BALLOON:
-  case TAIKO_EVENT_KUSUDAMA:
-  case TAIKO_EVENT_LANDMINE:
+  case TACO_EVENT_DON:
+  case TACO_EVENT_DON_BIG:
+  case TACO_EVENT_KAT:
+  case TACO_EVENT_KAT_BIG:
+  case TACO_EVENT_BALLOON:
+  case TACO_EVENT_KUSUDAMA:
+  case TACO_EVENT_LANDMINE:
     return event->detail_int.value;
   default:
     return -1;
   }
 }
 
-double taiko_event_detail_float(const taiko_event *event) {
+double taco_event_detail_float(const taco_event *event) {
   switch (event->type) {
-  case TAIKO_EVENT_BPM:
+  case TACO_EVENT_BPM:
     return event->detail_float.value;
   default:
     return NAN;
   }
 }
 
-int taiko_event_compare(const taiko_event *a, const taiko_event *b) {
+int taco_event_compare(const taco_event *a, const taco_event *b) {
   int result = (a->time > b->time) - (a->time < b->time);
 
   if (result == 0)
@@ -41,14 +41,14 @@ int taiko_event_compare(const taiko_event *a, const taiko_event *b) {
   return result;
 }
 
-const taiko_event *taiko_event_next(const taiko_event *event) {
+const taco_event *taco_event_next(const taco_event *event) {
   return event + 1;
 }
 
-taiko_event *taiko_event_next_mut_(taiko_event *event) { return event + 1; }
+taco_event *taco_event_next_mut_(taco_event *event) { return event + 1; }
 
-const taiko_event *taiko_event_prev(const taiko_event *event) {
+const taco_event *taco_event_prev(const taco_event *event) {
   return event - 1;
 }
 
-taiko_event *taiko_event_prev_mut_(taiko_event *event) { return event - 1; }
+taco_event *taco_event_prev_mut_(taco_event *event) { return event - 1; }

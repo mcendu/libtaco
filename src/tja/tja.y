@@ -43,8 +43,8 @@ struct branch_info_ {
 
 typedef void *yyscan_t;
 
-static taiko_section *get_section_(tja_parser *parser, int purpose);
-static void put_section_(tja_parser *parser, taiko_section *section);
+static taco_section *get_section_(tja_parser *parser, int purpose);
+static void put_section_(tja_parser *parser, taco_section *section);
 %}
 
 %code provides {
@@ -59,14 +59,14 @@ static void put_section_(tja_parser *parser, taiko_section *section);
 #define PURPOSE_BRANCH(n) (3 + n)
 
 struct tja_parser_ {
-  taiko_allocator *alloc;
+  taco_allocator *alloc;
   yyscan_t lexer;
-  taiko_file *input;
-  taiko_file *error_stream;
-  taiko_courseset *set;
+  taco_file *input;
+  taco_file *error_stream;
+  taco_courseset *set;
   tja_metadata *metadata;
 
-  taiko_section *tmpsections[PURPOSE_MAX];
+  taco_section *tmpsections[PURPOSE_MAX];
 };
 
 extern int tja_yylex(TJA_YYSTYPE *lvalp, TJA_YYLTYPE *llocp, yyscan_t lexer);
@@ -87,11 +87,11 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
   double real;
   char *text;
 
-  taiko_event note;
+  taco_event note;
   branch_info branch;
 
-  taiko_courseset *set;
-  taiko_course *course;
+  taco_courseset *set;
+  taco_course *course;
   tja_metadata *metadata;
   tja_balloon *balloon;
 
@@ -102,11 +102,11 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
   tja_events measure;
 }
 
-%destructor { taiko_free_(parser->alloc, $$); } <text>
-%destructor { taiko_course_free_($$); } <course>
+%destructor { taco_free_(parser->alloc, $$); } <text>
+%destructor { taco_course_free_($$); } <course>
 %destructor { tja_metadata_free_($$); } <metadata>
 %destructor { tja_balloon_free_($$); } <balloon>
-%destructor { taiko_course_free_($$.course); } <coursebody>
+%destructor { taco_course_free_($$.course); } <coursebody>
 %destructor {
   for (int i = 0; i < 3; ++i)
     put_section_(parser, $$.branches[i]);
@@ -215,7 +215,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 
 set:
   %empty {
-    parser->set = taiko_courseset_create2_(parser->alloc);
+    parser->set = taco_courseset_create2_(parser->alloc);
     parser->metadata = tja_metadata_create2_(parser->alloc);
     $$ = parser->set;
   }
@@ -225,7 +225,7 @@ set:
     tja_course_apply_metadata_($3, parser->metadata);
     tja_courseset_apply_metadata_($1, parser->metadata);
 
-    taiko_courseset_add_course_($1, $3);
+    taco_courseset_add_course_($1, $3);
     $$ = $1;
   };
 
@@ -305,14 +305,14 @@ side_header:
   SIDE ':' text '\n' {
     $$.key = TJA_METADATA_SIDE;
     $$.integer = tja_interpret_side_($3);
-    taiko_free_(parser->alloc, $3);
+    taco_free_(parser->alloc, $3);
   };
 
 course_header:
   COURSE ':' text '\n' {
     $$.key = TJA_METADATA_COURSE;
     $$.integer = tja_interpret_course_($3);
-    taiko_free_(parser->alloc, $3);
+    taco_free_(parser->alloc, $3);
   };
 
 level_header:
@@ -325,7 +325,7 @@ style_header:
   STYLE ':' text '\n' {
     $$.key = TJA_METADATA_STYLE;
     $$.integer = tja_interpret_style_($3);
-    taiko_free_(parser->alloc, $3);
+    taco_free_(parser->alloc, $3);
   };
 
 balloon_header:
@@ -361,8 +361,8 @@ unrecognized_header:
   IDENTIFIER ':' text '\n' {
     tja_parser_diagnose_(parser, @1.first_line, TJA_DIAG_WARN,
                          "unrecognized header: %s", $1);
-    taiko_free_(parser->alloc, $1);
-    taiko_free_(parser->alloc, $3);
+    taco_free_(parser->alloc, $1);
+    taco_free_(parser->alloc, $3);
     $$.key = TJA_METADATA_UNRECOGNIZED;
   }
   | unrecognized_command {
@@ -371,13 +371,13 @@ unrecognized_header:
 
 body:
   start_command sections end_command {
-    taiko_course_set_style_($2.course, $1);
+    taco_course_set_style_($2.course, $1);
 
-    int branches = taiko_course_branched($2.course) ? 3 : 1;
+    int branches = taco_course_branched($2.course) ? 3 : 1;
 
     for (int i = 0; i < branches; ++i) {
-      taiko_section *branch =
-          taiko_course_get_branch_mut_($2.course, TAIKO_SIDE_LEFT, i);
+      taco_section *branch =
+          taco_course_get_branch_mut_($2.course, TACO_SIDE_LEFT, i);
       tja_pass_convert_time_(parser, branch);
       tja_pass_checkpoint_rolls_(parser, branch);
       tja_pass_compile_branches_(parser, branch);
@@ -390,11 +390,11 @@ body:
 start_command:
   START_CMD text '\n' {
     if (strcmp($2, "P2") == 0) {
-      $$ = TAIKO_STYLE_2P_ONLY;
+      $$ = TACO_STYLE_2P_ONLY;
     } else {
-      $$ = TAIKO_STYLE_SINGLE;
+      $$ = TACO_STYLE_SINGLE;
     }
-    taiko_free_(parser->alloc, $2);
+    taco_free_(parser->alloc, $2);
   };
 
 end_command:
@@ -442,19 +442,19 @@ branchstart_command:
     $$.type = tja_branch_type_($2);
     $$.advanced = tja_branchtype_convert_threshold_($$.type, $4);
     $$.master = tja_branchtype_convert_threshold_($$.type, $6);
-    taiko_free_(parser->alloc, $2);
+    taco_free_(parser->alloc, $2);
   }
   | BRANCHSTART_CMD '\n' {
     // Extension: #BRANCHSTART without parameters does not create a
     // branch point. Instead, it is used to allow commands like #MEASURE
     // to be applied at the exact same time of all branches.
-    $$.type = TAIKO_BRANCHTYPE_NONE;
+    $$.type = TACO_BRANCHTYPE_NONE;
   };
 
 branch_command:
-  N_CMD '\n' { $$ = TAIKO_BRANCH_NORMAL; }
-  | E_CMD '\n' { $$ = TAIKO_BRANCH_ADVANCED; }
-  | M_CMD '\n' { $$ = TAIKO_BRANCH_MASTER; };
+  N_CMD '\n' { $$ = TACO_BRANCH_NORMAL; }
+  | E_CMD '\n' { $$ = TACO_BRANCH_ADVANCED; }
+  | M_CMD '\n' { $$ = TACO_BRANCH_MASTER; };
 
 common_section:
   branchend_command measures {
@@ -532,47 +532,47 @@ note_command:
 
 measure_command:
   MEASURE_CMD INTEGER '/' INTEGER '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_TJA_MEASURE_LENGTH;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_TJA_MEASURE_LENGTH;
     $$.tja_measure_length.dividend = $2;
     $$.tja_measure_length.divisor = $4;
   };
 
 section_command:
   SECTION_CMD '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_BRANCH_START;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_BRANCH_START;
   };
 
 levelhold_command:
   LEVELHOLD_CMD '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_TJA_LEVELHOLD;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_TJA_LEVELHOLD;
   };
 
 gogostart_command:
   GOGOSTART_CMD '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_GOGOSTART;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_GOGOSTART;
   };
 
 gogoend_command:
   GOGOEND_CMD '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_GOGOEND;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_GOGOEND;
   };
 
 scroll_command:
   SCROLL_CMD real '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_SCROLL;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_SCROLL;
     $$.detail_float.value = $2;
   };
 
 bpmchange_command:
   BPMCHANGE_CMD real '\n' {
-    memset(&$$, 0, sizeof(taiko_event));
-    $$.type = TAIKO_EVENT_BPM;
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_BPM;
     $$.detail_float.value = $2;
   };
 
@@ -580,9 +580,9 @@ unrecognized_command:
   COMMAND text '\n' {
     tja_parser_diagnose_(parser, @1.first_line, TJA_DIAG_WARN,
                          "unrecognized command: %s", $1);
-    $$.type = TAIKO_EVENT_NONE;
-    taiko_free_(parser->alloc, $1);
-    taiko_free_(parser->alloc, $2);
+    $$.type = TACO_EVENT_NONE;
+    taco_free_(parser->alloc, $1);
+    taco_free_(parser->alloc, $2);
   };
 
 real:
@@ -591,7 +591,7 @@ real:
 
 text:
   %empty {
-    $$ = taiko_strndup_(parser->alloc, "", 0);
+    $$ = taco_strndup_(parser->alloc, "", 0);
   }
   | TEXT {
     $$ = $1;
@@ -608,18 +608,18 @@ extern void tja_yyset_debug(int debug, yyscan_t scanner);
 extern void tja_yyrestart(FILE *file, yyscan_t scanner);
 
 tja_parser *tja_parser_create_(void) {
-  return tja_parser_create2_(&taiko_default_allocator_);
+  return tja_parser_create2_(&taco_default_allocator_);
 }
 
-tja_parser *tja_parser_create2_(taiko_allocator *alloc) {
-  tja_parser *parser = taiko_malloc_(alloc, sizeof(tja_parser));
-  taiko_file *error = taiko_file_open_stdio_(stderr);
+tja_parser *tja_parser_create2_(taco_allocator *alloc) {
+  tja_parser *parser = taco_malloc_(alloc, sizeof(tja_parser));
+  taco_file *error = taco_file_open_stdio_(stderr);
   yyscan_t scanner = NULL;
   tja_yylex_init(&scanner);
 
   if (!parser || !error || !scanner) {
-    taiko_free_(alloc, parser);
-    taiko_file_close_(error);
+    taco_free_(alloc, parser);
+    taco_file_close_(error);
     if (scanner) tja_yylex_destroy(scanner);
     return NULL;
   }
@@ -631,7 +631,7 @@ tja_parser *tja_parser_create2_(taiko_allocator *alloc) {
   parser->error_stream = error;
 
   for (int i = 0; i < PURPOSE_MAX; ++i)
-    parser->tmpsections[i] = taiko_section_create2_(parser->alloc);
+    parser->tmpsections[i] = taco_section_create2_(parser->alloc);
 
   return parser;
 }
@@ -641,17 +641,17 @@ void tja_parser_free_(tja_parser *parser) {
     return;
 
   tja_yylex_destroy(parser->lexer);
-  taiko_file_close_(parser->error_stream);
+  taco_file_close_(parser->error_stream);
   for (int i = 0; i < PURPOSE_MAX; ++i)
-    taiko_section_free_(parser->tmpsections[i]);
-  taiko_free_(parser->alloc, parser);
+    taco_section_free_(parser->tmpsections[i]);
+  taco_free_(parser->alloc, parser);
 }
 
-taiko_allocator *tja_parser_allocator_(tja_parser *parser) {
+taco_allocator *tja_parser_allocator_(tja_parser *parser) {
   return parser->alloc;
 }
 
-taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file) {
+taco_courseset *tja_parser_parse_(tja_parser *parser, taco_file *file) {
   if (!file)
     return NULL;
   parser->input = file;
@@ -665,18 +665,18 @@ taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file) {
   tja_metadata_free_(parser->metadata);
 
   if (errcode) {
-    taiko_courseset_free(parser->set);
+    taco_courseset_free(parser->set);
     parser->set = NULL;
   }
 
-  taiko_courseset *set = parser->set;
+  taco_courseset *set = parser->set;
   parser->set = NULL;
   parser->input = NULL;
   return set;
 }
 
-int tja_parser_set_error_(tja_parser *parser, taiko_file *file) {
-  taiko_file_close_(parser->error_stream);
+int tja_parser_set_error_(tja_parser *parser, taco_file *file) {
+  taco_file_close_(parser->error_stream);
   parser->error_stream = file;
   return 0;
 }
@@ -694,7 +694,7 @@ void tja_parser_diagnose_(tja_parser *parser, int line, int level,
   va_start(ap, format);
   int size = vsnprintf(NULL, 0, format, ap) + 1;
   va_end(ap);
-  char *formatted = taiko_malloc_(parser->alloc, size);
+  char *formatted = taco_malloc_(parser->alloc, size);
   if (formatted) {
     va_start(ap, format);
     vsnprintf(formatted, size, format, ap);
@@ -703,9 +703,9 @@ void tja_parser_diagnose_(tja_parser *parser, int line, int level,
 
   // forward to error output
   if (formatted)
-    taiko_file_printf_(parser->error_stream, templates[level],
-                       taiko_file_name_(parser->input), line, formatted);
-  taiko_free_(parser->alloc, formatted);
+    taco_file_printf_(parser->error_stream, templates[level],
+                       taco_file_name_(parser->input), line, formatted);
+  taco_free_(parser->alloc, formatted);
 }
 
 void tja_yyerror(TJA_YYLTYPE *lloc, tja_parser *parser, yyscan_t lexer,
@@ -713,11 +713,11 @@ void tja_yyerror(TJA_YYLTYPE *lloc, tja_parser *parser, yyscan_t lexer,
   tja_parser_diagnose_(parser, lloc->first_line, TJA_DIAG_ERROR, "%s", msg);
 }
 
-static taiko_section *get_section_(tja_parser *parser, int purpose) {
-  taiko_section *s = parser->tmpsections[purpose];
+static taco_section *get_section_(tja_parser *parser, int purpose) {
+  taco_section *s = parser->tmpsections[purpose];
   return s;
 }
 
-static void put_section_(tja_parser *parser, taiko_section *section) {
-  taiko_section_clear_(section);
+static void put_section_(tja_parser *parser, taco_section *section) {
+  taco_section_clear_(section);
 }
