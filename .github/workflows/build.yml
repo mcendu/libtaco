@@ -12,32 +12,83 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cc:
-          - gcc
-          - clang
-        options:
-          - [--optimization=0]
-          - [--optimization=2]
-          - [--optimization=2, -Db_lto=true]
-          - [--optimization=3]
-          - [--optimization=3, -Db_lto=true]
-          - [--optimization=s]
+        name:
+          - gcc -O0
+          - gcc -Og -fsanitize=address
+          - gcc -O2
+          - gcc -O2 -flto
+          - gcc -O3
+          - gcc -O3 -flto
+          - gcc -Os
+          - clang -O2
+          - clang -O2 -flto
+          - clang -O3
+          - clang -O3 -flto
+          - clang -Os
         include:
-          - cc: gcc
-            options: [--optimization=0, -Db_sanitize=address]
-            shorthand: O0-asan
-          - options: [--optimization=0]
-            shorthand: O0
-          - options: [--optimization=2]
-            shorthand: O2
-          - options: [--optimization=2, -Db_lto=true]
-            shorthand: O2-lto
-          - options: [--optimization=3]
-            shorthand: O3
-          - options: [--optimization=3, -Db_lto=true]
-            shorthand: O3-lto
-          - options: [--optimization=s]
-            shorthand: Os
+          - name: gcc -O0
+            short: gcc-o0
+            cc: gcc
+            meson-cfg: --optimization=0
+            ldflags:
+          - name: gcc -Og -fsanitize=address
+            short: gcc-asan
+            cc: gcc
+            meson-cfg: --optimization=g -Db_sanitize=address
+            ldflags:
+          - name: gcc -O2
+            short: gcc-o2
+            cc: gcc
+            meson-cfg: --optimization=2
+            ldflags:
+          - name: gcc -O2 -flto
+            short: gcc-o2-lto
+            cc: gcc
+            meson-cfg: --optimization=2 -Db_lto=true
+            ldflags:
+          - name: gcc -O3
+            short: gcc-o3
+            cc: gcc
+            meson-cfg: --optimization=3
+            ldflags:
+          - name: gcc -O3 -flto
+            short: gcc-o3-lto
+            cc: gcc
+            meson-cfg: --optimization=3 -Db_lto=true
+            ldflags:
+          - name: gcc -Os
+            short: gcc-os
+            cc: gcc
+            meson-cfg: --optimization=s
+            ldflags:
+          - name: clang -O2
+            short: clang-o2
+            cc: clang
+            meson-cfg: --optimization=2
+            ldflags: -fuse-ld=lld
+          - name: clang -O2 -flto
+            short: clang-o2-lto
+            cc: clang
+            meson-cfg: --optimization=2 -Db_lto=true
+            ldflags: -fuse-ld=lld
+          - name: clang -O3
+            short: clang-o3
+            cc: clang
+            meson-cfg: --optimization=3
+            ldflags: -fuse-ld=lld
+          - name: clang -O3 -flto
+            short: clang-o3-lto
+            cc: clang
+            meson-cfg: --optimization=3 -Db_lto=true
+            ldflags: -fuse-ld=lld
+          - name: clang -Os
+            short: clang-os
+            cc: clang
+            meson-cfg: --optimization=s
+            ldflags: -fuse-ld=lld
+    env:
+      CC: ${{ matrix.cc }}
+      LDFLAGS: ${{ matrix.ldflags }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -47,13 +98,16 @@ jobs:
             meson \
             ninja-build \
             check
+          if [ x$CC = xclang ]; then
+            sudo apt-get install clang lld
+          fi
       - name: Configure project
         run: |
-          CC=${{ matrix.cc }} meson setup \
+          meson setup \
             --backend=ninja \
             --debug \
             --prefix=/usr \
-            ${{ join(matrix.options, ' ') }} \
+            ${{ matrix.meson-cfg }} \
             build
       - name: Build
         run: ninja -v -C build all
@@ -62,7 +116,7 @@ jobs:
       - name: Upload test log
         uses: actions/upload-artifact@v4
         with:
-          name: testlog-${{ github.sha }}-ubuntu-${{ matrix.cc }}-${{ matrix.shorthand }}
+          name: testlog-${{ github.sha }}-ubuntu-${{ matrix.short }}
           path: build/meson-logs/testlog.txt
       - name: Install
         run: |
@@ -70,7 +124,7 @@ jobs:
       - name: Upload installed tree
         uses: actions/upload-artifact@v4
         with:
-          name: libtaco-${{ github.sha }}-ubuntu-${{ matrix.cc }}-${{ matrix.shorthand }}
+          name: libtaco-${{ github.sha }}-ubuntu-${{ matrix.short }}
           path: destdir
   build-mingw:
     name: Build (Windows)
@@ -78,26 +132,63 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        options:
-          - [--optimization=0]
-          - [--optimization=2]
-          - [--optimization=2, -Db_lto=true]
-          - [--optimization=3]
-          - [--optimization=3, -Db_lto=true]
-          - [--optimization=s]
+        name:
+          - gcc -O2
+          - gcc -O2 -flto
+          - gcc -O3
+          - gcc -O3 -flto
+          - gcc -Os
+          - clang -O2
+          - clang -O2 -flto
+          - clang -O3
+          - clang -O3 -flto
+          - clang -Os
         include:
-          - options: [--optimization=0]
-            shorthand: O0
-          - options: [--optimization=2]
-            shorthand: O2
-          - options: [--optimization=2, -Db_lto=true]
-            shorthand: O2-lto
-          - options: [--optimization=3]
-            shorthand: O3
-          - options: [--optimization=3, -Db_lto=true]
-            shorthand: O3-lto
-          - options: [--optimization=s]
-            shorthand: Os
+          - name: gcc -O2
+            short: gcc-o2
+            msystem: ucrt64
+            meson-cfg: --optimization=2
+            ldflags:
+          - name: gcc -O2 -flto
+            short: gcc-o2-lto
+            msystem: ucrt64
+            meson-cfg: --optimization=2 -Db_lto=true
+            ldflags:
+          - name: gcc -O3
+            short: gcc-o3
+            msystem: ucrt64
+            meson-cfg: --optimization=3
+            ldflags:
+          - name: gcc -O3 -flto
+            short: gcc-o3-lto
+            msystem: ucrt64
+            meson-cfg: --optimization=3 -Db_lto=true
+            ldflags:
+          - name: gcc -Os
+            short: gcc-os
+            msystem: ucrt64
+            meson-cfg: --optimization=s
+            ldflags:
+          - name: clang -O2
+            short: clang-o2
+            msystem: clang64
+            meson-cfg: --optimization=2
+          - name: clang -O2 -flto
+            short: clang-o2-lto
+            msystem: clang64
+            meson-cfg: --optimization=2 -Db_lto=true
+          - name: clang -O3
+            short: clang-o3
+            msystem: clang64
+            meson-cfg: --optimization=3
+          - name: clang -O3 -flto
+            short: clang-o2-lto
+            msystem: clang64
+            meson-cfg: --optimization=3 -Db_lto=true
+          - name: clang -Os
+            short: clang-os
+            msystem: clang64
+            meson-cfg: --optimization=s
     defaults:
       run:
         shell: msys2 {0}
@@ -107,7 +198,7 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           release: false
-          msystem: clang64
+          msystem: ${{ matrix.msystem }}
           pacboy: >-
             toolchain:p
             meson:p
@@ -121,7 +212,7 @@ jobs:
             --backend=ninja \
             --debug \
             --prefix=/usr \
-            ${{ join(matrix.options, ' ') }} \
+            ${{ join(matrix.meson-cfg) }} \
             build
       - name: Build
         run: ninja -v -C build all
@@ -130,7 +221,7 @@ jobs:
       - name: Upload test log
         uses: actions/upload-artifact@v4
         with:
-          name: testlog-${{ github.sha }}-mingw-w64-${{ matrix.shorthand }}
+          name: testlog-${{ github.sha }}-mingw-w64-${{ matrix.short }}
           path: build/meson-logs/testlog.txt
       - name: Install
         run: |
@@ -138,5 +229,5 @@ jobs:
       - name: Upload installed tree
         uses: actions/upload-artifact@v4
         with:
-          name: libtaco-${{ github.sha }}-mingw-w64-${{ matrix.shorthand }}
+          name: libtaco-${{ github.sha }}-mingw-w64-${{ matrix.short }}
           path: destdir
