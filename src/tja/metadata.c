@@ -33,7 +33,7 @@ struct tja_metadata_ {
 
 typedef int (*metadata_setter)(tja_metadata *meta, tja_metadata_field *field);
 
-static const metadata_setter setters[];
+static metadata_setter setter(int index);
 
 tja_metadata *tja_metadata_create2_(taiko_allocator *a) {
   tja_metadata *m = taiko_malloc_(a, sizeof(tja_metadata));
@@ -70,7 +70,7 @@ int tja_metadata_add_field_(tja_metadata *meta, tja_metadata_field *field) {
   if (field->key >= TJA_METADATA_MAX)
     return -1;
 
-  return setters[field->key](meta, field);
+  return setter(field->key)(meta, field);
 }
 
 static inline void add_text_field_fn_(taiko_allocator *alloc, char **dst,
@@ -206,4 +206,8 @@ static const metadata_setter setters[] = {
     [TJA_METADATA_BALLOONEXP] = SETTER_(balloon_a),
     [TJA_METADATA_BALLOONMAS] = SETTER_(balloon_m),
     [TJA_METADATA_PAPAMAMA] = SETTER_(papamama),
+};
+
+static metadata_setter setter(int index) {
+  return setters[index];
 };

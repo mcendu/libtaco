@@ -24,7 +24,7 @@ void taiko_section_set_bpm_(taiko_section *restrict s, double bpm);
 extern int taiko_section_push_(taiko_section *restrict section,
                                const taiko_event *restrict event);
 extern int taiko_section_push_many_(taiko_section *restrict section,
-                                    const taiko_event events[restrict],
+                                    const taiko_event *restrict events,
                                     size_t count);
 extern int taiko_section_concat_(taiko_section *restrict section,
                                  const taiko_section *restrict other);
@@ -34,7 +34,7 @@ extern void taiko_section_clear_(taiko_section *restrict section);
 extern int taiko_section_trim_(taiko_section *restrict section);
 
 extern int taiko_section_set_balloons_(taiko_section *restrict section,
-                                       const int balloons[restrict],
+                                       const int *restrict balloons,
                                        size_t count);
 
 #define taiko_section_foreach_mut_(i, s)                                       \

@@ -196,7 +196,7 @@ taiko_section *taiko_course_attach_branch_(taiko_course *restrict course,
 }
 
 int taiko_course_set_balloons_(taiko_course *restrict course,
-                               const int balloons[restrict], size_t count,
+                               const int *restrict balloons, size_t count,
                                int side, int branch) {
   assert((balloons));
 

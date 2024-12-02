@@ -225,7 +225,7 @@ void taiko_section_clear_(taiko_section *restrict s) {
 }
 
 int taiko_section_set_balloons_(taiko_section *restrict section,
-                                const int balloons[restrict], size_t count) {
+                                const int *restrict balloons, size_t count) {
   const int *j = balloons;
   const int *end = balloons + count;
 

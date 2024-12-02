@@ -1,2 +1,10 @@
+# clangd
 .cache/
+
+# vcpkg
+vcpkg_installed/
+vcpkg.json
+vcpkg-configuration.json
+
+# vscode
 .vscode/

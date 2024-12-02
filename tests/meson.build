@@ -1,5 +1,9 @@
 # SPDX-License-Identifier: 0BSD
-check_dep = dependency('check', required: false)
+check_dep = dependency('check', required: false, modules: ['Check::checkShared'])
+
+if not check_dep.found()
+  subdir_done()
+endif
 
 libtaco_tests_lib = static_library(
   'taco_tests',
@@ -12,6 +16,7 @@ libtaco_tests_lib = static_library(
 )
 
 libtaco_tests_dep = declare_dependency(
+  compile_args: ['-DTAIKO_TESTS_'],
   include_directories: [libtaco_include, libtaco_include_private],
   dependencies: libtaco_deps,
   link_with: libtaco_tests_lib,

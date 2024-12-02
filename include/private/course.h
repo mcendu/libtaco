@@ -28,7 +28,7 @@ extern taiko_section *taiko_course_attach_branch_(taiko_course *restrict course,
 extern int taiko_course_setup_branching_(taiko_course *restrict course);
 
 extern int taiko_course_set_balloons_(taiko_course *restrict course,
-                                      const int balloons[restrict],
+                                      const int *restrict balloons,
                                       size_t count, int side, int branch);
 
 extern int taiko_course_merge_(taiko_course *restrict destination,
