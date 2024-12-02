@@ -10,6 +10,7 @@ libtaco_src += files(
   'parser.c',
   'pass_checkpoint_rolls.c',
   'pass_cleanup.c',
+  'pass_compile_branches.c',
   'pass_convert_time.c',
   'segment.c',
   'timestamp.c',

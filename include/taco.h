@@ -164,6 +164,7 @@
 #define TAIKO_BRANCHTYPE_ACCURACY 1
 #define TAIKO_BRANCHTYPE_ROLL 2
 #define TAIKO_BRANCHTYPE_ACCURACY_BIG 3
+#define TAIKO_BRANCHTYPE_MAX 4
 
 /* Note annotations. */
 #define TAIKO_TEXT(detail) ((detail) & (INT_MIN | 0xf))

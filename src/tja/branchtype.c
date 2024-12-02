@@ -7,17 +7,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BRANCHTYPE_CLASS_INTEGER 0
-#define BRANCHTYPE_CLASS_PERCENTAGE 1
-
 static const struct branchtype_info_ {
   const char *code;
   int type;
-  int class;
-} branchtype_info[] = {
-    {"b", TAIKO_BRANCHTYPE_ACCURACY_BIG, BRANCHTYPE_CLASS_PERCENTAGE},
-    {"p", TAIKO_BRANCHTYPE_ACCURACY, BRANCHTYPE_CLASS_PERCENTAGE},
-    {"r", TAIKO_BRANCHTYPE_ROLL, BRANCHTYPE_CLASS_INTEGER},
+} branchtype_names[] = {
+    {"b", TAIKO_BRANCHTYPE_ACCURACY_BIG},
+    {"p", TAIKO_BRANCHTYPE_ACCURACY},
+    {"r", TAIKO_BRANCHTYPE_ROLL},
+};
+
+static const int branchtype_classes_[] = {
+    [TAIKO_BRANCHTYPE_NONE] = BRANCHTYPE_CLASS_INTEGER,
+    [TAIKO_BRANCHTYPE_ACCURACY] = BRANCHTYPE_CLASS_PERCENTAGE,
+    [TAIKO_BRANCHTYPE_ACCURACY_BIG] = BRANCHTYPE_CLASS_PERCENTAGE,
+    [TAIKO_BRANCHTYPE_ROLL] = BRANCHTYPE_CLASS_INTEGER,
 };
 
 static int cmp_branchtype_info_(const void *key, const void *entry_void) {
@@ -27,18 +30,14 @@ static int cmp_branchtype_info_(const void *key, const void *entry_void) {
 
 int tja_branch_type_(const char *code) {
   const struct branchtype_info_ *entry =
-      bsearch(code, branchtype_info,
-              sizeof(branchtype_info) / sizeof(struct branchtype_info_),
+      bsearch(code, branchtype_names,
+              sizeof(branchtype_names) / sizeof(struct branchtype_info_),
               sizeof(struct branchtype_info_), cmp_branchtype_info_);
   return entry ? entry->type : TAIKO_BRANCHTYPE_NONE;
 }
 
-int tja_branch_type_convert_threshold_(const char *code, double value) {
-  const struct branchtype_info_ *entry =
-      bsearch(code, branchtype_info,
-              sizeof(branchtype_info) / sizeof(struct branchtype_info_),
-              sizeof(struct branchtype_info_), cmp_branchtype_info_);
-  int class = entry ? entry->class : BRANCHTYPE_CLASS_INTEGER;
+int tja_branchtype_convert_threshold_(int type, double value) {
+  int class = tja_branchtype_class(type);
 
   switch (class) {
   default:
@@ -46,8 +45,14 @@ int tja_branch_type_convert_threshold_(const char *code, double value) {
     return (int)value;
 
   case BRANCHTYPE_CLASS_PERCENTAGE: {
-    double fixedpoint = ((value / 100) * exp2(24));
-    return fixedpoint >= (double)INT_MAX ? INT_MAX : (int)fixedpoint;
+    // convert percentage to a fixed-point format for internal use, with
+    // 24 bits for the fractional part and 8 bits for the integer part.
+    // The range of numbers representable is from -128 to about 127.9999999,
+    // where 0.0 means 0% and 1.0 represents 100%.
+    double fixedpoint = ((value / 100) * 0x1000000);
+    return fixedpoint >= (double)INT32_MAX ? INT32_MAX : (int32_t)fixedpoint;
   }
   }
 }
+
+int tja_branchtype_class(int type) { return branchtype_classes_[type]; }

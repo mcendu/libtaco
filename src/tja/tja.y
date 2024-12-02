@@ -380,6 +380,7 @@ body:
           taiko_course_get_branch_mut_($2.course, TAIKO_SIDE_LEFT, i);
       tja_pass_convert_time_(parser, branch);
       tja_pass_checkpoint_rolls_(parser, branch);
+      tja_pass_compile_branches_(parser, branch);
       tja_pass_cleanup_(parser, branch);
     }
 
@@ -439,8 +440,8 @@ branched_section:
 branchstart_command:
   BRANCHSTART_CMD IDENTIFIER ',' real ',' real '\n' {
     $$.type = tja_branch_type_($2);
-    $$.advanced = tja_branch_type_convert_threshold_($2, $4);
-    $$.master = tja_branch_type_convert_threshold_($2, $6);
+    $$.advanced = tja_branchtype_convert_threshold_($$.type, $4);
+    $$.master = tja_branchtype_convert_threshold_($$.type, $6);
     taiko_free_(parser->alloc, $2);
   }
   | BRANCHSTART_CMD '\n' {
@@ -644,6 +645,10 @@ void tja_parser_free_(tja_parser *parser) {
   for (int i = 0; i < PURPOSE_MAX; ++i)
     taiko_section_free_(parser->tmpsections[i]);
   taiko_free_(parser->alloc, parser);
+}
+
+taiko_allocator *tja_parser_allocator_(tja_parser *parser) {
+  return parser->alloc;
 }
 
 taiko_courseset *tja_parser_parse_(tja_parser *parser, taiko_file *file) {

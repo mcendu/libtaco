@@ -186,7 +186,7 @@ START_TEST(test_measures) {
 END_TEST
 
 START_TEST(test_branch) {
-  static const int lengths[] = {8, 9, 10};
+  static const int lengths[] = {9, 10, 11};
 
   taiko_courseset *set = taiko_parser_parse_file(parser, "assets/branch.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
