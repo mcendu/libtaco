@@ -101,11 +101,10 @@
 #define TAIKO_SIDE_RIGHT 1
 
 /* Play style. */
-#define TAIKO_STYLE_SINGLE 0 // singleplayer; both players get the same score
-#define TAIKO_STYLE_TJA_L_ 0 // internal, left
-#define TAIKO_STYLE_TJA_R_ 1 // internal, right
-#define TAIKO_STYLE_COUPLE 2 // multiplayer; each side has a unique score
-#define TAIKO_STYLE_DOUBLE 3 // singleplayer; each side has a unique score
+#define TAIKO_STYLE_SINGLE 0
+#define TAIKO_STYLE_2P_ONLY 1
+#define TAIKO_STYLE_COUPLE 2
+#define TAIKO_STYLE_DOUBLE 3
 
 /* Difficulty class. */
 #define TAIKO_CLASS_EASY 0

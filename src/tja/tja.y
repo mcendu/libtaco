@@ -390,9 +390,9 @@ body:
 start_command:
   START_CMD text '\n' {
     if (strcmp($2, "P2") == 0) {
-      $$ = TAIKO_STYLE_TJA_R_;
+      $$ = TAIKO_STYLE_2P_ONLY;
     } else {
-      $$ = TAIKO_STYLE_TJA_L_;
+      $$ = TAIKO_STYLE_SINGLE;
     }
     taiko_free_(parser->alloc, $2);
   };

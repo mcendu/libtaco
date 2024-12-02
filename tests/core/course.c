@@ -156,14 +156,16 @@ START_TEST(test_merge) {
     taiko_section_push_many_(lb, input_left, 1);
     taiko_course_attach_branch_(course, lb, TAIKO_SIDE_LEFT,
                                 TAIKO_BRANCH_NORMAL);
-    taiko_course_set_style_(course, TAIKO_STYLE_TJA_L_);
+    taiko_course_set_style_(course, TAIKO_STYLE_DOUBLE);
 
     taiko_section_push_many_(rb, input_right, 1);
     taiko_course_attach_branch_(rc, rb, TAIKO_SIDE_LEFT, TAIKO_BRANCH_NORMAL);
-    taiko_course_set_style_(rc, TAIKO_STYLE_TJA_R_);
+    taiko_course_set_style_(rc, TAIKO_STYLE_2P_ONLY);
 
     taiko_course_merge_(course, rc);
   }
+
+  ck_assert_int_eq(taiko_course_style(course), TAIKO_STYLE_DOUBLE);
 
   {
     const taiko_section *lb =

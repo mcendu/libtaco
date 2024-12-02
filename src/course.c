@@ -223,13 +223,14 @@ int taiko_course_merge_(taiko_course *restrict s,
   int src_side;
   int dst_side;
 
-  if (s->style == TAIKO_STYLE_TJA_L_ && other->style == TAIKO_STYLE_TJA_R_) {
+  if (s->style != TAIKO_STYLE_2P_ONLY && other->style == TAIKO_STYLE_2P_ONLY) {
     src_side = TAIKO_SIDE_LEFT;
     dst_side = TAIKO_SIDE_RIGHT;
-  } else if (s->style == TAIKO_STYLE_TJA_R_ &&
-             other->style == TAIKO_STYLE_TJA_L_) {
+  } else if (s->style == TAIKO_STYLE_2P_ONLY &&
+             other->style != TAIKO_STYLE_2P_ONLY) {
     src_side = TAIKO_SIDE_RIGHT;
     dst_side = TAIKO_SIDE_LEFT;
+    s->style = other->style;
   } else {
     return -1;
   }
@@ -250,7 +251,8 @@ int taiko_course_merge_(taiko_course *restrict s,
     other->balloons[TAIKO_SIDE_LEFT][i].data = NULL;
   }
 
-  s->style = TAIKO_STYLE_COUPLE;
+  if (!s->style)
+    s->style = TAIKO_STYLE_COUPLE;
   taiko_course_free_(other);
   return 0;
 }
