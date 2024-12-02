@@ -26,7 +26,7 @@ static void pass_extract_tickrate(taiko_section *branch) {
   int divisor = 4;
 
   taiko_section_foreach (i, branch) {
-    if (i->type == TAIKO_EVENT_MEASURE) {
+    if (i->type == TAIKO_EVENT_MEASURE && i->measure.tja_units != 0) {
       // calculate units required for 4/4 signature
       int units = lcm(i->measure.tja_units * divisor, dividend);
       // multiply tickrate with missing factors

@@ -164,6 +164,19 @@ START_TEST(test_division) {
 }
 END_TEST
 
+START_TEST(test_emptymeasures) {
+  static const int time[] = {0, 96};
+  taiko_courseset *set =
+      taiko_parser_parse_file(parser, "assets/emptymeasures.tja");
+  const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
+  const taiko_section *s = taiko_course_get_branch(c, 0, 0);
+  for (int i = 0; i < taiko_section_size(s); ++i) {
+    const taiko_event *e = taiko_section_locate(s, i);
+    ck_assert_int_eq(taiko_event_time(e), time[i]);
+  }
+  taiko_courseset_free(set);
+}
+
 START_TEST(test_measures) {
   static const int time[] = {0, 0, 96, 96};
   static const int type[] = {TAIKO_EVENT_MEASURE, TAIKO_EVENT_DON,
@@ -186,7 +199,13 @@ START_TEST(test_measures) {
 END_TEST
 
 START_TEST(test_branch) {
-  static const int lengths[] = {9, 10, 11};
+  static const int lengths[] = {11, 12, 13};
+
+  static const int types[] = {
+      TAIKO_EVENT_BRANCH_START, TAIKO_EVENT_MEASURE,      TAIKO_EVENT_DON,
+      TAIKO_EVENT_KAT,          TAIKO_EVENT_BRANCH_CHECK, TAIKO_EVENT_MEASURE,
+      TAIKO_EVENT_BRANCH_JUMP,  TAIKO_EVENT_MEASURE,
+  };
 
   taiko_courseset *set = taiko_parser_parse_file(parser, "assets/branch.tja");
   const taiko_course *c = taiko_courseset_get_course(set, TAIKO_CLASS_ONI);
@@ -195,6 +214,10 @@ START_TEST(test_branch) {
     const taiko_section *s = taiko_course_get_branch(c, TAIKO_SIDE_LEFT, i);
     ck_assert_ptr_nonnull(s);
     ck_assert_int_eq(taiko_section_size(s), lengths[i]);
+
+    for (int i = 0; i < 8; ++i) {
+      ck_assert_int_eq(taiko_event_type(taiko_section_locate(s, i)), types[i]);
+    }
   }
 
   taiko_courseset_free(set);
@@ -265,6 +288,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_division);
   tcase_add_test(c, test_double);
   tcase_add_test(c, test_empty);
+  tcase_add_test(c, test_emptymeasures);
   tcase_add_test(c, test_measures);
   tcase_add_test(c, test_whitespace);
   return c;
