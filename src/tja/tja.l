@@ -71,7 +71,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(header_pretext);
   return MAKER;
 }
-<INITIAL>AUDIO {
+<INITIAL>WAVE {
   BEGIN(header_pretext);
   return AUDIO;
 }
