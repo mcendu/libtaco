@@ -19,6 +19,9 @@
   yylloc->last_line = yylineno; \
   yylloc->last_column = 1; \
 } while (0);
+
+#define YY_NO_INPUT
+#define YY_NO_UNPUT
 %}
 
 %option batch
@@ -291,6 +294,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
   // fallback; feed into token stream, potentially causing parser to yell
   return *yytext;
 }
+
 %%
 
 int yywrap(yyscan_t scanner) {
