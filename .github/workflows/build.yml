@@ -111,9 +111,9 @@ jobs:
             build
       - name: Build
         run: |
-          echo "--add-matcher::cc.json"
+          echo "::add-matcher::.github/cc.json"
           ninja -v -C build all
-          echo "--remove-matcher owner=cc"
+          echo "::remove-matcher owner=cc::"
       - name: Test
         run: meson test -C build --verbose --no-rebuild
       - name: Upload test log
