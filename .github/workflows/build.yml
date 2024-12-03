@@ -110,7 +110,10 @@ jobs:
             ${{ matrix.meson-cfg }} \
             build
       - name: Build
-        run: ninja -v -C build all
+        run: |
+          echo "--add-matcher::cc.json"
+          ninja -v -C build all
+          echo "--remove-matcher owner=cc"
       - name: Test
         run: meson test -C build --verbose --no-rebuild
       - name: Upload test log
