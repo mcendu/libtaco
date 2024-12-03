@@ -30,37 +30,38 @@ jobs:
             short: gcc-o0
             cc: gcc
             meson-cfg: --optimization=0
-            ldflags:
+            ldflags: ""
           - name: gcc -Og -fsanitize=address
             short: gcc-asan
             cc: gcc
             meson-cfg: --optimization=g -Db_sanitize=address
-            ldflags:
+            ldflags: ""
           - name: gcc -O2
             short: gcc-o2
             cc: gcc
             meson-cfg: --optimization=2
-            ldflags:
+            ldflags: ""
           - name: gcc -O2 -flto
             short: gcc-o2-lto
             cc: gcc
             meson-cfg: --optimization=2 -Db_lto=true
-            ldflags:
+            ldflags: ""
+            annotate: 1
           - name: gcc -O3
             short: gcc-o3
             cc: gcc
             meson-cfg: --optimization=3
-            ldflags:
+            ldflags: ""
           - name: gcc -O3 -flto
             short: gcc-o3-lto
             cc: gcc
             meson-cfg: --optimization=3 -Db_lto=true
-            ldflags:
+            ldflags: ""
           - name: gcc -Os
             short: gcc-os
             cc: gcc
             meson-cfg: --optimization=s
-            ldflags:
+            ldflags: ""
           - name: clang -O2
             short: clang-o2
             cc: clang
@@ -111,9 +112,13 @@ jobs:
             build
       - name: Build
         run: |
-          echo "::add-matcher::.github/cc.json"
+          if [ x${{ matrix.annotate }} = x1 ]; then
+            echo "::add-matcher::.github/cc.json"
+          fi
           ninja -v -C build all
-          echo "::remove-matcher owner=cc::"
+          if [ x${{ matrix.annotate }} = x1 ]; then
+            echo "::remove-matcher owner=cc::"
+          fi
       - name: Test
         run: meson test -C build --verbose --no-rebuild
       - name: Upload test log
