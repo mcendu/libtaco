@@ -20,8 +20,7 @@ START_TEST(test_attach_branch) {
   {
     taco_section *normal = taco_section_create_();
     taco_section_push_many_(normal, e, 3);
-    taco_course_attach_branch_(c, normal, TACO_SIDE_LEFT,
-                                TACO_BRANCH_NORMAL);
+    taco_course_attach_branch_(c, normal, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   }
 
   const taco_section *b =
@@ -48,8 +47,7 @@ START_TEST(test_setup_branching) {
   {
     taco_section *normal = taco_section_create_();
     taco_section_push_many_(normal, e, 3);
-    taco_course_attach_branch_(c, normal, TACO_SIDE_LEFT,
-                                TACO_BRANCH_NORMAL);
+    taco_course_attach_branch_(c, normal, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   }
 
   ck_assert_int_eq(taco_course_setup_branching_(c), 0);
@@ -97,8 +95,7 @@ START_TEST(test_balloons_before) {
   taco_section *s = taco_section_create_();
   taco_section_push_many_(s, input, 4);
 
-  taco_course_set_balloons_(c, balloons, 3, TACO_SIDE_LEFT,
-                             TACO_BRANCH_NORMAL);
+  taco_course_set_balloons_(c, balloons, 3, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   taco_course_attach_branch_(c, s, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
   ck_assert_mem_eq(taco_section_begin(s), expected, 4 * sizeof(taco_event));
@@ -129,8 +126,7 @@ START_TEST(test_balloons_after) {
   taco_section_push_many_(s, input, 4);
 
   taco_course_attach_branch_(c, s, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
-  taco_course_set_balloons_(c, balloons, 3, TACO_SIDE_LEFT,
-                             TACO_BRANCH_NORMAL);
+  taco_course_set_balloons_(c, balloons, 3, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
   ck_assert_mem_eq(taco_section_begin(s), expected, 4 * sizeof(taco_event));
 
@@ -154,8 +150,7 @@ START_TEST(test_merge) {
     taco_section *rb = taco_section_create_();
 
     taco_section_push_many_(lb, input_left, 1);
-    taco_course_attach_branch_(course, lb, TACO_SIDE_LEFT,
-                                TACO_BRANCH_NORMAL);
+    taco_course_attach_branch_(course, lb, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
     taco_course_set_style_(course, TACO_STYLE_DOUBLE);
 
     taco_section_push_many_(rb, input_right, 1);
@@ -176,10 +171,8 @@ START_TEST(test_merge) {
     ck_assert_ptr_nonnull(lb);
     ck_assert_ptr_nonnull(rb);
     ck_assert_ptr_ne(lb, rb);
-    ck_assert_int_eq(taco_event_type(taco_section_begin(lb)),
-                     TACO_EVENT_DON);
-    ck_assert_int_eq(taco_event_type(taco_section_begin(rb)),
-                     TACO_EVENT_KAT);
+    ck_assert_int_eq(taco_event_type(taco_section_begin(lb)), TACO_EVENT_DON);
+    ck_assert_int_eq(taco_event_type(taco_section_begin(rb)), TACO_EVENT_KAT);
   }
 
   taco_course_free_(course);

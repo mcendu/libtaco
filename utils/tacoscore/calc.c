@@ -4,7 +4,8 @@
 #include <math.h>
 #include <taco.h>
 
-int score_set(taco_parser *parser, FILE *f, const char *filename, score_branch_fn score) {
+int score_set(taco_parser *parser, FILE *f, const char *filename,
+              score_branch_fn score) {
   taco_courseset *set = taco_parser_parse_stdio(parser, f);
   if (!set) {
     printf("## %s ##\n", filename);

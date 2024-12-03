@@ -12,7 +12,7 @@ struct taco_parser_ {
 };
 
 taco_parser *taco_parser_wrap_(taco_allocator *alloc, void *parser,
-                                 taco_parser_vfuncs *vtable) {
+                               taco_parser_vfuncs *vtable) {
   taco_parser *wrapper = taco_malloc_(alloc, sizeof(taco_parser));
   if (!wrapper)
     return NULL;
@@ -41,7 +41,7 @@ static void post_parse_cleanup_(taco_courseset *restrict c,
 }
 
 taco_courseset *taco_parser_parse_file(taco_parser *restrict parser,
-                                         const char *restrict path) {
+                                       const char *restrict path) {
   taco_file *f = taco_file_open_path_(path, "r");
   taco_courseset *result = parser->vtable->parse(parser->parser, f);
   post_parse_cleanup_(result, f);
@@ -49,7 +49,7 @@ taco_courseset *taco_parser_parse_file(taco_parser *restrict parser,
 }
 
 taco_courseset *taco_parser_parse_stdio(taco_parser *restrict parser,
-                                          FILE *file) {
+                                        FILE *file) {
   taco_file *f = taco_file_open_stdio_(file);
   taco_courseset *result = parser->vtable->parse(parser->parser, f);
   post_parse_cleanup_(result, f);

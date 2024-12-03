@@ -23,13 +23,13 @@ int tja_coursebody_init_(tja_coursebody *restrict c, taco_allocator *a) {
   c->measures = 0;
   c->levelhold = 0;
   taco_course_attach_branch_(course, default_branch, TACO_SIDE_LEFT,
-                              TACO_BRANCH_NORMAL);
+                             TACO_BRANCH_NORMAL);
   return 0;
 }
 
 int tja_coursebody_append_common_(tja_coursebody *restrict c,
                                   tja_segment *restrict common) {
-  taco_section_foreach_mut_ (i, common->segment) {
+  taco_section_foreach_mut_(i, common->segment) {
     tja_event_set_measure_(i, tja_event_measure_(i) + c->measures);
   }
   c->measures += common->measures;
@@ -39,9 +39,9 @@ int tja_coursebody_append_common_(tja_coursebody *restrict c,
   }
 
   if (!taco_course_branched(c->course)) {
-    taco_section_concat_(taco_course_get_branch_mut_(
-                              c->course, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL),
-                          common->segment);
+    taco_section_concat_(taco_course_get_branch_mut_(c->course, TACO_SIDE_LEFT,
+                                                     TACO_BRANCH_NORMAL),
+                         common->segment);
   } else {
     for (int b = TACO_BRANCH_NORMAL; b <= TACO_BRANCH_MASTER; ++b) {
       taco_section_concat_(
@@ -59,7 +59,7 @@ int tja_coursebody_append_branched_(tja_coursebody *restrict c,
 
   for (int b = TACO_BRANCH_NORMAL; b <= TACO_BRANCH_MASTER; ++b) {
     taco_section *section = branched->branches[b];
-    taco_section_foreach_mut_ (i, section) {
+    taco_section_foreach_mut_(i, section) {
       tja_event_set_measure_(i, tja_event_measure_(i) + c->measures);
     }
 

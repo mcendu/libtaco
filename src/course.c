@@ -63,7 +63,7 @@ void taco_course_free_(taco_course *restrict c) {
 }
 
 extern void taco_course_difficulty(const taco_course *restrict course,
-                                    int *restrict class, int *restrict level) {
+                                   int *restrict class, int *restrict level) {
   if (class)
     *class = course->class;
   if (level)
@@ -122,9 +122,8 @@ void taco_course_set_offset_(taco_course *restrict course, double offset) {
   course->offset = offset;
 }
 
-const taco_section *
-taco_course_get_branch(const taco_course *restrict course, int side,
-                        int branch) {
+const taco_section *taco_course_get_branch(const taco_course *restrict course,
+                                           int side, int branch) {
   if (side < 2 && branch < 3) {
     if (course->style == TACO_STYLE_SINGLE)
       side = TACO_SIDE_LEFT;
@@ -136,7 +135,7 @@ taco_course_get_branch(const taco_course *restrict course, int side,
 }
 
 taco_section *taco_course_get_branch_mut_(taco_course *restrict course,
-                                            int side, int branch) {
+                                          int side, int branch) {
   if (side < 2 && branch < 3) {
     if (course->style == TACO_STYLE_SINGLE)
       side = TACO_SIDE_LEFT;
@@ -171,8 +170,8 @@ int taco_course_setup_branching_(taco_course *restrict course) {
 }
 
 taco_section *taco_course_attach_branch_(taco_course *restrict course,
-                                           taco_section *restrict content,
-                                           int side, int branch) {
+                                         taco_section *restrict content,
+                                         int side, int branch) {
   assert((side < 2 && branch < 3));
 
   // attach
@@ -196,8 +195,8 @@ taco_section *taco_course_attach_branch_(taco_course *restrict course,
 }
 
 int taco_course_set_balloons_(taco_course *restrict course,
-                               const int *restrict balloons, size_t count,
-                               int side, int branch) {
+                              const int *restrict balloons, size_t count,
+                              int side, int branch) {
   assert((balloons));
 
   // apply hitcount immediately if section is attached
@@ -218,8 +217,7 @@ int taco_course_set_balloons_(taco_course *restrict course,
   return 0;
 }
 
-int taco_course_merge_(taco_course *restrict s,
-                        taco_course *restrict other) {
+int taco_course_merge_(taco_course *restrict s, taco_course *restrict other) {
   int src_side;
   int dst_side;
 

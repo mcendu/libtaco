@@ -27,8 +27,7 @@ START_TEST(test_basic) {
   ck_assert_int_eq(taco_section_size(s), 2);
   ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
                    TACO_EVENT_MEASURE);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
-                   TACO_EVENT_DON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)), TACO_EVENT_DON);
 
   taco_courseset_free(set);
 }
@@ -60,8 +59,7 @@ START_TEST(test_bom) {
   ck_assert_int_eq(taco_section_size(s), 2);
   ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
                    TACO_EVENT_MEASURE);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
-                   TACO_EVENT_DON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)), TACO_EVENT_DON);
 
   taco_courseset_free(set);
 }
@@ -84,16 +82,37 @@ START_TEST(test_crlf) {
   ck_assert_int_eq(taco_section_size(s), 2);
   ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
                    TACO_EVENT_MEASURE);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)),
-                   TACO_EVENT_DON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)), TACO_EVENT_DON);
+
+  taco_courseset_free(set);
+}
+END_TEST
+
+START_TEST(test_eof) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/eof.tja");
+  ck_assert_ptr_nonnull(set);
+  ck_assert_str_eq(taco_courseset_title(set), "Example");
+
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  ck_assert_ptr_nonnull(c);
+  ck_assert_double_eq(taco_course_bpm(c), 130);
+  ck_assert_int_eq(taco_course_class(c), TACO_CLASS_ONI);
+  ck_assert_double_eq(taco_course_level(c), 1);
+
+  const taco_section *s =
+      taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
+  ck_assert_ptr_nonnull(s);
+  ck_assert_int_eq(taco_section_size(s), 2);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
+                   TACO_EVENT_MEASURE);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)), TACO_EVENT_DON);
 
   taco_courseset_free(set);
 }
 END_TEST
 
 START_TEST(test_whitespace) {
-  taco_courseset *set =
-      taco_parser_parse_file(parser, "assets/whitespace.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/whitespace.tja");
   ck_assert_ptr_nonnull(set);
   ck_assert_str_eq(taco_courseset_title(set), "I don't have whitespaces");
 
@@ -132,7 +151,7 @@ START_TEST(test_balloon) {
       taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
 
   int j = 0;
-  taco_section_foreach (i, s) {
+  taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BALLOON) {
       ck_assert_int_eq(taco_event_hits(i), count[j]);
       j += 1;
@@ -232,14 +251,12 @@ START_TEST(test_double) {
   const taco_section *l =
       taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(l);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(l, 1)),
-                   TACO_EVENT_DON);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(l, 1)), TACO_EVENT_DON);
 
   const taco_section *r =
       taco_course_get_branch(c, TACO_SIDE_RIGHT, TACO_BRANCH_NORMAL);
   ck_assert_ptr_nonnull(r);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(r, 1)),
-                   TACO_EVENT_KAT);
+  ck_assert_int_eq(taco_event_type(taco_section_locate(r, 1)), TACO_EVENT_KAT);
 
   taco_courseset_free(set);
 }
@@ -250,8 +267,7 @@ START_TEST(test_badmeasure) {
 }
 
 START_TEST(test_checkpoint) {
-  taco_courseset *set =
-      taco_parser_parse_file(parser, "assets/checkpoint.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/checkpoint.tja");
   const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   const taco_section *s = taco_course_get_branch(c, 0, 0);
 
@@ -289,6 +305,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_double);
   tcase_add_test(c, test_empty);
   tcase_add_test(c, test_emptymeasures);
+  tcase_add_test(c, test_eof);
   tcase_add_test(c, test_measures);
   tcase_add_test(c, test_whitespace);
   return c;

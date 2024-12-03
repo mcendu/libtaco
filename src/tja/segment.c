@@ -38,7 +38,7 @@ void tja_segment_finish_measure_(tja_segment *segment) {
 }
 
 int tja_segment_push_events_(tja_segment *segment, tja_events *events) {
-  taco_section_foreach_mut_ (i, events->events) {
+  taco_section_foreach_mut_(i, events->events) {
     tja_event_set_measure_(i, segment->measures);
   }
   segment->levelhold = segment->levelhold || events->levelhold;

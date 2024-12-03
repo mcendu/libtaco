@@ -10,10 +10,9 @@
 typedef struct taco_file_ taco_file;
 
 extern taco_file *taco_file_open_(taco_allocator *alloc, void *stream,
-                                    const char *filename, taco_read_fn *read,
-                                    taco_write_fn *write,
-                                    taco_close_fn *close,
-                                    taco_printf_fn *printf);
+                                  const char *filename, taco_read_fn *read,
+                                  taco_write_fn *write, taco_close_fn *close,
+                                  taco_printf_fn *printf);
 extern taco_file *taco_file_open_path_(const char *path, const char *mode);
 extern taco_file *taco_file_open_stdio_(FILE *file);
 extern taco_file *taco_file_open_null_(taco_allocator *alloc);
@@ -26,8 +25,8 @@ extern size_t taco_file_read_(taco_file *file, void *dst, size_t size);
 extern size_t taco_file_write_(taco_file *file, const void *src, size_t size);
 extern int taco_file_printf_(taco_file *file, const char *format, ...)
     TACO_PRINTF(2, 3);
-extern int taco_file_vprintf_(taco_file *file, const char *format,
-                               va_list arg) TACO_PRINTF(2, 0);
+extern int taco_file_vprintf_(taco_file *file, const char *format, va_list arg)
+    TACO_PRINTF(2, 0);
 
 extern taco_file *taco_get_stderr_();
 

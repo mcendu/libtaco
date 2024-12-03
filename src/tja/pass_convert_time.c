@@ -25,7 +25,7 @@ static void pass_extract_tickrate(taco_section *branch) {
   int dividend = 4;
   int divisor = 4;
 
-  taco_section_foreach (i, branch) {
+  taco_section_foreach(i, branch) {
     if (i->type == TACO_EVENT_MEASURE && i->measure.tja_units != 0) {
       // calculate units required for 4/4 signature
       int units = lcm(i->measure.tja_units * divisor, dividend);
@@ -48,7 +48,7 @@ static void pass_convert(taco_section *branch) {
   int current_measure = 0;
   int units = 4;
 
-  taco_section_foreach_mut_ (i, branch) {
+  taco_section_foreach_mut_(i, branch) {
     // new measure
     if (tja_event_measure_(i) != current_measure) {
       start = start + measure_ticks;
@@ -79,8 +79,8 @@ static void pass_convert(taco_section *branch) {
 static void pass_remove_excess_factors(taco_section *branch) {
   int divisor = 0;
 
-  taco_section_foreach (i, branch)
-    divisor = gcd(i->time, divisor); // impl detail: gcd(x, 0) = x
+  taco_section_foreach(i, branch) divisor =
+      gcd(i->time, divisor); // impl detail: gcd(x, 0) = x
 
   // ensure a minimum tickrate of 96
   if (divisor == 0) {
@@ -92,10 +92,8 @@ static void pass_remove_excess_factors(taco_section *branch) {
   }
 
   if (divisor > 1) {
-    taco_section_set_tickrate_(branch,
-                                taco_section_tickrate(branch) / divisor);
-    taco_section_foreach_mut_ (i, branch)
-      i->time /= divisor;
+    taco_section_set_tickrate_(branch, taco_section_tickrate(branch) / divisor);
+    taco_section_foreach_mut_(i, branch) i->time /= divisor;
   }
 }
 

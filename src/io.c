@@ -18,9 +18,9 @@ struct taco_file_ {
 };
 
 taco_file *taco_file_open_(taco_allocator *alloc, void *stream,
-                             const char *filename, taco_read_fn *read,
-                             taco_write_fn *write, taco_close_fn *close,
-                             taco_printf_fn *printf) {
+                           const char *filename, taco_read_fn *read,
+                           taco_write_fn *write, taco_close_fn *close,
+                           taco_printf_fn *printf) {
   taco_file *f = taco_malloc_(alloc, sizeof(taco_file));
   if (!f)
     return NULL;
@@ -41,9 +41,9 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
     return NULL;
 
   taco_file *result =
-      taco_file_open_(&taco_default_allocator_, f, path,
-                       (taco_read_fn *)fread, (taco_write_fn *)fwrite,
-                       (taco_close_fn *)fclose, (taco_printf_fn *)vfprintf);
+      taco_file_open_(&taco_default_allocator_, f, path, (taco_read_fn *)fread,
+                      (taco_write_fn *)fwrite, (taco_close_fn *)fclose,
+                      (taco_printf_fn *)vfprintf);
   if (!result) {
     fclose(f);
     return NULL;
@@ -54,8 +54,8 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
 
 taco_file *taco_file_open_stdio_(FILE *file) {
   return taco_file_open_(&taco_default_allocator_, file, "<stream>",
-                          (taco_read_fn *)fread, (taco_write_fn *)fwrite,
-                          NULL, (taco_printf_fn *)vfprintf);
+                         (taco_read_fn *)fread, (taco_write_fn *)fwrite, NULL,
+                         (taco_printf_fn *)vfprintf);
 }
 
 taco_file *taco_file_open_null_(taco_allocator *alloc) {

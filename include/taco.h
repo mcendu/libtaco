@@ -200,15 +200,15 @@ typedef void *taco_realloc_fn(void *ptr, size_t size, void *restrict heap)
 
 /* Read data from stream. (cf. fread) */
 typedef size_t taco_read_fn(void *restrict dst, size_t size, size_t count,
-                             void *restrict stream);
+                            void *restrict stream);
 /* Write data to stream. (cf. fwrite) */
 typedef size_t taco_write_fn(const void *restrict src, size_t size,
-                              size_t count, void *restrict stream);
+                             size_t count, void *restrict stream);
 /* Close stream. Not used if you pass in the stream. (cf. fclose) */
 typedef int taco_close_fn(void *stream);
 /* Write formatted output to stream. (cf. vfprintf) */
 typedef int taco_printf_fn(void *restrict stream, const char *restrict format,
-                            va_list ap);
+                           va_list ap);
 
 /* User-supplied structures */
 
@@ -229,15 +229,14 @@ TACO_PUBLIC taco_parser *taco_parser_tja_create2(taco_allocator *allocator);
 /* Destroys a parser. */
 TACO_PUBLIC void taco_parser_free(taco_parser *parser);
 /* Parse a courseset from the filesystem. */
-TACO_PUBLIC taco_courseset *
-taco_parser_parse_file(taco_parser *restrict parser,
-                        const char *restrict file);
+TACO_PUBLIC taco_courseset *taco_parser_parse_file(taco_parser *restrict parser,
+                                                   const char *restrict file);
 /* Parse a courseset from an open <stdio.h> stream. */
 TACO_PUBLIC taco_courseset *
 taco_parser_parse_stdio(taco_parser *restrict parser, FILE *file);
 
 TACO_PUBLIC int taco_parser_set_error_stdio(taco_parser *restrict parser,
-                                              FILE *file);
+                                            FILE *file);
 
 /* Destroys a courseset. */
 TACO_PUBLIC void taco_courseset_free(taco_courseset *set);
@@ -266,21 +265,19 @@ taco_courseset_demo_time(const taco_courseset *restrict set) TACO_PURE;
 /* Gets a course with the difficulty class specified. */
 TACO_PUBLIC const taco_course *
 taco_courseset_get_course(const taco_courseset *restrict set,
-                           int diffclass) TACO_PURE;
+                          int diffclass) TACO_PURE;
 
 /* Gets difficulty info. */
 TACO_PUBLIC void taco_course_difficulty(const taco_course *restrict course,
-                                          int *restrict diffclass,
-                                          int *restrict level);
+                                        int *restrict diffclass,
+                                        int *restrict level);
 /* Gets the difficulty class. */
-TACO_PUBLIC int
-taco_course_class(const taco_course *restrict course) TACO_PURE;
+TACO_PUBLIC int taco_course_class(const taco_course *restrict course) TACO_PURE;
 /* Gets the level. */
 TACO_PUBLIC double
 taco_course_level(const taco_course *restrict course) TACO_PURE;
 /* Gets the playstyle. */
-TACO_PUBLIC int
-taco_course_style(const taco_course *restrict course) TACO_PURE;
+TACO_PUBLIC int taco_course_style(const taco_course *restrict course) TACO_PURE;
 /* Gets the main tempo. */
 TACO_PUBLIC double
 taco_course_bpm(const taco_course *restrict course) TACO_PURE;
@@ -297,11 +294,11 @@ taco_course_branched(const taco_course *restrict course) TACO_PURE;
 /* Gets the branch of a course. */
 TACO_PUBLIC const taco_section *
 taco_course_get_branch(const taco_course *restrict course, int side,
-                        int branch) TACO_PURE;
+                       int branch) TACO_PURE;
 
 /* Gets the count of events. */
-TACO_PUBLIC size_t taco_section_size(const taco_section *restrict section)
-    TACO_PURE;
+TACO_PUBLIC size_t
+taco_section_size(const taco_section *restrict section) TACO_PURE;
 /* Gets the number of ticks per 4/4 measure. */
 TACO_PUBLIC int
 taco_section_tickrate(const taco_section *restrict section) TACO_PURE;
@@ -315,7 +312,7 @@ taco_section_end(const taco_section *restrict section) TACO_PURE;
 /* Gets an iterator to an arbitrary event. Returns NULL if out of bounds. */
 TACO_PUBLIC const taco_event *
 taco_section_locate(const taco_section *restrict section,
-                     size_t index) TACO_PURE;
+                    size_t index) TACO_PURE;
 
 /* Gets the time of an event in ticks. */
 TACO_PUBLIC int taco_event_time(const taco_event *restrict event) TACO_PURE;
@@ -330,12 +327,12 @@ taco_event_detail_float(const taco_event *restrict event) TACO_PURE;
 
 /* Compares two events for sorting. */
 TACO_PUBLIC int taco_event_compare(const taco_event *restrict a,
-                                     const taco_event *restrict b);
+                                   const taco_event *restrict b);
 
 /* Gets the time of an event in seconds. */
 TACO_PUBLIC double
 taco_event_seconds(const taco_event *restrict event,
-                    const taco_section *restrict section) TACO_PURE;
+                   const taco_section *restrict section) TACO_PURE;
 
 /* Gets the next event. */
 TACO_PUBLIC const taco_event *
@@ -354,9 +351,9 @@ taco_event_prev(const taco_event *restrict event) TACO_PURE;
 /* ## Shorthands */
 
 /* Iterates over a section. Replace `i` with an unused variable name. */
-#define taco_section_foreach(i, s)                                            \
-  for (const taco_event *i = taco_section_begin(s);                          \
-       i != taco_section_end(s); i = taco_event_next(i))
+#define taco_section_foreach(i, s)                                             \
+  for (const taco_event *i = taco_section_begin(s); i != taco_section_end(s);  \
+       i = taco_event_next(i))
 
 /* Gets the annotation of a note. */
 #define taco_event_notetext(e) (TACO_TEXT(taco_event_detail_int(e)))

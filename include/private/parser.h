@@ -8,9 +8,9 @@ typedef const struct taco_parser_vfuncs_ taco_parser_vfuncs;
 
 typedef void (*taco_parser_free_fn)(void *parser);
 typedef taco_courseset *(*taco_parser_parse_fn)(void *restrict parser,
-                                                  taco_file *restrict file);
+                                                taco_file *restrict file);
 typedef int (*taco_parser_seterror_fn)(void *restrict parser,
-                                        taco_file *restrict file);
+                                       taco_file *restrict file);
 
 struct taco_parser_vfuncs_ {
   taco_parser_free_fn free;
@@ -19,6 +19,6 @@ struct taco_parser_vfuncs_ {
 };
 
 extern taco_parser *taco_parser_wrap_(taco_allocator *alloc, void *parser,
-                                        taco_parser_vfuncs *vtable);
+                                      taco_parser_vfuncs *vtable);
 
 #endif /* TACO_PARSER_H_ */

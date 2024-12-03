@@ -17,7 +17,7 @@ int score_branch_ac16(const taco_section *b, const taco_course *c, int *base,
   int current_balloon_hits = 0;
   double current_roll_start = NAN;
 
-  taco_section_foreach (i, b) {
+  taco_section_foreach(i, b) {
     int type = taco_event_type(i);
 
     // ignore non-note events

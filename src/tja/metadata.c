@@ -147,16 +147,16 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
 
   if (meta->balloon_n)
     taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_n),
-                               tja_balloon_size_(meta->balloon_n),
-                               TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
+                              tja_balloon_size_(meta->balloon_n),
+                              TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
   if (meta->balloon_a)
     taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_a),
-                               tja_balloon_size_(meta->balloon_a),
-                               TACO_SIDE_LEFT, TACO_BRANCH_ADVANCED);
+                              tja_balloon_size_(meta->balloon_a),
+                              TACO_SIDE_LEFT, TACO_BRANCH_ADVANCED);
   if (meta->balloon_m)
     taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_m),
-                               tja_balloon_size_(meta->balloon_m),
-                               TACO_SIDE_LEFT, TACO_BRANCH_MASTER);
+                              tja_balloon_size_(meta->balloon_m),
+                              TACO_SIDE_LEFT, TACO_BRANCH_MASTER);
 
   return 0;
 }
@@ -208,6 +208,4 @@ static const metadata_setter setters[] = {
     [TJA_METADATA_PAPAMAMA] = SETTER_(papamama),
 };
 
-static metadata_setter setter(int index) {
-  return setters[index];
-};
+static metadata_setter setter(int index) { return setters[index]; };

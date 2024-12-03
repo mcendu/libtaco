@@ -156,6 +156,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <header_numeric,header_pretext,header_command><<EOF>> {
+  BEGIN(INITIAL);
   return '\n';
 }
 
@@ -261,6 +262,7 @@ IDENTIFIER {IDSTART}{IDCONT}*
 }
 
 <body_pretext,body_command><<EOF>> {
+  BEGIN(body);
   return '\n';
 }
 

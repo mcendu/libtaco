@@ -10,7 +10,7 @@ extern void tja_pass_checkpoint_rolls_(tja_parser *parser,
                                        taco_section *branch) {
   taco_event *head = NULL;
 
-  taco_section_foreach_mut_ (i, branch) {
+  taco_section_foreach_mut_(i, branch) {
     if (taco_event_type(i) <= 0)
       continue;
 

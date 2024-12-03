@@ -40,8 +40,7 @@ taco_section *taco_section_create_(void) {
 
 taco_section *taco_section_create2_(taco_allocator *a) {
   taco_section *section = taco_malloc_(a, sizeof(taco_section));
-  taco_event *events =
-      taco_malloc_(a, INITIAL_CAPACITY * sizeof(taco_event));
+  taco_event *events = taco_malloc_(a, INITIAL_CAPACITY * sizeof(taco_event));
 
   if (!section || !events) {
     taco_free_(a, section);
@@ -118,7 +117,7 @@ const taco_event *taco_section_end(const taco_section *restrict s) {
 }
 
 const taco_event *taco_section_locate(const taco_section *restrict s,
-                                        size_t i) {
+                                      size_t i) {
   if (i >= s->size)
     return NULL;
   return s->events + i;
@@ -183,7 +182,7 @@ int taco_section_trim_(taco_section *restrict s) {
 }
 
 int taco_section_push_(taco_section *restrict s,
-                        const taco_event *restrict event) {
+                       const taco_event *restrict event) {
   invalidate_bpm_times_(s);
   taco_event *start = reserve(s, 1);
   if (!start)
@@ -194,8 +193,8 @@ int taco_section_push_(taco_section *restrict s,
 }
 
 extern int taco_section_push_many_(taco_section *restrict s,
-                                    const taco_event *restrict events,
-                                    size_t count) {
+                                   const taco_event *restrict events,
+                                   size_t count) {
   invalidate_bpm_times_(s);
   taco_event *start = reserve(s, count);
   if (!start)
@@ -206,7 +205,7 @@ extern int taco_section_push_many_(taco_section *restrict s,
 }
 
 int taco_section_concat_(taco_section *restrict s,
-                          const taco_section *restrict other) {
+                         const taco_section *restrict other) {
   invalidate_bpm_times_(s);
   return taco_section_push_many_(s, other->events, other->size);
 }
@@ -225,11 +224,11 @@ void taco_section_clear_(taco_section *restrict s) {
 }
 
 int taco_section_set_balloons_(taco_section *restrict section,
-                                const int *restrict balloons, size_t count) {
+                               const int *restrict balloons, size_t count) {
   const int *j = balloons;
   const int *end = balloons + count;
 
-  taco_section_foreach_mut_ (i, section) {
+  taco_section_foreach_mut_(i, section) {
     if (i->type != TACO_EVENT_BALLOON && i->type != TACO_EVENT_KUSUDAMA)
       continue;
 
@@ -255,7 +254,7 @@ static int init_bpm_times_(taco_section *restrict s) {
 
   // scan
   int bpms = 1;
-  taco_section_foreach (i, s) {
+  taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BPM)
       bpms += 1;
   }
@@ -277,7 +276,7 @@ static int init_bpm_times_(taco_section *restrict s) {
   entry += 1;
 
   // calculate time for _BPM events
-  taco_section_foreach (i, s) {
+  taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BPM) {
       // special case time 0 BPM change to overwrite default first entry
       if (taco_event_time(i) == 0) {
@@ -318,7 +317,7 @@ static const bpm_entry *find_bpm_section_start_(int ticks,
 }
 
 TACO_PUBLIC double taco_event_seconds(const taco_event *restrict e,
-                                        const taco_section *restrict s) {
+                                      const taco_section *restrict s) {
   if (e < s->events || e >= s->events + s->size)
     return NAN;
 

@@ -59,7 +59,7 @@ const char *taco_courseset_title(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_title_(taco_courseset *restrict set,
-                               const char *restrict title) {
+                              const char *restrict title) {
   char *buf = taco_strdup_(set->alloc, title);
 
   if (buf) {
@@ -76,7 +76,7 @@ const char *taco_courseset_subtitle(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_subtitle_(taco_courseset *restrict set,
-                                  const char *restrict subtitle) {
+                                 const char *restrict subtitle) {
   char *buf = taco_strdup_(set->alloc, subtitle);
 
   if (buf) {
@@ -93,7 +93,7 @@ const char *taco_courseset_genre(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_genre_(taco_courseset *restrict set,
-                               const char *restrict genre) {
+                              const char *restrict genre) {
   char *buf = taco_strdup_(set->alloc, genre);
 
   if (buf) {
@@ -110,7 +110,7 @@ const char *taco_courseset_maker(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_maker_(taco_courseset *restrict set,
-                               const char *restrict maker) {
+                              const char *restrict maker) {
   char *buf = taco_strdup_(set->alloc, maker);
 
   if (buf) {
@@ -129,7 +129,7 @@ const char *taco_courseset_filename(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_filename_(taco_courseset *restrict set,
-                                  const char *restrict filename) {
+                                 const char *restrict filename) {
   char *buf = taco_strdup_(set->alloc, filename);
 
   if (buf) {
@@ -146,7 +146,7 @@ const char *taco_courseset_audio(const taco_courseset *restrict set) {
 }
 
 int taco_courseset_set_audio_(taco_courseset *restrict set,
-                               const char *restrict path) {
+                              const char *restrict path) {
   char *buf = taco_strdup_(set->alloc, path);
 
   if (buf) {
@@ -163,26 +163,26 @@ double taco_courseset_demo_time(const taco_courseset *restrict set) {
 }
 
 extern void taco_courseset_set_demo_time_(taco_courseset *restrict set,
-                                           double time) {
+                                          double time) {
   set->demo_time = time;
 }
 
-const taco_course *
-taco_courseset_get_course(const taco_courseset *restrict set, int class) {
+const taco_course *taco_courseset_get_course(const taco_courseset *restrict set,
+                                             int class) {
   if (class >= 8)
     return NULL;
   return set->courses[class];
 }
 
 taco_course *taco_courseset_get_course_mut_(taco_courseset *restrict set,
-                                              int class) {
+                                            int class) {
   if (class >= 8)
     return NULL;
   return set->courses[class];
 }
 
 int taco_courseset_add_course_(taco_courseset *restrict set,
-                                taco_course *restrict course) {
+                               taco_course *restrict course) {
   int class = taco_course_class(course);
 
   if (set->courses[class]) {

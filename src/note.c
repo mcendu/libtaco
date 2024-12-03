@@ -41,14 +41,10 @@ int taco_event_compare(const taco_event *a, const taco_event *b) {
   return result;
 }
 
-const taco_event *taco_event_next(const taco_event *event) {
-  return event + 1;
-}
+const taco_event *taco_event_next(const taco_event *event) { return event + 1; }
 
 taco_event *taco_event_next_mut_(taco_event *event) { return event + 1; }
 
-const taco_event *taco_event_prev(const taco_event *event) {
-  return event - 1;
-}
+const taco_event *taco_event_prev(const taco_event *event) { return event - 1; }
 
 taco_event *taco_event_prev_mut_(taco_event *event) { return event - 1; }
