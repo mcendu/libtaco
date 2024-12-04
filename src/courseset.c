@@ -54,109 +54,42 @@ void taco_courseset_free(taco_courseset *set) {
   taco_free_(set->alloc, set);
 }
 
-const char *taco_courseset_title(const taco_courseset *restrict set) {
-  return set->title;
-}
-
-int taco_courseset_set_title_(taco_courseset *restrict set,
-                              const char *restrict title) {
-  char *buf = taco_strdup_(set->alloc, title);
-
-  if (buf) {
-    taco_free_(set->alloc, set->title);
-    set->title = buf;
-    return 0;
+#define STRING_PROPERTY_SETTER(prop)                                           \
+  int taco_courseset_set_##prop##_(taco_courseset *restrict set_,              \
+                                   const char *restrict prop) {                \
+    char *buf = taco_strdup_(set_->alloc, prop);                               \
+                                                                               \
+    if (buf) {                                                                 \
+      taco_free_(set_->alloc, set_->prop);                                     \
+      set_->prop = buf;                                                        \
+      return 0;                                                                \
+    }                                                                          \
+                                                                               \
+    return -1;                                                                 \
   }
 
-  return -1;
-}
-
-const char *taco_courseset_subtitle(const taco_courseset *restrict set) {
-  return set->subtitle;
-}
-
-int taco_courseset_set_subtitle_(taco_courseset *restrict set,
-                                 const char *restrict subtitle) {
-  char *buf = taco_strdup_(set->alloc, subtitle);
-
-  if (buf) {
-    taco_free_(set->alloc, set->subtitle);
-    set->subtitle = buf;
-    return 0;
+#define STRING_PROPERTY_GETTER(prop, default)                                  \
+  const char *taco_courseset_##prop(const taco_courseset *restrict set_) {     \
+    if (!(set_->prop))                                                         \
+      return (default);                                                        \
+    return set_->prop;                                                         \
   }
 
-  return -1;
-}
+#define STRING_PROPERTY(prop, default)                                         \
+  STRING_PROPERTY_GETTER(prop, default)                                        \
+  STRING_PROPERTY_SETTER(prop)
 
-const char *taco_courseset_genre(const taco_courseset *restrict set) {
-  return set->genre;
-}
+STRING_PROPERTY(title, NULL)
 
-int taco_courseset_set_genre_(taco_courseset *restrict set,
-                              const char *restrict genre) {
-  char *buf = taco_strdup_(set->alloc, genre);
+STRING_PROPERTY(subtitle, NULL)
 
-  if (buf) {
-    taco_free_(set->alloc, set->genre);
-    set->genre = buf;
-    return 0;
-  }
+STRING_PROPERTY(genre, NULL)
 
-  return -1;
-}
+STRING_PROPERTY(maker, NULL)
 
-const char *taco_courseset_maker(const taco_courseset *restrict set) {
-  return set->maker;
-}
+STRING_PROPERTY(filename, "<unknown>")
 
-int taco_courseset_set_maker_(taco_courseset *restrict set,
-                              const char *restrict maker) {
-  char *buf = taco_strdup_(set->alloc, maker);
-
-  if (buf) {
-    taco_free_(set->alloc, set->maker);
-    set->maker = buf;
-    return 0;
-  }
-
-  return -1;
-}
-
-const char *taco_courseset_filename(const taco_courseset *restrict set) {
-  if (!(set->filename))
-    return "<unnamed>";
-  return set->filename;
-}
-
-int taco_courseset_set_filename_(taco_courseset *restrict set,
-                                 const char *restrict filename) {
-  char *buf = taco_strdup_(set->alloc, filename);
-
-  if (buf) {
-    taco_free_(set->alloc, set->filename);
-    set->filename = buf;
-    return 0;
-  }
-
-  return -1;
-}
-
-const char *taco_courseset_audio(const taco_courseset *restrict set) {
-  return set->audio;
-}
-
-int taco_courseset_set_audio_(taco_courseset *restrict set,
-                              const char *restrict path) {
-  char *buf = taco_strdup_(set->alloc, path);
-
-  if (buf) {
-    taco_free_(set->alloc, set->audio);
-    set->audio = buf;
-    return 0;
-  }
-
-  return -1;
-}
+STRING_PROPERTY(audio, NULL)
 
 double taco_courseset_demo_time(const taco_courseset *restrict set) {
   return set->demo_time;
