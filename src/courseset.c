@@ -57,11 +57,11 @@ void taco_courseset_free(taco_courseset *set) {
 #define STRING_PROPERTY_SETTER(prop)                                           \
   int taco_courseset_set_##prop##_(taco_courseset *restrict set_,              \
                                    const char *restrict prop) {                \
-    char *buf = taco_strdup_(set_->alloc, prop);                               \
+    char *buf_ = taco_strdup_(set_->alloc, prop);                              \
                                                                                \
-    if (buf) {                                                                 \
+    if (buf_) {                                                                \
       taco_free_(set_->alloc, set_->prop);                                     \
-      set_->prop = buf;                                                        \
+      set_->prop = buf_;                                                       \
       return 0;                                                                \
     }                                                                          \
                                                                                \
@@ -79,17 +79,17 @@ void taco_courseset_free(taco_courseset *set) {
   STRING_PROPERTY_GETTER(prop, default)                                        \
   STRING_PROPERTY_SETTER(prop)
 
-STRING_PROPERTY(title, NULL)
+STRING_PROPERTY(title, "Untitled")
 
-STRING_PROPERTY(subtitle, NULL)
+STRING_PROPERTY(subtitle, "")
 
-STRING_PROPERTY(genre, NULL)
+STRING_PROPERTY(genre, "")
 
-STRING_PROPERTY(maker, NULL)
+STRING_PROPERTY(maker, "")
 
 STRING_PROPERTY(filename, "<unknown>")
 
-STRING_PROPERTY(audio, NULL)
+STRING_PROPERTY(audio, "")
 
 double taco_courseset_demo_time(const taco_courseset *restrict set) {
   return set->demo_time;

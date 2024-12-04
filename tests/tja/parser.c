@@ -36,7 +36,7 @@ END_TEST
 START_TEST(test_empty) {
   taco_courseset *set = taco_parser_parse_file(parser, "assets/empty.tja");
   ck_assert_ptr_nonnull(set);
-  ck_assert_ptr_null(taco_courseset_title(set));
+  ck_assert_str_eq(taco_courseset_title(set), "Untitled");
   ck_assert_ptr_null(taco_courseset_get_course(set, TACO_CLASS_ONI));
   taco_courseset_free(set);
 }

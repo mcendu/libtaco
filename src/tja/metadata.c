@@ -125,15 +125,15 @@ int tja_metadata_update_(tja_metadata *meta, tja_metadata *updates) {
 }
 
 int tja_courseset_apply_metadata_(taco_courseset *set, tja_metadata *meta) {
-  if (meta->title && !taco_courseset_title(set))
+  if (meta->title)
     taco_courseset_set_title_(set, meta->title);
-  if (meta->subtitle && !taco_courseset_subtitle(set))
+  if (meta->subtitle)
     taco_courseset_set_subtitle_(set, meta->subtitle);
-  if (meta->genre && !taco_courseset_genre(set))
+  if (meta->genre)
     taco_courseset_set_genre_(set, meta->genre);
-  if (meta->maker && !taco_courseset_maker(set))
+  if (meta->maker)
     taco_courseset_set_maker_(set, meta->maker);
-  if (meta->audio && !taco_courseset_audio(set))
+  if (meta->audio)
     taco_courseset_set_audio_(set, meta->audio);
   if (isnan(taco_courseset_demo_time(set)))
     taco_courseset_set_demo_time_(set, meta->demostart);
@@ -142,7 +142,8 @@ int tja_courseset_apply_metadata_(taco_courseset *set, tja_metadata *meta) {
 
 int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
   taco_course_set_class_(course, meta->course);
-  taco_course_set_level_(course, meta->level);
+  if (!isnan(meta->level))
+    taco_course_set_level_(course, meta->level);
   taco_course_set_papamama_(course, meta->papamama);
 
   if (meta->balloon_n)
