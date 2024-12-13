@@ -133,6 +133,8 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %type <field> level_header
 %type <field> style_header
 %type <field> balloon_header
+%type <field> scoreinit_header
+%type <field> scorediff_header
 %type <field> papamama_command
 %type <field> unrecognized_header
 
@@ -191,6 +193,8 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token BALLOONNOR
 %token BALLOONEXP
 %token BALLOONMAS
+%token SCOREINIT
+%token SCOREDIFF
 
 %token PAPAMAMA_CMD
 
@@ -249,6 +253,8 @@ header:
   | course_header
   | level_header
   | style_header
+  | scoreinit_header
+  | scorediff_header
   | balloon_header
   | papamama_command
   | unrecognized_header;
@@ -326,6 +332,24 @@ style_header:
     $$.key = TJA_METADATA_STYLE;
     $$.integer = tja_interpret_style_($3);
     taco_free_(parser->alloc, $3);
+  };
+
+scoreinit_header:
+  SCOREINIT ':' INTEGER '\n' {
+    $$.key = TJA_METADATA_SCOREINIT;
+    $$.scoreinit.casual = $3;
+    $$.scoreinit.tournament = 0;
+  }
+  | SCOREINIT ':' INTEGER ',' INTEGER '\n' {
+    $$.key = TJA_METADATA_SCOREINIT;
+    $$.scoreinit.casual = $3;
+    $$.scoreinit.tournament = $5;
+  };
+
+scorediff_header:
+  SCOREDIFF ':' INTEGER '\n' {
+    $$.key = TJA_METADATA_SCOREINIT;
+    $$.integer = $3;
   };
 
 balloon_header:
