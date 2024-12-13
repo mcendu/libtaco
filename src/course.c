@@ -26,6 +26,10 @@ struct taco_course_ {
   int style;
   int scrollmode;
 
+  int score_base;
+  int score_tournament;
+  int score_bonus;
+
   bool papamama : 1;
   bool branched : 1;
 
@@ -98,6 +102,18 @@ double taco_course_offset(const taco_course *restrict course) {
   return course->offset;
 }
 
+int taco_course_score_base(const taco_course *restrict course) {
+  return course->score_base;
+}
+
+int taco_course_score_tournament(const taco_course *restrict course) {
+  return course->score_tournament;
+}
+
+int taco_course_score_bonus(const taco_course *restrict course) {
+  return course->score_bonus;
+}
+
 void taco_course_set_class_(taco_course *restrict course, int class) {
   course->class = class;
 }
@@ -120,6 +136,19 @@ void taco_course_set_bpm_(taco_course *restrict course, double bpm) {
 
 void taco_course_set_offset_(taco_course *restrict course, double offset) {
   course->offset = offset;
+}
+
+void taco_course_set_score_base_(taco_course *restrict course, int base) {
+  course->score_base = base;
+}
+
+void taco_course_set_score_tournament_(taco_course *restrict course,
+                                       int score) {
+  course->score_tournament = score;
+}
+
+void taco_course_set_score_bonus_(taco_course *restrict course, int bonus) {
+  course->score_bonus = bonus;
 }
 
 const taco_section *taco_course_get_branch(const taco_course *restrict course,

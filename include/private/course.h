@@ -16,6 +16,11 @@ extern void taco_course_set_papamama_(taco_course *restrict course,
 extern void taco_course_set_bpm_(taco_course *restrict course, double bpm);
 extern void taco_course_set_offset_(taco_course *restrict course,
                                     double offset);
+extern void taco_course_set_score_base_(taco_course *restrict course, int base);
+extern void taco_course_set_score_tournament_(taco_course *restrict course,
+                                              int score);
+extern void taco_course_set_score_bonus_(taco_course *restrict course,
+                                         int bonus);
 
 extern taco_section *taco_course_get_branch_mut_(taco_course *restrict course,
                                                  int side, int branch);
