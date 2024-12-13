@@ -28,6 +28,9 @@ struct tja_metadata_ {
   int side;
   int course;
   int style;
+  int scoreinit;
+  int scorediff;
+  int scoreinit_s;
   bool papamama;
 };
 
@@ -48,6 +51,9 @@ tja_metadata *tja_metadata_create2_(taco_allocator *a) {
   m->side = -1;
   m->course = -1;
   m->style = -1;
+  m->scoreinit = -1;
+  m->scoreinit_s = -1;
+  m->scorediff = -1;
   return m;
 }
 
@@ -114,6 +120,9 @@ int tja_metadata_update_(tja_metadata *meta, tja_metadata *updates) {
   update_int(meta, updates, side);
   update_int(meta, updates, course);
   update_int(meta, updates, style);
+  update_int(meta, updates, scoreinit);
+  update_int(meta, updates, scoreinit_s);
+  update_int(meta, updates, scorediff);
   move_balloon(meta, updates, balloon_n);
   move_balloon(meta, updates, balloon_a);
   move_balloon(meta, updates, balloon_m);
@@ -145,6 +154,15 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
   if (!isnan(meta->level))
     taco_course_set_level_(course, meta->level);
   taco_course_set_papamama_(course, meta->papamama);
+
+  if (meta->scoreinit != 0) {
+    taco_course_set_score_base_(course, meta->scoreinit);
+    if (meta->scorediff != 0)
+      taco_course_set_score_bonus_(course, meta->scorediff);
+  }
+  if (meta->scoreinit_s != 0) {
+    taco_course_set_score_tournament_(course, meta->scoreinit_s);
+  }
 
   if (meta->balloon_n)
     taco_course_set_balloons_(course, tja_balloon_data_(meta->balloon_n),
@@ -187,7 +205,14 @@ MAKE_SETTER_(style, integer);
 MAKE_SETTER_(balloon_n, balloon);
 MAKE_SETTER_(balloon_a, balloon);
 MAKE_SETTER_(balloon_m, balloon);
+MAKE_SETTER_(scorediff, integer);
 MAKE_SETTER_(papamama, integer);
+
+static int SETTER_(scoreinit)(tja_metadata *m, tja_metadata_field *f) {
+  m->scoreinit = f->scoreinit.casual;
+  m->scoreinit_s = f->scoreinit.tournament;
+  return 0;
+}
 
 static const metadata_setter setters[] = {
     [TJA_METADATA_UNRECOGNIZED] = SETTER_(unrecognized),
@@ -206,6 +231,8 @@ static const metadata_setter setters[] = {
     [TJA_METADATA_BALLOON] = SETTER_(balloon_n),
     [TJA_METADATA_BALLOONEXP] = SETTER_(balloon_a),
     [TJA_METADATA_BALLOONMAS] = SETTER_(balloon_m),
+    [TJA_METADATA_SCOREINIT] = SETTER_(scoreinit),
+    [TJA_METADATA_SCOREDIFF] = SETTER_(scorediff),
     [TJA_METADATA_PAPAMAMA] = SETTER_(papamama),
 };
 

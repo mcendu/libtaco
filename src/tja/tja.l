@@ -102,6 +102,12 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(header_pretext);
   return STYLE;
 }
+<INITIAL>SCOREINIT {
+  return SCOREINIT;
+}
+<INITIAL>SCOREDIFF {
+  return SCOREDIFF;
+}
 <INITIAL>BALLOON {
   return BALLOON;
 }

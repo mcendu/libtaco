@@ -22,6 +22,8 @@ enum tja_metadata_enum_ {
   TJA_METADATA_BALLOONEXP,
   TJA_METADATA_BALLOONMAS,
   TJA_METADATA_PAPAMAMA,
+  TJA_METADATA_SCOREINIT,
+  TJA_METADATA_SCOREDIFF,
   TJA_METADATA_MAX,
 };
 
@@ -56,6 +58,10 @@ struct tja_metadata_field_ {
     double real;
     char *text;
     tja_balloon *balloon;
+    struct {
+      int casual;
+      int tournament;
+    } scoreinit;
   };
 };
 
