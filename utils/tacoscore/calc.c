@@ -41,7 +41,7 @@ int score_course(const taco_course *c, int cls, score_branch_fn score) {
 
   if (taco_course_style(c) == TACO_STYLE_SINGLE) {
     const taco_section *b = taco_course_get_branch(c, 0, TACO_BRANCH_MASTER);
-    score_branch_ac16(b, c, &base, &bonus, &ceil, &combo);
+    score(b, c, &base, &bonus, &ceil, &combo);
     printf("%s: base %d, bonus %d, ceiling %d, max combo %d\n",
            class_names[cls], base, bonus, ceil, combo);
   } else {
