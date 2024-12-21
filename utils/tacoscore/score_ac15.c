@@ -14,7 +14,7 @@ struct result {
 struct roll_info {
   double small;
   double big;
-  double balloon;
+  double unbreakable;
   int balloon_hits;
   int breaks;
   int late_breaks;
@@ -57,6 +57,46 @@ static int note_bonus(int combo) {
   return table[combo / 10];
 }
 
+static int note_score(int combo, int gogotime, int base, int bonus) {
+  int raw = base + bonus * note_bonus(combo);
+  if (gogotime)
+    raw = floor(raw * 1.2);
+  return floor(raw / 10.0) * 10;
+}
+
+static int find_ceiling(const taco_section *branch, int base, int bonus,
+                        const struct roll_info *roll_info) {
+  int gogotime = 0;
+  int score = 0;
+  int combo = 0;
+
+  taco_section_foreach(i, branch) {
+    int type = taco_event_type(i);
+    switch (type) {
+    case TACO_EVENT_GOGOSTART:
+      gogotime = 1;
+      break;
+    case TACO_EVENT_GOGOEND:
+      gogotime = 0;
+      break;
+    case TACO_EVENT_DON:
+    case TACO_EVENT_KAT:
+      combo += 1;
+      score += note_score(combo, gogotime, base, bonus);
+      break;
+    case TACO_EVENT_DON_BIG:
+    case TACO_EVENT_KAT_BIG:
+      combo += 1;
+      score += note_score(combo, gogotime, base, bonus) * 2;
+      break;
+    }
+  }
+
+  score += roll_info->balloon_hits * 300 + roll_info->breaks * 5000 +
+           roll_info->late_breaks * 1000;
+  return score;
+};
+
 static void process_roll(struct roll_info *info, int type, double length,
                          int hits, double checkpoint) {
   if (type == TACO_EVENT_KUSUDAMA) {
@@ -70,14 +110,14 @@ static void process_roll(struct roll_info *info, int type, double length,
       info->balloon_hits += hits - 1;
       info->late_breaks += 1;
     } else {
-      info->balloon += length;
+      info->unbreakable += length;
     }
   } else if (type == TACO_EVENT_BALLOON) {
     if (roll_hits(length, 20) >= hits) {
       info->balloon_hits += hits - 1;
       info->breaks += 1;
     } else {
-      info->balloon += length;
+      info->unbreakable += length;
     }
   } else if (type == TACO_EVENT_ROLL_BIG) {
     info->big += length;
@@ -163,7 +203,8 @@ static void score_targetted(const taco_section *b, struct result *result,
   // determine contribution of rolls to target
   target -= roll_hits(roll_info.small, 15) * 100;
   target -= roll_hits(roll_info.big, 15) * 200;
-  target -= (roll_info.balloon_hits + roll_hits(roll_info.balloon, 15)) * 300;
+  target -=
+      (roll_info.balloon_hits + roll_hits(roll_info.unbreakable, 15)) * 300;
   target -= roll_info.breaks * 5000;
   target -= roll_info.late_breaks * 1000;
 
@@ -174,14 +215,9 @@ static void score_targetted(const taco_section *b, struct result *result,
   double unit = units ? target / (double)units : 0;
   int base = ceil((unit * 20) / 10) * 10;
   int bonus = ceil(unit * 5);
-  int gogobase = floor(base * 1.2);
-  int gogobonus = floor(bonus * 1.2);
 
   // calculate ceiling
-  int ceiling = base * base_count[0] + bonus * bonus_count[0] +
-                gogobase * base_count[1] + gogobonus * bonus_count[1] +
-                roll_info.balloon_hits * 300 + roll_info.breaks * 5000 +
-                roll_info.late_breaks * 1000;
+  int ceiling = find_ceiling(b, base, bonus, &roll_info);
 
   *(result->base) = base;
   *(result->bonus) = bonus;
@@ -218,7 +254,7 @@ int score_branch_ac15s(const taco_section *branch, const taco_course *meta,
   taco_section_foreach(i, branch) {
     int type = taco_event_type(i);
 
-    // process normal notes
+    // ignore all non-interactive events (tempo change etc.)
     if (type <= 0)
       continue;
 
@@ -269,7 +305,8 @@ int score_branch_ac15s(const taco_section *branch, const taco_course *meta,
   // determine contribution of rolls to target
   target -= roll_hits(roll_info.small, 15) * 100;
   target -= roll_hits(roll_info.big, 15) * 200;
-  target -= (roll_info.balloon_hits + roll_hits(roll_info.balloon, 15)) * 300;
+  target -=
+      (roll_info.balloon_hits + roll_hits(roll_info.unbreakable, 15)) * 300;
   target -= roll_info.breaks * 5000;
   target -= roll_info.late_breaks * 1000;
 
@@ -279,4 +316,86 @@ int score_branch_ac15s(const taco_section *branch, const taco_course *meta,
   *ceiling = *base * units + 300 * roll_info.balloon_hits +
              5000 * roll_info.breaks + 1000 * roll_info.late_breaks;
   return 0;
+}
+
+static int score_branch_existing(const taco_section *branch, int base,
+                                 int bonus, int *ceiling, int *combo) {
+  *combo = 0;
+  struct roll_info roll_info = {0, 0, 0, 0, 0, 0};
+  int roll_type = 0;
+  int balloon_hits = 0;
+  double roll_start = NAN;
+  double roll_checkpoint = NAN;
+
+  taco_section_foreach(i, branch) {
+    int type = taco_event_type(i);
+
+    if (type <= 0)
+      continue;
+
+    // process rolls
+    if (!isnan(roll_start)) {
+      switch (type) {
+      case TACO_EVENT_ROLL_END:
+        process_roll(&roll_info, roll_type,
+                     taco_event_seconds(i, branch) - roll_start, balloon_hits,
+                     taco_event_seconds(i, branch) - roll_checkpoint);
+        roll_start = NAN;
+        roll_checkpoint = NAN;
+        break;
+      case TACO_EVENT_ROLL_CHECKPOINT:
+        roll_checkpoint = taco_event_seconds(i, branch);
+      default:
+        // any roll without a specified end is discarded as invalid
+        roll_start = NAN;
+        break;
+      }
+    } else {
+      // process other stuff
+      switch (type) {
+      case TACO_EVENT_DON:
+      case TACO_EVENT_KAT:
+      case TACO_EVENT_DON_BIG:
+      case TACO_EVENT_KAT_BIG:
+        *combo += 1;
+        break;
+      case TACO_EVENT_BALLOON:
+      case TACO_EVENT_KUSUDAMA:
+        balloon_hits = taco_event_hits(i);
+        roll_type = taco_event_type(i);
+        roll_start = taco_event_seconds(i, branch);
+        break;
+      }
+    }
+  }
+
+  *ceiling = find_ceiling(branch, base, bonus, &roll_info);
+  return 0;
+}
+
+int score_branch_default(const taco_section *branch, const taco_course *meta,
+                         int *base, int *bonus, int *ceiling, int *combo) {
+  if (taco_course_score_base(meta) <= 0 || taco_course_score_bonus(meta) <= 0)
+    return score_branch_ac15(branch, meta, base, bonus, ceiling, combo);
+
+  *base = taco_course_score_base(meta);
+  *bonus = taco_course_score_bonus(meta);
+  return score_branch_existing(branch, *base, *bonus, ceiling, combo);
+}
+
+int score_branch_shinuchi(const taco_section *branch, const taco_course *meta,
+                          int *base, int *bonus, int *ceiling, int *combo) {
+  if (taco_course_score_tournament(meta) > 0) {
+    *base = taco_course_score_tournament(meta);
+  } else {
+    if (taco_course_score_base(meta) > 0 &&
+        taco_course_score_bonus(meta) <= 0) {
+      *base = taco_course_score_base(meta);
+    } else {
+      return score_branch_ac15s(branch, meta, base, bonus, ceiling, combo);
+    }
+  }
+
+  *bonus = 0;
+  return score_branch_existing(branch, *base, *bonus, ceiling, combo);
 }
