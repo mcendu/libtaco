@@ -155,12 +155,12 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
     taco_course_set_level_(course, meta->level);
   taco_course_set_papamama_(course, meta->papamama);
 
-  if (meta->scoreinit != 0) {
+  if (meta->scoreinit != -1) {
     taco_course_set_score_base_(course, meta->scoreinit);
-    if (meta->scorediff != 0)
+    if (meta->scorediff != -1)
       taco_course_set_score_bonus_(course, meta->scorediff);
   }
-  if (meta->scoreinit_s != 0) {
+  if (meta->scoreinit_s != -1) {
     taco_course_set_score_tournament_(course, meta->scoreinit_s);
   }
 
@@ -177,6 +177,12 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
                               tja_balloon_size_(meta->balloon_m),
                               TACO_SIDE_LEFT, TACO_BRANCH_MASTER);
 
+  taco_free_(meta->alloc, meta->balloon_n);
+  taco_free_(meta->alloc, meta->balloon_a);
+  taco_free_(meta->alloc, meta->balloon_m);
+  meta->balloon_n = NULL;
+  meta->balloon_a = NULL;
+  meta->balloon_m = NULL;
   return 0;
 }
 

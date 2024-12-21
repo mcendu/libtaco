@@ -22,6 +22,12 @@ extern int score_branch_ac15s(const taco_section *branch,
 extern int score_branch_ac16(const taco_section *branch,
                              const taco_course *meta, int *base, int *bonus,
                              int *ceil, int *combo);
+extern int score_branch_default(const taco_section *branch,
+                                const taco_course *meta, int *base, int *bonus,
+                                int *ceiling, int *combo);
+extern int score_branch_shinuchi(const taco_section *branch,
+                                 const taco_course *meta, int *base, int *bonus,
+                                 int *ceiling, int *combo);
 
 extern int roll_hits(double duration, double roll_rate);
 

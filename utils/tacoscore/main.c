@@ -19,10 +19,10 @@ static const struct scoring_rule {
   const char *name;
   score_branch_fn score_fn;
 } scoring_rules[] = {
-    {"ac15", score_branch_ac15},      {"ac15s", score_branch_ac15s},
-    {"ac16", score_branch_ac16},      {"arcade", score_branch_ac16},
-    {"console", score_branch_ac15},   {"default", score_branch_ac15s},
-    {"shinuchi", score_branch_ac15s},
+    {"ac15", score_branch_ac15},       {"ac15s", score_branch_ac15s},
+    {"ac16", score_branch_ac16},       {"arcade", score_branch_ac16},
+    {"console", score_branch_ac15},    {"course", score_branch_default},
+    {"default", score_branch_default}, {"shinuchi", score_branch_shinuchi},
 };
 
 int cmp_scoring_rules(const void *k, const void *e) {
@@ -96,8 +96,10 @@ static void help(const char *arg0) {
          "\n"
          "Available rules:\n"
          "  - ac15 (console)\n"
-         "  - ac15s (default, shinuchi)\n"
-         "  - ac16 (arcade)\n",
+         "  - ac15s\n"
+         "  - ac16 (arcade)\n"
+         "  - default (course)\n"
+         "  - shinuchi\n",
          arg0);
 }
 

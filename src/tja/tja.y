@@ -348,7 +348,7 @@ scoreinit_header:
 
 scorediff_header:
   SCOREDIFF ':' INTEGER '\n' {
-    $$.key = TJA_METADATA_SCOREINIT;
+    $$.key = TJA_METADATA_SCOREDIFF;
     $$.integer = $3;
   };
 
