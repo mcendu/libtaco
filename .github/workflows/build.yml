@@ -89,7 +89,7 @@ jobs:
             ldflags: -fuse-ld=lld
     env:
       CC: ${{ matrix.cc }}
-      LDFLAGS: ${{ matrix.ldflags }}
+      LDFLAGS: -Wl,--compress-debug-sections=zlib ${{ matrix.ldflags }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
