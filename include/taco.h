@@ -177,14 +177,26 @@ extern "C" {
 
 /* ## Types */
 
-/* Types for things that should be supplied by the user. */
+/* Types for user-supplied stuff. */
+
+/* An object that allocates memory for other objects. */
 typedef struct taco_allocator_ taco_allocator;
 
 /* Types for libtaco managed stuff. Everything here are opaque. */
+
+/* Reads coursesets from a disk or other input. */
 typedef struct taco_parser_ taco_parser;
+/* A set of game levels synced to the same piece of music. */
 typedef struct taco_courseset_ taco_courseset;
+/* A single game level. */
 typedef struct taco_course_ taco_course;
+/*
+ * A branch of a level.
+ *
+ * Internally also used for sections of a branch.
+ */
 typedef struct taco_section_ taco_section;
+/* An event in a level. */
 typedef struct taco_event_ taco_event;
 
 /* ## Callbacks */
