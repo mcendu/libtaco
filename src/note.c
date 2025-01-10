@@ -32,6 +32,34 @@ double taco_event_detail_float(const taco_event *event) {
   }
 }
 
+int taco_event_is_note(const taco_event *restrict event) {
+  return event->type > 0;
+}
+
+int taco_event_is_normal_note(const taco_event *restrict event) {
+  switch (event->type) {
+  case TACO_EVENT_DON:
+  case TACO_EVENT_DON_BIG:
+  case TACO_EVENT_KAT:
+  case TACO_EVENT_KAT_BIG:
+    return 1;
+  default:
+    return 0;
+  }
+}
+
+int taco_event_is_roll(const taco_event *restrict event) {
+  switch (event->type) {
+  case TACO_EVENT_ROLL:
+  case TACO_EVENT_ROLL_BIG:
+  case TACO_EVENT_BALLOON:
+  case TACO_EVENT_KUSUDAMA:
+    return 1;
+  default:
+    return 0;
+  }
+}
+
 int taco_event_compare(const taco_event *a, const taco_event *b) {
   int result = (a->time > b->time) - (a->time < b->time);
 
