@@ -332,9 +332,17 @@ taco_event_detail_int(const taco_event *restrict event) TACO_PURE;
 TACO_PUBLIC double
 taco_event_detail_float(const taco_event *restrict event) TACO_PURE;
 
+/* Check if the event is interactive, e.g. like a Don/Kat or a drum roll. */
+TACO_PUBLIC int taco_event_is_note(const taco_event *restrict event) TACO_PURE;
+/* Check if the event is a Don or a Kat. */
+TACO_PUBLIC int
+taco_event_is_normal_note(const taco_event *restrict event) TACO_PURE;
+/* Check if the event starts a drumroll. */
+TACO_PUBLIC int taco_event_is_roll(const taco_event *restrict event) TACO_PURE;
+
 /* Compares two events for sorting. */
 TACO_PUBLIC int taco_event_compare(const taco_event *restrict a,
-                                   const taco_event *restrict b);
+                                   const taco_event *restrict b) TACO_PURE;
 
 /* Gets the time of an event in seconds. */
 TACO_PUBLIC double
