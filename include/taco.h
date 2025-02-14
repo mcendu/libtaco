@@ -177,10 +177,12 @@ extern "C" {
 
 /* ## Types */
 
-/* Types for user-supplied stuff. */
+/* Types for user-visible and user-supplied stuff. */
 
 /* An object that allocates memory for other objects. */
 typedef struct taco_allocator_ taco_allocator;
+/* The scoring mode of a branched section. */
+typedef struct taco_branch_scoring_ taco_branch_scoring;
 
 /* Types for libtaco managed stuff. Everything here are opaque. */
 
@@ -222,9 +224,17 @@ typedef int taco_close_fn(void *stream);
 typedef int taco_printf_fn(void *restrict stream, const char *restrict format,
                            va_list ap);
 
-/* User-supplied structures */
+/* ## Struct definitions */
 
-/* An abstract allocator used by libtaco to allocate memory. */
+struct taco_branch_scoring_ {
+  int good;
+  int good_big;
+  int ok;
+  int ok_big;
+  int roll;
+  int bad;
+};
+
 struct taco_allocator_ {
   taco_malloc_fn *malloc;
   taco_free_fn *free;
@@ -343,6 +353,14 @@ taco_event_detail_int(const taco_event *restrict event) TACO_PURE;
 /* Gets the parameter of an event. */
 TACO_PUBLIC double
 taco_event_detail_float(const taco_event *restrict event) TACO_PURE;
+/* Gets the scoring parameters of a branching section. */
+TACO_PUBLIC int
+taco_event_branch_scoring(const taco_event *restrict event,
+                          taco_branch_scoring *restrict scoring);
+/* Gets the branch thresholds of a branching section. */
+TACO_PUBLIC int taco_event_branch_thresholds(const taco_event *restrict event,
+                                             int *restrict advanced,
+                                             int *restrict master);
 
 /* Check if the event is interactive, e.g. like a Don/Kat or a drum roll. */
 TACO_PUBLIC int taco_event_is_note(const taco_event *restrict event) TACO_PURE;
