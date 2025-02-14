@@ -32,6 +32,32 @@ double taco_event_detail_float(const taco_event *event) {
   }
 }
 
+int taco_event_branch_scoring(const taco_event *restrict event,
+                              taco_branch_scoring *restrict scoring) {
+  if (event->type != TACO_EVENT_BRANCH_START)
+    return -1;
+
+  scoring->good = event->branch_start.good;
+  scoring->good_big = event->branch_start.good_big;
+  scoring->ok = event->branch_start.ok;
+  scoring->ok_big = event->branch_start.ok_big;
+  scoring->roll = event->branch_start.roll;
+  scoring->bad = event->branch_start.bad;
+
+  return 0;
+}
+
+int taco_event_branch_thresholds(const taco_event *restrict event,
+                                 int *restrict advanced, int *restrict master) {
+  if (event->type != TACO_EVENT_BRANCH_CHECK)
+    return -1;
+
+  *advanced = event->branch_cond.advanced;
+  *master = event->branch_cond.master;
+
+  return 0;
+}
+
 int taco_event_is_note(const taco_event *restrict event) {
   return event->type > 0;
 }
