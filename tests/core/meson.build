@@ -2,6 +2,7 @@
 tests_core_src = files(
   'core.c',
   'course.c',
+  'note.c',
   'section.c',
 )
 

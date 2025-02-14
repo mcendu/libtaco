@@ -26,6 +26,7 @@ int taco_event_detail_int(const taco_event *event) {
 double taco_event_detail_float(const taco_event *event) {
   switch (event->type) {
   case TACO_EVENT_BPM:
+  case TACO_EVENT_SCROLL:
     return event->detail_float.value;
   default:
     return NAN;
@@ -37,12 +38,14 @@ int taco_event_branch_scoring(const taco_event *restrict event,
   if (event->type != TACO_EVENT_BRANCH_START)
     return -1;
 
-  scoring->good = event->branch_start.good;
-  scoring->good_big = event->branch_start.good_big;
-  scoring->ok = event->branch_start.ok;
-  scoring->ok_big = event->branch_start.ok_big;
-  scoring->roll = event->branch_start.roll;
-  scoring->bad = event->branch_start.bad;
+  if (scoring) {
+    scoring->good = event->branch_start.good;
+    scoring->good_big = event->branch_start.good_big;
+    scoring->ok = event->branch_start.ok;
+    scoring->ok_big = event->branch_start.ok_big;
+    scoring->roll = event->branch_start.roll;
+    scoring->bad = event->branch_start.bad;
+  }
 
   return 0;
 }
@@ -52,8 +55,10 @@ int taco_event_branch_thresholds(const taco_event *restrict event,
   if (event->type != TACO_EVENT_BRANCH_CHECK)
     return -1;
 
-  *advanced = event->branch_cond.advanced;
-  *master = event->branch_cond.master;
+  if (advanced)
+    *advanced = event->branch_cond.advanced;
+  if (master)
+    *master = event->branch_cond.master;
 
   return 0;
 }
