@@ -165,8 +165,8 @@
 #define TACO_TEXT_DO 0
 #define TACO_TEXT_KO 1
 #define TACO_TEXT_DON 2
-#define TACO_TEXT_KA 0
-#define TACO_TEXT_KAT 2
+#define TACO_TEXT_KA 4
+#define TACO_TEXT_KAT 6
 
 #define TACO_DETAIL_HAND 16
 
