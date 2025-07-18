@@ -343,6 +343,10 @@ TACO_PUBLIC const taco_event *
 taco_section_locate(const taco_section *restrict section,
                     size_t index) TACO_PURE;
 
+/* Print a section in an unstable, human-readable format. */
+TACO_PUBLIC void taco_section_print(const taco_section *restrict section,
+                                    FILE *restrict file);
+
 /* Gets the time of an event in ticks. */
 TACO_PUBLIC int taco_event_time(const taco_event *restrict event) TACO_PURE;
 /* Gets the event type. */
