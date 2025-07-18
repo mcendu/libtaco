@@ -10,13 +10,13 @@ int taco_event_type(const taco_event *event) { return event->type; }
 
 int taco_event_detail_int(const taco_event *event) {
   switch (event->type) {
-  case TACO_EVENT_DON:
-  case TACO_EVENT_DON_BIG:
-  case TACO_EVENT_KAT:
-  case TACO_EVENT_KAT_BIG:
-  case TACO_EVENT_BALLOON:
-  case TACO_EVENT_KUSUDAMA:
-  case TACO_EVENT_LANDMINE:
+  case TACO_EVENT_DON: // annotation
+  case TACO_EVENT_DON_BIG: // hand
+  case TACO_EVENT_KAT: // annotation
+  case TACO_EVENT_KAT_BIG: // hand
+  case TACO_EVENT_BALLOON: // hits required
+  case TACO_EVENT_KUSUDAMA: // hits required
+  case TACO_EVENT_LANDMINE: // annotation
     return event->detail_int.value;
   default:
     return -1;
@@ -25,8 +25,8 @@ int taco_event_detail_int(const taco_event *event) {
 
 double taco_event_detail_float(const taco_event *event) {
   switch (event->type) {
-  case TACO_EVENT_BPM:
-  case TACO_EVENT_SCROLL:
+  case TACO_EVENT_BPM: // bpm
+  case TACO_EVENT_SCROLL: // scroll speed multiplier
     return event->detail_float.value;
   default:
     return NAN;
