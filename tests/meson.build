@@ -22,7 +22,6 @@ libtaco_tests_dep = declare_dependency(
   link_with: libtaco_tests_lib,
 )
 
-tests_main = static_library('tests_main', 'main.c')
-
+subdir('utils')
 subdir('core')
 subdir('tja')

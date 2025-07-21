@@ -10,6 +10,7 @@ tests_tja_bin = executable(
   'tests_tja',
   tests_tja_src,
   link_with: [tests_main],
+  include_directories: [testutils_include],
   dependencies: [libtaco_tests_dep, check_dep],
   install: false,
 )

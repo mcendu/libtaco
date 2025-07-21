@@ -244,7 +244,7 @@ int taco_section_set_balloons_(taco_section *restrict section,
 }
 
 #define TIME(bpm, ticks, tickrate)                                             \
-  ((60.0 / (double)(bpm)*4.0) * ((double)(ticks) / (double)(tickrate)))
+  ((60.0 / (double)(bpm) * 4.0) * ((double)(ticks) / (double)(tickrate)))
 
 // generate a sorted tick-to-time array for binary search
 static int init_bpm_times_(taco_section *restrict s) {
