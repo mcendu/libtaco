@@ -4,7 +4,6 @@
 #include "note.h"
 #include "section.h"
 #include "taco.h"
-#include "tja/branchtype.h"
 #include "tja/parser.h"
 #include <string.h>
 
@@ -67,7 +66,7 @@ void tja_pass_compile_branches_(tja_parser *parser, taco_section *branch) {
   memset(&stats, 0, sizeof(stats));
 
   taco_section *new_events =
-      taco_section_create_(tja_parser_allocator_(parser));
+      taco_section_create2_(tja_parser_allocator_(parser));
 
   taco_section_foreach_mut_(i, branch) {
     switch (taco_event_type(i)) {
