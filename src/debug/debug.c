@@ -70,11 +70,11 @@ static void print_event_(const taco_event *restrict event,
     fprintf(file, "%d gogoend\n", event->time);
     break;
   case TACO_EVENT_SCROLL:
-    fprintf(file, "%d scroll mult=%lf\n", event->time,
+    fprintf(file, "%d scroll mult=%lg\n", event->time,
             event->detail_float.value);
     break;
   case TACO_EVENT_BPM:
-    fprintf(file, "%d bpm tempo=%lf\n", event->time, event->detail_float.value);
+    fprintf(file, "%d bpm tempo=%lg\n", event->time, event->detail_float.value);
     break;
   case TACO_EVENT_BRANCH_START:
     fprintf(
@@ -95,6 +95,6 @@ static void print_event_(const taco_event *restrict event,
 }
 
 void taco_section_print(const taco_section *restrict section,
-                                    FILE *restrict file) {
+                        FILE *restrict file) {
   taco_section_foreach(i, section) { print_event_(i, file); }
 }

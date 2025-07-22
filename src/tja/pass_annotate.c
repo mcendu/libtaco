@@ -9,12 +9,12 @@
 void tja_pass_annotate_(tja_parser *parser, taco_section *branch) {
   taco_section_foreach_mut_(i, branch) {
     switch (i->type) {
-      case TACO_EVENT_DON:
-        i->detail_int.value = TACO_TEXT_DO;
-        break;
-      case TACO_EVENT_KAT:
-        i->detail_int.value = TACO_TEXT_KA;
-        break;
+    case TACO_EVENT_DON:
+      i->detail_int.value = TACO_TEXT_DO;
+      break;
+    case TACO_EVENT_KAT:
+      i->detail_int.value = TACO_TEXT_KA;
+      break;
     }
   }
 }

@@ -1,0 +1,7 @@
+0 scroll mult=1
+0 measure
+0 don annotation=do
+24 kat annotation=ka
+48 don_big
+72 scroll mult=2
+72 kat_big

@@ -2,6 +2,7 @@
 #include "note.h"
 
 #include "taco.h"
+#include "tja/parser.h"
 #include <math.h>
 
 int taco_event_time(const taco_event *event) { return event->time; }
@@ -10,13 +11,14 @@ int taco_event_type(const taco_event *event) { return event->type; }
 
 int taco_event_detail_int(const taco_event *event) {
   switch (event->type) {
-  case TACO_EVENT_DON:      // annotation
-  case TACO_EVENT_DON_BIG:  // hand
-  case TACO_EVENT_KAT:      // annotation
-  case TACO_EVENT_KAT_BIG:  // hand
-  case TACO_EVENT_BALLOON:  // hits required
-  case TACO_EVENT_KUSUDAMA: // hits required
-  case TACO_EVENT_LANDMINE: // annotation
+  case TACO_EVENT_DON:             // annotation
+  case TACO_EVENT_DON_BIG:         // hand
+  case TACO_EVENT_KAT:             // annotation
+  case TACO_EVENT_KAT_BIG:         // hand
+  case TACO_EVENT_BALLOON:         // hits required
+  case TACO_EVENT_KUSUDAMA:        // hits required
+  case TACO_EVENT_LANDMINE:        // annotation
+  case TACO_EVENT_TJA_BRANCH_TYPE: // branch type
     return event->detail_int.value;
   default:
     return -1;

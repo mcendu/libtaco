@@ -1,0 +1,12 @@
+0 branch_start good=20 good_big=20 ok=10 ok_big=10 roll=1 bad=0
+0 measure
+0 don annotation=do
+48 kat annotation=ka
+96 branch_check advanced=20 master=30
+96 measure
+192 branch_jump
+192 measure
+192 don annotation=do
+240 kat annotation=ka
+288 measure
+288 don annotation=do

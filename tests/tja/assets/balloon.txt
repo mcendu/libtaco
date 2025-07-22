@@ -1,0 +1,8 @@
+0 measure
+0 balloon hits=10
+96 measure
+96 roll_end
+192 measure
+192 balloon hits=20
+288 measure
+288 roll_end
