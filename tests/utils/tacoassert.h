@@ -4,7 +4,7 @@
 
 #include "taco.h"
 
-extern void assert_section_matches(const taco_section *section,
+extern void assert_section_eq(const taco_section *section,
                                    const char *expected_path);
 
 #endif

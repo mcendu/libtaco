@@ -3,6 +3,7 @@
 #include <check.h>
 
 #include "taco.h"
+#include "tacoassert.h"
 
 static taco_parser *parser;
 
@@ -23,11 +24,7 @@ START_TEST(test_basic) {
 
   const taco_section *s =
       taco_course_get_branch(c, TACO_SIDE_LEFT, TACO_BRANCH_NORMAL);
-  ck_assert_ptr_nonnull(s);
-  ck_assert_int_eq(taco_section_size(s), 2);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 0)),
-                   TACO_EVENT_MEASURE);
-  ck_assert_int_eq(taco_event_type(taco_section_locate(s, 1)), TACO_EVENT_DON);
+  assert_section_eq(s, "assets/basic.txt");
 
   taco_courseset_free(set);
 }

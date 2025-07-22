@@ -19,6 +19,7 @@ testutils_include = include_directories('.')
 tests_main = static_library(
   'testutils',
   testutils_src,
+  c_args: ['-DTACO_TESTS_'],
   include_directories: [testutils_include, libtaco_include],
   dependencies: libtaco_deps,
   link_with: libtaco_tests_lib,

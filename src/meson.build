@@ -9,6 +9,7 @@ libtaco_src = files(
   'section.c',
 )
 
+subdir('debug')
 subdir('tja')
 
 libc_deps = []

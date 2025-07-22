@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void assert_section_matches(const taco_section *section, const char *path) {
+void assert_section_eq(const taco_section *section, const char *path) {
   // dump section to temp file
   FILE *dump = open_temp();
   taco_section_print(section, dump);

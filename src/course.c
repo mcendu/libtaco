@@ -66,7 +66,7 @@ void taco_course_free_(taco_course *restrict c) {
   taco_free_(c->alloc, c);
 }
 
-extern void taco_course_difficulty(const taco_course *restrict course,
+void taco_course_difficulty(const taco_course *restrict course,
                                    int *restrict class, int *restrict level) {
   if (class)
     *class = course->class;

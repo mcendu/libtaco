@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-2-Clause
-#include "note.h"
 #include "taco.h"
 
+#include "note.h"
 #include <stdio.h>
 
 static const char *annotations[16] = {
@@ -94,7 +94,7 @@ static void print_event_(const taco_event *restrict event,
   }
 }
 
-TACO_PUBLIC void taco_section_print(const taco_section *restrict section,
+void taco_section_print(const taco_section *restrict section,
                                     FILE *restrict file) {
   taco_section_foreach(i, section) { print_event_(i, file); }
 }
