@@ -27,8 +27,9 @@ FILE *open_temp(void) {
 
   // create and open the temporary file
   intptr_t handle = (intptr_t)CreateFileA(
-      tmpname, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-      FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE, NULL);
+      tmpname, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, NULL,
+      CREATE_ALWAYS, FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,
+      NULL);
   free(tmpname);
 
   // convert to FILE *
