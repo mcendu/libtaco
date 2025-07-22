@@ -3,7 +3,7 @@ testutils_src = files(
   'tacoassert.c',
 )
 
-if host_machine.system() == 'win32'
+if host_machine.system() == 'windows'
   subdir('windows')
 else
   # Assume Unix for the rest, as non-Windows operating systems non-
@@ -19,6 +19,7 @@ testutils_include = include_directories('.')
 tests_main = static_library(
   'testutils',
   testutils_src,
-  include_directories: [testutils_include],
-  dependencies: [libtaco_tests_dep, check_dep],
+  include_directories: [testutils_include, libtaco_include],
+  dependencies: libtaco_deps,
+  link_with: libtaco_tests_lib,
 )

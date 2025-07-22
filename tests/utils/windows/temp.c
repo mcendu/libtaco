@@ -17,7 +17,7 @@ FILE *open_temp(void) {
   size_t tmpdir_len = GetTempPathA(0, NULL);
   char *tmpdir = malloc(tmpdir_len + 1);
   tmpdir[tmpdir_len] = 0;
-  GetTempPath2A(tmpdir_len, tmpdir);
+  GetTempPathA(tmpdir_len, tmpdir);
 
   // generate a name for the temporary file
   char *tmpname = malloc(MAX_PATH + 1);
