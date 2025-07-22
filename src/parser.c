@@ -42,7 +42,7 @@ static void post_parse_cleanup_(taco_courseset *restrict c,
 
 taco_courseset *taco_parser_parse_file(taco_parser *restrict parser,
                                        const char *restrict path) {
-  taco_file *f = taco_file_open_path_(path, "r");
+  taco_file *f = taco_file_open_path_(path, "rb");
   if (!f)
     return NULL;
 
