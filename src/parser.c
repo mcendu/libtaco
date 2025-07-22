@@ -43,6 +43,9 @@ static void post_parse_cleanup_(taco_courseset *restrict c,
 taco_courseset *taco_parser_parse_file(taco_parser *restrict parser,
                                        const char *restrict path) {
   taco_file *f = taco_file_open_path_(path, "r");
+  if (!f)
+    return NULL;
+
   taco_courseset *result = parser->vtable->parse(parser->parser, f);
   post_parse_cleanup_(result, f);
   return result;
