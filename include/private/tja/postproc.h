@@ -5,6 +5,7 @@
 #include "parser.h"
 #include "taco.h"
 
+extern void tja_pass_annotate_(tja_parser *parser, taco_section *branch);
 extern void tja_pass_convert_time_(tja_parser *parser, taco_section *section);
 extern void tja_pass_checkpoint_rolls_(tja_parser *parser,
                                        taco_section *section);
