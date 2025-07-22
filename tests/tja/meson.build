@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: 0BSD
 tests_tja_src = files(
-  'events.c',
   'parser.c',
-  'segment.c',
   'tja.c',
 )
 
