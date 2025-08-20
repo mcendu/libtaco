@@ -103,6 +103,10 @@ void taco_section_set_tickrate_(taco_section *restrict s, int tickrate) {
   s->tickrate = tickrate;
 }
 
+double taco_section_bpm(const taco_section *restrict s) {
+  return s->bpm;
+}
+
 void taco_section_set_bpm_(taco_section *restrict s, double bpm) {
   invalidate_bpm_times_(s);
   s->bpm = bpm;

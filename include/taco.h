@@ -328,6 +328,9 @@ taco_course_get_branch(const taco_course *restrict course, int side,
 /* Gets the count of events. */
 TACO_PUBLIC size_t
 taco_section_size(const taco_section *restrict section) TACO_PURE;
+/* Gets the main tempo. */
+TACO_PUBLIC double
+taco_section_bpm(const taco_section *restrict section) TACO_PURE;
 /* Gets the number of ticks per 4/4 measure. */
 TACO_PUBLIC int
 taco_section_tickrate(const taco_section *restrict section) TACO_PURE;
