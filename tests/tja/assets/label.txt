@@ -1,0 +1,36 @@
+0 measure
+0 don annotation=don
+96 measure
+96 don annotation=don
+144 don annotation=don
+192 measure
+192 don annotation=don
+216 don annotation=don
+240 don annotation=don
+288 measure
+288 don annotation=do
+300 don annotation=ko
+312 don annotation=don
+336 don annotation=do
+348 don annotation=do
+360 kat annotation=kat
+384 measure
+384 don annotation=do
+392 don annotation=do
+400 don annotation=do
+408 don annotation=don
+432 don annotation=do
+440 don annotation=do
+448 don annotation=do
+456 kat annotation=kat
+480 measure
+480 don annotation=do
+492 don annotation=don
+504 don annotation=do
+510 don annotation=ko
+516 don annotation=don
+528 kat annotation=ka
+540 kat annotation=kat
+552 kat annotation=ka
+558 kat annotation=ka
+564 kat annotation=kat

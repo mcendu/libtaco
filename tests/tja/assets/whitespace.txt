@@ -1,3 +1,2 @@
 0 measure
-0 don annotation=do
-0 kat annotation=ka
+48 don annotation=don

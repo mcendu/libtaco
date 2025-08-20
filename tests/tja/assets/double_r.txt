@@ -1,2 +1,2 @@
 0 measure
-0 kat annotation=ka
+0 kat annotation=kat
