@@ -34,3 +34,22 @@
 552 kat annotation=ka
 558 kat annotation=ka
 564 kat annotation=kat
+576 measure
+576 don annotation=don
+592 don annotation=do
+600 don annotation=do
+602 don annotation=ko
+604 don annotation=do
+606 don annotation=ko
+608 don annotation=do
+610 don annotation=ko
+612 don annotation=do
+624 don annotation=don
+640 don annotation=do
+648 don annotation=do
+650 don annotation=ko
+652 don annotation=do
+654 don annotation=ko
+656 don annotation=do
+658 don annotation=ko
+660 don annotation=do
