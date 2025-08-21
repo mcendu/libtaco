@@ -1,4 +1,5 @@
 0 branch_start good=20 good_big=20 ok=10 ok_big=10 roll=1 bad=0
+0 bpm tempo=120
 0 measure
 0 don annotation=don
 48 kat annotation=kat

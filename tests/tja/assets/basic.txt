@@ -1,2 +1,3 @@
+0 bpm tempo=130
 0 measure
 0 don annotation=don

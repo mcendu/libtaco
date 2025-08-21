@@ -4,6 +4,8 @@
 
 #include "taco.h"
 
+#include <stdbool.h>
+
 enum tja_metadata_enum_ {
   TJA_METADATA_UNRECOGNIZED,
   TJA_METADATA_TITLE,
@@ -30,6 +32,29 @@ enum tja_metadata_enum_ {
 typedef struct tja_metadata_ tja_metadata;
 typedef struct tja_metadata_field_ tja_metadata_field;
 typedef struct tja_balloon_ tja_balloon;
+
+struct tja_metadata_ {
+  taco_allocator *alloc;
+  double bpm;
+  double offset;
+  double demostart;
+  double level;
+  char *title;
+  char *subtitle;
+  char *genre;
+  char *maker;
+  char *audio;
+  tja_balloon *balloon_n;
+  tja_balloon *balloon_a;
+  tja_balloon *balloon_m;
+  int side;
+  int course;
+  int style;
+  int scoreinit;
+  int scorediff;
+  int scoreinit_s;
+  bool papamama;
+};
 
 extern tja_metadata *tja_metadata_create2_(taco_allocator *alloc);
 extern void tja_metadata_free_(tja_metadata *meta);

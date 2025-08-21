@@ -11,29 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct tja_metadata_ {
-  taco_allocator *alloc;
-  double bpm;
-  double offset;
-  double demostart;
-  double level;
-  char *title;
-  char *subtitle;
-  char *genre;
-  char *maker;
-  char *audio;
-  tja_balloon *balloon_n;
-  tja_balloon *balloon_a;
-  tja_balloon *balloon_m;
-  int side;
-  int course;
-  int style;
-  int scoreinit;
-  int scorediff;
-  int scoreinit_s;
-  bool papamama;
-};
-
 typedef int (*metadata_setter)(tja_metadata *meta, tja_metadata_field *field);
 
 static metadata_setter setter(int index);

@@ -12,5 +12,6 @@ extern void tja_pass_checkpoint_rolls_(tja_parser *parser,
 extern void tja_pass_compile_branches_(tja_parser *parser,
                                        taco_section *branch);
 extern void tja_pass_cleanup_(tja_parser *parser, taco_section *section);
+extern void tja_pass_prepend_bgm_(tja_parser *parser, taco_section *branch);
 
 #endif /* !TJA_POSTPROC_H_ */

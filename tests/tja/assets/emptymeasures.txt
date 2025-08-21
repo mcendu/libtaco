@@ -1,2 +1,3 @@
+0 bpm tempo=120
 0 measure
 96 measure

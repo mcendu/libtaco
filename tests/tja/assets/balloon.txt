@@ -1,3 +1,4 @@
+0 bpm tempo=120
 0 measure
 0 balloon hits=10
 96 measure

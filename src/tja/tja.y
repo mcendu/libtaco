@@ -226,6 +226,18 @@ set:
   | set headers body {
     tja_metadata_update_(parser->metadata, $2);
     tja_metadata_free_($2);
+
+    // run post processing filters that requires metadata availability
+    int branches = taco_course_branched($3) ? 3 : 1;
+
+    for (int i = 0; i < branches; ++i) {
+      taco_section *branch =
+          taco_course_get_branch_mut_($3, TACO_SIDE_LEFT, i);
+      tja_pass_prepend_bgm_(parser, branch);
+      tja_pass_cleanup_(parser, branch);
+    }
+
+    // apply metadata
     tja_course_apply_metadata_($3, parser->metadata);
     tja_courseset_apply_metadata_($1, parser->metadata);
 

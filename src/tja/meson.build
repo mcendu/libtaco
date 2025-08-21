@@ -13,6 +13,7 @@ libtaco_src += files(
   'pass_cleanup.c',
   'pass_compile_branches.c',
   'pass_convert_time.c',
+  'pass_prepend_bpm.c',
   'segment.c',
   'timestamp.c',
 )

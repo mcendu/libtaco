@@ -1,3 +1,4 @@
+0 bpm tempo=182
 0 scroll mult=1
 0 measure
 0 don annotation=don
