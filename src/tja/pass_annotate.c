@@ -189,8 +189,9 @@ static void process_event_(taco_section *branch, size_t i,
 }
 
 static void init_state_(annotator_state *state, const taco_section *branch) {
-  state->bpm = taco_section_bpm(branch);
-  state->next_bpm = taco_section_bpm(branch);
+  // sane initial bpm values
+  state->bpm = 120;
+  state->next_bpm = 120;
   state->hi_speed = 1.0;
   state->group.spacing = NAN;
   state->group.type = TYPE_EMPTY;

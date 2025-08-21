@@ -27,7 +27,6 @@ struct taco_section_ {
   int tickrate;
   taco_event *events;
 
-  double bpm;
   bpm_entry *bpm_times;
   size_t bpms;
 };
@@ -54,7 +53,6 @@ taco_section *taco_section_create2_(taco_allocator *a) {
   section->size = 0;
   section->capacity = INITIAL_CAPACITY;
   section->tickrate = 96;
-  section->bpm = NAN;
   section->bpm_times = NULL;
   section->bpms = 0;
   return section;
@@ -79,7 +77,6 @@ taco_section *taco_section_clone_(const taco_section *restrict other) {
   section->size = other->size;
   section->capacity = other->capacity;
   section->tickrate = other->tickrate;
-  section->bpm = other->bpm;
   section->bpm_times = NULL;
   section->bpms = 0;
   return section;
@@ -101,15 +98,6 @@ int taco_section_tickrate(const taco_section *restrict s) {
 
 void taco_section_set_tickrate_(taco_section *restrict s, int tickrate) {
   s->tickrate = tickrate;
-}
-
-double taco_section_bpm(const taco_section *restrict s) {
-  return s->bpm;
-}
-
-void taco_section_set_bpm_(taco_section *restrict s, double bpm) {
-  invalidate_bpm_times_(s);
-  s->bpm = bpm;
 }
 
 const taco_event *taco_section_begin(const taco_section *restrict s) {
@@ -253,15 +241,16 @@ int taco_section_set_balloons_(taco_section *restrict section,
 // generate a sorted tick-to-time array for binary search
 static int init_bpm_times_(taco_section *restrict s) {
   assert((!s->bpm_times));
-  if (isnan(s->bpm))
-    return -1;
 
   // scan
-  int bpms = 1;
+  int bpms = 0;
   taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BPM)
       bpms += 1;
   }
+
+  if (bpms == 0)
+    return 0;
 
   s->bpm_times = taco_malloc_(s->alloc, bpms * sizeof(bpm_entry));
   if (!s->bpm_times)
@@ -271,23 +260,11 @@ static int init_bpm_times_(taco_section *restrict s) {
   int ticks = 0;
   double time = 0;
   bpm_entry *entry = s->bpm_times;
-  double bpm = s->bpm;
-
-  // write first entry
-  entry->ticks = ticks;
-  entry->time = time;
-  entry->bpm = bpm;
-  entry += 1;
+  double bpm = 120; // sane default for initial bpm
 
   // calculate time for _BPM events
   taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BPM) {
-      // special case time 0 BPM change to overwrite default first entry
-      if (taco_event_time(i) == 0) {
-        s->bpms -= 1;
-        entry = s->bpm_times;
-      }
-
       int delta = taco_event_time(i) - ticks;
       time += TIME(bpm, delta, s->tickrate);
       ticks = taco_event_time(i);

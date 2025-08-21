@@ -208,9 +208,6 @@ taco_section *taco_course_attach_branch_(taco_course *restrict course,
   taco_section *old = *target;
   *target = content;
 
-  // apply bpm data
-  taco_section_set_bpm_(content, course->basebpm);
-
   // apply balloon hitcount if stored
   balloon_data_ *balloons = &(course->balloons[side][branch]);
   if (balloons) {

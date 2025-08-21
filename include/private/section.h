@@ -17,7 +17,6 @@ extern taco_event *taco_section_locate_mut_(taco_section *restrict s, size_t i);
 
 extern void taco_section_set_tickrate_(taco_section *restrict section,
                                        int tickrate);
-void taco_section_set_bpm_(taco_section *restrict s, double bpm);
 
 extern int taco_section_push_(taco_section *restrict section,
                               const taco_event *restrict event);
