@@ -208,8 +208,7 @@ START_TEST(test_checkpoint) {
 }
 
 START_TEST(test_label) {
-  taco_courseset *set =
-      taco_parser_parse_file(parser, "assets/label.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/label.tja");
   const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   const taco_section *s = taco_course_get_branch(c, 0, 0);
   assert_section_eq(s, "assets/label.txt", assert_section);
