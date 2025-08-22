@@ -196,7 +196,9 @@ START_TEST(test_double) {
 END_TEST
 
 START_TEST(test_badmeasure) {
-  ck_assert_ptr_null(taco_parser_parse_file(parser, "assets/badmeasure.tja"));
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/badmeasure.tja");
+  ck_assert_ptr_null(taco_courseset_get_course(set, TACO_CLASS_ONI));
+  taco_courseset_free(set);
 }
 END_TEST
 

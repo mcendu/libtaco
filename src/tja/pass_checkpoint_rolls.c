@@ -6,7 +6,7 @@
 #include "taco.h"
 #include "tja/parser.h"
 
-void tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
+int tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
   taco_event *head = NULL;
 
   taco_section_foreach_mut_(i, branch) {
@@ -46,4 +46,6 @@ void tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
       }
     }
   }
+
+  return 0;
 }

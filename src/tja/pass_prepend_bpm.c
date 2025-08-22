@@ -7,7 +7,7 @@
 #include "tja/metadata.h"
 #include "tja/parser.h"
 
-void tja_pass_prepend_bgm_(tja_parser *parser, taco_section *branch) {
+int tja_pass_prepend_bgm_(tja_parser *parser, taco_section *branch) {
   double bpm = parser->metadata->bpm;
   taco_event e = {
       .time = 0,
@@ -16,4 +16,6 @@ void tja_pass_prepend_bgm_(tja_parser *parser, taco_section *branch) {
       .detail_float = {.value = bpm},
   };
   taco_section_push_(branch, &e);
+
+  return 0;
 }

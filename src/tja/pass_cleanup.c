@@ -16,7 +16,7 @@ static int cmp(taco_event *a, taco_event *b) {
   return result;
 }
 
-void tja_pass_cleanup_(tja_parser *parser, taco_section *branch) {
+int tja_pass_cleanup_(tja_parser *parser, taco_section *branch) {
   // sort events
   qsort(taco_section_begin_mut_(branch), taco_section_size(branch),
         sizeof(taco_event), (int (*)(const void *, const void *))cmp);
@@ -27,4 +27,6 @@ void tja_pass_cleanup_(tja_parser *parser, taco_section *branch) {
   while ((--i)->type == TACO_EVENT_NONE)
     none_count += 1;
   taco_section_pop_(branch, none_count);
+
+  return 0;
 }

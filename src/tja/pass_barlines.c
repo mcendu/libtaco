@@ -6,7 +6,7 @@
 #include "tja/parser.h"
 #include <stdbool.h>
 
-void tja_pass_barlines_(tja_parser *parser, taco_section *branch) {
+int tja_pass_barlines_(tja_parser *parser, taco_section *branch) {
   bool barline_on = true;
 
   taco_section_foreach_mut_(i, branch) {
@@ -24,4 +24,6 @@ void tja_pass_barlines_(tja_parser *parser, taco_section *branch) {
       break;
     }
   }
+
+  return 0;
 }

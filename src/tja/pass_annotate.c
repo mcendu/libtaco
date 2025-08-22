@@ -198,7 +198,7 @@ static void init_state_(annotator_state *state, const taco_section *branch) {
   state->group.time = -0x20000000;
 }
 
-void tja_pass_annotate_(tja_parser *parser, taco_section *branch) {
+int tja_pass_annotate_(tja_parser *parser, taco_section *branch) {
   annotator_state state;
   init_state_(&state, branch);
 
@@ -209,4 +209,5 @@ void tja_pass_annotate_(tja_parser *parser, taco_section *branch) {
   }
 
   annotate_group_(branch, &state.group, INFINITY);
+  return 0;
 }

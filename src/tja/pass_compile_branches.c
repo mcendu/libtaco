@@ -56,7 +56,7 @@ branch_threshold_calc *const threshold_calc[] = {
     [TACO_BRANCHTYPE_ROLL] = roll_threshold,
 };
 
-void tja_pass_compile_branches_(tja_parser *parser, taco_section *branch) {
+int tja_pass_compile_branches_(tja_parser *parser, taco_section *branch) {
   threshold_stats stats;
   int section_time = 0;
   int check_time = 0;
@@ -133,4 +133,6 @@ void tja_pass_compile_branches_(tja_parser *parser, taco_section *branch) {
 
   taco_section_concat_(branch, new_events);
   taco_section_free_(new_events);
+
+  return 0;
 }

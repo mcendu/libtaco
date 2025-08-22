@@ -236,26 +236,36 @@ set:
     tja_metadata_update_(parser->metadata, $2);
     tja_metadata_free_($2);
 
-    // run post processing filters
-    int branches = taco_course_branched($3) ? 3 : 1;
+    int error = $3 ? 0 : -1;
 
-    for (int i = 0; i < branches; ++i) {
-      taco_section *branch =
-          taco_course_get_branch_mut_($3, TACO_SIDE_LEFT, i);
-      tja_pass_convert_time_(parser, branch);
-      tja_pass_checkpoint_rolls_(parser, branch);
-      tja_pass_barlines_(parser, branch);
-      tja_pass_compile_branches_(parser, branch);
-      tja_pass_prepend_bgm_(parser, branch);
-      tja_pass_cleanup_(parser, branch);
-      tja_pass_annotate_(parser, branch);
+    if (error == 0) {
+      // run post processing filters
+      int branches = taco_course_branched($3) ? 3 : 1;
+
+      for (int i = 0; i < branches; ++i) {
+        taco_section *branch =
+            taco_course_get_branch_mut_($3, TACO_SIDE_LEFT, i);
+
+        error = error || tja_pass_convert_time_(parser, branch);
+        error = error || tja_pass_checkpoint_rolls_(parser, branch);
+        error = error || tja_pass_barlines_(parser, branch);
+        error = error || tja_pass_compile_branches_(parser, branch);
+        error = error || tja_pass_prepend_bgm_(parser, branch);
+        error = error || tja_pass_cleanup_(parser, branch);
+        error = error || tja_pass_annotate_(parser, branch);
+      }
     }
 
-    // apply metadata
-    tja_course_apply_metadata_($3, parser->metadata);
-    tja_courseset_apply_metadata_($1, parser->metadata);
+    // only adding course if no errors are found
+    if (error == 0) {
+      tja_course_apply_metadata_($3, parser->metadata);
+      taco_courseset_add_course_($1, $3);
+    } else {
+      taco_course_free_($3);
+    }
 
-    taco_courseset_add_course_($1, $3);
+    // apply set metadata
+    tja_courseset_apply_metadata_($1, parser->metadata);
     $$ = $1;
   };
 
@@ -263,6 +273,10 @@ headers:
   %empty { $$ = tja_metadata_create2_(parser->alloc); }
   | headers header {
     tja_metadata_add_field_($1, &$2);
+    $$ = $1;
+  }
+  | headers error '\n' {
+    // syntax errors in header lines are discarded
     $$ = $1;
   };
 
@@ -422,10 +436,11 @@ unrecognized_header:
 body:
   start_command sections end_command {
     taco_course_set_style_($2.course, $1);
-
-    int branches = taco_course_branched($2.course) ? 3 : 1;
-
     $$ = $2.course;
+  }
+  | start_command error end_command {
+    // courses are discarded when syntax errors happen
+    $$ = NULL;
   };
 
 start_command:

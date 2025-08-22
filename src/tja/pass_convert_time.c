@@ -7,20 +7,23 @@
 #include "tja/timestamp.h"
 #include <assert.h>
 
-static void pass_extract_tickrate(tja_parser *parser, taco_section *branch);
+static int pass_extract_tickrate(tja_parser *parser, taco_section *branch);
 static void pass_convert(taco_section *branch);
 static void pass_remove_excess_factors(taco_section *branch);
 
 static int gcd(int x, int y);
 static int lcm(int x, int y);
 
-void tja_pass_convert_time_(tja_parser *parser, taco_section *branch) {
-  pass_extract_tickrate(parser, branch);
+int tja_pass_convert_time_(tja_parser *parser, taco_section *branch) {
+  if (pass_extract_tickrate(parser, branch) != 0)
+    return -1;
+
   pass_convert(branch);
   pass_remove_excess_factors(branch);
+  return 0;
 }
 
-static void pass_extract_tickrate(tja_parser *parser, taco_section *branch) {
+static int pass_extract_tickrate(tja_parser *parser, taco_section *branch) {
   // ticks per 4/4 measure
   int tickrate = 96;
   int dividend = 4;
@@ -42,15 +45,13 @@ static void pass_extract_tickrate(tja_parser *parser, taco_section *branch) {
       } else {
         tja_parser_diagnose_(parser, i->line, TJA_DIAG_ERROR,
                              "division by zero in #MEASURE");
-        // attempt to recover from division by zero by setting to 4/4;
-        // this should really prevent generating an output
-        dividend = 4;
-        divisor = 4;
+        return -1;
       }
     }
   }
 
   taco_section_set_tickrate_(branch, tickrate);
+  return 0;
 }
 
 static void pass_convert(taco_section *branch) {
