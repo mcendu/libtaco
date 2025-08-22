@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: BSD-2-Clause
+#include "tja/parser.h"
 #include "tja/postproc.h"
 
 #include "section.h"
@@ -6,7 +7,7 @@
 #include "tja/timestamp.h"
 #include <assert.h>
 
-static void pass_extract_tickrate(taco_section *branch);
+static void pass_extract_tickrate(tja_parser *parser, taco_section *branch);
 static void pass_convert(taco_section *branch);
 static void pass_remove_excess_factors(taco_section *branch);
 
@@ -14,12 +15,12 @@ static int gcd(int x, int y);
 static int lcm(int x, int y);
 
 void tja_pass_convert_time_(tja_parser *parser, taco_section *branch) {
-  pass_extract_tickrate(branch);
+  pass_extract_tickrate(parser, branch);
   pass_convert(branch);
   pass_remove_excess_factors(branch);
 }
 
-static void pass_extract_tickrate(taco_section *branch) {
+static void pass_extract_tickrate(tja_parser *parser, taco_section *branch) {
   // ticks per 4/4 measure
   int tickrate = 96;
   int dividend = 4;
@@ -34,8 +35,18 @@ static void pass_extract_tickrate(taco_section *branch) {
     }
 
     if (i->type == TACO_EVENT_TJA_MEASURE_LENGTH) {
-      dividend = i->tja_measure_length.dividend;
-      divisor = i->tja_measure_length.divisor;
+      if (divisor != 0) {
+        // update measure length
+        dividend = i->tja_measure_length.dividend;
+        divisor = i->tja_measure_length.divisor;
+      } else {
+        tja_parser_diagnose_(parser, i->line, TJA_DIAG_ERROR,
+                             "division by zero in #MEASURE");
+        // attempt to recover from division by zero by setting to 4/4;
+        // this should really prevent generating an output
+        dividend = 4;
+        divisor = 4;
+      }
     }
   }
 
