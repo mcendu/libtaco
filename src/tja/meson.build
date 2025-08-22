@@ -9,6 +9,7 @@ libtaco_src += files(
   'metadata.c',
   'parser.c',
   'pass_annotate.c',
+  'pass_barlines.c',
   'pass_checkpoint_rolls.c',
   'pass_cleanup.c',
   'pass_compile_branches.c',

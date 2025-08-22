@@ -166,6 +166,8 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %type <note> bpmchange_command
 %type <note> delay_command
 %type <note> unrecognized_command
+%type <note> barlineon_command
+%type <note> barlineoff_command
 
 %type <real> real
 %type <text> text
@@ -214,6 +216,8 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token SCROLL_CMD
 %token BPMCHANGE_CMD
 %token DELAY_CMD
+%token BARLINEON_CMD
+%token BARLINEOFF_CMD
 
 %start set
 
@@ -418,6 +422,7 @@ body:
           taco_course_get_branch_mut_($2.course, TACO_SIDE_LEFT, i);
       tja_pass_convert_time_(parser, branch);
       tja_pass_checkpoint_rolls_(parser, branch);
+      tja_pass_barlines_(parser, branch);
       tja_pass_compile_branches_(parser, branch);
       tja_pass_cleanup_(parser, branch);
       tja_pass_annotate_(parser, branch);
@@ -568,6 +573,8 @@ note_command:
   | bpmchange_command
   | levelhold_command
   | delay_command
+  | barlineon_command
+  | barlineoff_command
   | unrecognized_command;
 
 measure_command:
@@ -621,6 +628,18 @@ delay_command:
     memset(&$$, 0, sizeof(taco_event));
     $$.type = TACO_EVENT_DELAY;
     $$.detail_float.value = $2;
+  }
+
+barlineon_command:
+  BARLINEON_CMD '\n' {
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_TJA_BARLINEON;
+  }
+
+barlineoff_command:
+  BARLINEOFF_CMD '\n' {
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_TJA_BARLINEOFF;
   }
 
 unrecognized_command:

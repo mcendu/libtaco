@@ -23,9 +23,11 @@ extern void tja_parser_diagnose_(tja_parser *parser, int line, int level,
 
 extern taco_allocator *tja_parser_allocator_(tja_parser *parser);
 
-#define TACO_EVENT_TJA_MEASURE_LENGTH (-0x4001)
-#define TACO_EVENT_TJA_BRANCH_THRESHOLD (-0x4002)
-#define TACO_EVENT_TJA_BRANCH_TYPE (-0x4003)
-#define TACO_EVENT_TJA_LEVELHOLD (-0x4004)
+#define TACO_EVENT_TJA_BARLINEON (-0x4000)
+#define TACO_EVENT_TJA_BARLINEOFF (-0x4001)
+#define TACO_EVENT_TJA_MEASURE_LENGTH (-0x4002)
+#define TACO_EVENT_TJA_BRANCH_THRESHOLD (-0x4003)
+#define TACO_EVENT_TJA_BRANCH_TYPE (-0x4004)
+#define TACO_EVENT_TJA_LEVELHOLD (-0x4005)
 
 #endif /* !TJA_PARSER_H_ */

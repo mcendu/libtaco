@@ -240,6 +240,14 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(body_command);
   return DELAY_CMD;
 }
+<body>#BARLINEON {
+  BEGIN(body_command);
+  return BARLINEON_CMD;
+}
+<body>#BARLINEOFF {
+  BEGIN(body_command);
+  return BARLINEOFF_CMD;
+}
 
 <body_pretext>{SPACE}+ {
   BEGIN(body_text);
