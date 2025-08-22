@@ -177,6 +177,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token <real> REAL
 %token <text> TEXT
 %token <text> IDENTIFIER
+%token <text> HEADER
 %token <text> COMMAND
 %token <integer> NOTE
 
@@ -285,102 +286,102 @@ header:
   | unrecognized_header;
 
 title_header:
-  TITLE ':' text '\n' {
+  TITLE text '\n' {
     $$.key = TJA_METADATA_TITLE;
-    $$.text = $3;
+    $$.text = $2;
   };
 
 subtitle_header:
-  SUBTITLE ':' text '\n' {
+  SUBTITLE text '\n' {
     $$.key = TJA_METADATA_SUBTITLE;
-    $$.text = $3;
+    $$.text = $2;
   };
 
 genre_header:
-  GENRE ':' text '\n' {
+  GENRE text '\n' {
     $$.key = TJA_METADATA_GENRE;
-    $$.text = $3;
+    $$.text = $2;
   };
 
 maker_header:
-  MAKER ':' text '\n' {
+  MAKER text '\n' {
     $$.key = TJA_METADATA_MAKER;
-    $$.text = $3;
+    $$.text = $2;
   };
 
 audio_header:
-  AUDIO ':' text '\n' {
+  AUDIO text '\n' {
     $$.key = TJA_METADATA_AUDIO;
-    $$.text = $3;
+    $$.text = $2;
   };
 
 bpm_header:
-  BPM ':' real '\n' {
+  BPM real '\n' {
     $$.key = TJA_METADATA_BPM;
-    $$.real = $3;
+    $$.real = $2;
   };
 
 offset_header:
-  OFFSET ':' real '\n' {
+  OFFSET real '\n' {
     $$.key = TJA_METADATA_OFFSET;
-    $$.real = $3;
+    $$.real = $2;
   };
 
 demostart_header:
-  DEMOSTART ':' real '\n' {
+  DEMOSTART real '\n' {
     $$.key = TJA_METADATA_DEMOSTART;
-    $$.real = $3;
+    $$.real = $2;
   };
 
 side_header:
-  SIDE ':' text '\n' {
+  SIDE text '\n' {
     $$.key = TJA_METADATA_SIDE;
-    $$.integer = tja_interpret_side_($3);
-    taco_free_(parser->alloc, $3);
+    $$.integer = tja_interpret_side_($2);
+    taco_free_(parser->alloc, $2);
   };
 
 course_header:
-  COURSE ':' text '\n' {
+  COURSE text '\n' {
     $$.key = TJA_METADATA_COURSE;
-    $$.integer = tja_interpret_course_($3);
-    taco_free_(parser->alloc, $3);
+    $$.integer = tja_interpret_course_($2);
+    taco_free_(parser->alloc, $2);
   };
 
 level_header:
-  LEVEL ':' real '\n' {
+  LEVEL real '\n' {
     $$.key = TJA_METADATA_LEVEL;
-    $$.real = $3;
+    $$.real = $2;
   };
 
 style_header:
-  STYLE ':' text '\n' {
+  STYLE text '\n' {
     $$.key = TJA_METADATA_STYLE;
-    $$.integer = tja_interpret_style_($3);
-    taco_free_(parser->alloc, $3);
+    $$.integer = tja_interpret_style_($2);
+    taco_free_(parser->alloc, $2);
   };
 
 scoreinit_header:
-  SCOREINIT ':' INTEGER '\n' {
+  SCOREINIT INTEGER '\n' {
     $$.key = TJA_METADATA_SCOREINIT;
-    $$.scoreinit.casual = $3;
+    $$.scoreinit.casual = $2;
     $$.scoreinit.tournament = 0;
   }
-  | SCOREINIT ':' INTEGER ',' INTEGER '\n' {
+  | SCOREINIT INTEGER ',' INTEGER '\n' {
     $$.key = TJA_METADATA_SCOREINIT;
-    $$.scoreinit.casual = $3;
-    $$.scoreinit.tournament = $5;
+    $$.scoreinit.casual = $2;
+    $$.scoreinit.tournament = $4;
   };
 
 scorediff_header:
-  SCOREDIFF ':' INTEGER '\n' {
+  SCOREDIFF INTEGER '\n' {
     $$.key = TJA_METADATA_SCOREDIFF;
-    $$.integer = $3;
+    $$.integer = $2;
   };
 
 balloon_header:
-  balloon_branch ':' balloon_data '\n' {
+  balloon_branch balloon_data '\n' {
     $$.key = $1;
-    $$.balloon = $3;
+    $$.balloon = $2;
   };
 
 balloon_branch:
@@ -407,11 +408,11 @@ papamama_command:
   }
 
 unrecognized_header:
-  IDENTIFIER ':' text '\n' {
+  HEADER text '\n' {
     tja_parser_diagnose_(parser, @1.first_line, TJA_DIAG_WARN,
                          "unrecognized header: %s", $1);
     taco_free_(parser->alloc, $1);
-    taco_free_(parser->alloc, $3);
+    taco_free_(parser->alloc, $2);
     $$.key = TJA_METADATA_UNRECOGNIZED;
   }
   | unrecognized_command {

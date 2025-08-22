@@ -36,7 +36,8 @@ double taco_event_detail_float(const taco_event *event) {
   }
 }
 
-int taco_event_scroll(const taco_event *restrict event, double *restrict x, double *restrict y) {
+int taco_event_scroll(const taco_event *restrict event, double *restrict x,
+                      double *restrict y) {
   if (!x || !y)
     return -1;
 

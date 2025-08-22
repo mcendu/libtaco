@@ -47,7 +47,6 @@ IDSTART [a-zA-Z_]
 IDCONT [a-zA-Z0-9_]
 IDENTIFIER {IDSTART}{IDCONT}*
 
-%x header_pretext
 %x header_text
 %x header_numeric
 %x header_command
@@ -58,66 +57,76 @@ IDENTIFIER {IDSTART}{IDCONT}*
 
 %%
 
-<INITIAL>TITLE {
-  BEGIN(header_pretext);
+<INITIAL>TITLE{COLON} {
+  BEGIN(header_text);
   return TITLE;
 }
-<INITIAL>SUBTITLE {
-  BEGIN(header_pretext);
+<INITIAL>SUBTITLE{COLON} {
+  BEGIN(header_text);
   return SUBTITLE;
 }
-<INITIAL>GENRE {
-  BEGIN(header_pretext);
+<INITIAL>GENRE{COLON} {
+  BEGIN(header_text);
   return GENRE;
 }
-<INITIAL>MAKER {
-  BEGIN(header_pretext);
+<INITIAL>MAKER{COLON} {
+  BEGIN(header_text);
   return MAKER;
 }
-<INITIAL>WAVE {
-  BEGIN(header_pretext);
+<INITIAL>WAVE{COLON} {
+  BEGIN(header_text);
   return AUDIO;
 }
-<INITIAL>BPM {
+<INITIAL>BPM{COLON} {
+  BEGIN(header_numeric);
   return BPM;
 }
-<INITIAL>OFFSET {
+<INITIAL>OFFSET{COLON} {
+  BEGIN(header_numeric);
   return OFFSET;
 }
-<INITIAL>DEMOSTART {
+<INITIAL>DEMOSTART{COLON} {
+  BEGIN(header_numeric);
   return DEMOSTART;
 }
-<INITIAL>SIDE {
-  BEGIN(header_pretext);
+<INITIAL>SIDE{COLON} {
+  BEGIN(header_text);
   return SIDE;
 }
-<INITIAL>COURSE {
-  BEGIN(header_pretext);
+<INITIAL>COURSE{COLON} {
+  BEGIN(header_text);
   return COURSE;
 }
-<INITIAL>LEVEL {
+<INITIAL>LEVEL{COLON} {
+  BEGIN(header_numeric);
   return LEVEL;
 }
-<INITIAL>STYLE {
-  BEGIN(header_pretext);
+<INITIAL>STYLE{COLON} {
+  BEGIN(header_text);
   return STYLE;
 }
-<INITIAL>SCOREINIT {
+<INITIAL>SCOREINIT{COLON} {
+  BEGIN(header_numeric);
   return SCOREINIT;
 }
-<INITIAL>SCOREDIFF {
+<INITIAL>SCOREDIFF{COLON} {
+  BEGIN(header_numeric);
   return SCOREDIFF;
 }
-<INITIAL>BALLOON {
+<INITIAL>BALLOON{COLON} {
+  BEGIN(header_numeric);
   return BALLOON;
 }
-<INITIAL>BALLOONNOR {
+<INITIAL>BALLOONNOR{COLON} {
+  BEGIN(header_numeric);
   return BALLOONNOR;
 }
-<INITIAL>BALLOONEXP {
+<INITIAL>BALLOONEXP{COLON} {
+  BEGIN(header_numeric);
   return BALLOONEXP;
 }
-<INITIAL>BALLOONMAS {
+<INITIAL>BALLOONMAS{COLON} {
+  BEGIN(header_numeric);
   return BALLOONMAS;
 }
 
@@ -126,22 +135,12 @@ IDENTIFIER {IDSTART}{IDCONT}*
   return PAPAMAMA_CMD;
 }
 
-<INITIAL>{COLON} {
-  BEGIN(header_numeric);
-  return ':';
-}
-
 <header_numeric>, {
   return ',';
 }
 
-<INITIAL,header_numeric,header_pretext>{SPACE}+
+<INITIAL,header_numeric>{SPACE}+
 <INITIAL>{NEWLINE}
-
-<header_pretext>{COLON} {
-  BEGIN(header_text);
-  return ':';
-}
 
 <header_text>[^\r\n]* {
   yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
@@ -159,12 +158,12 @@ IDENTIFIER {IDSTART}{IDCONT}*
   return REAL;
 }
 
-<header_numeric,header_pretext,header_command>{NEWLINE} {
+<header_numeric,header_command>{NEWLINE} {
   BEGIN(INITIAL);
   return '\n';
 }
 
-<header_numeric,header_pretext,header_command><<EOF>> {
+<header_numeric,header_command><<EOF>> {
   BEGIN(INITIAL);
   return '\n';
 }
@@ -291,15 +290,15 @@ IDENTIFIER {IDSTART}{IDCONT}*
   return '\n';
 }
 
-<INITIAL>^{IDENTIFIER} {
+<INITIAL>^{IDENTIFIER}{COLON} {
   yylval->text = taco_strndup_(yyextra->alloc, yytext, yyleng);
-  BEGIN(header_pretext);
-  return IDENTIFIER;
+  BEGIN(header_text);
+  return HEADER;
 }
 
 <INITIAL>#{IDENTIFIER} {
   yylval->text = taco_strndup_(yyextra->alloc, yytext + 1, yyleng - 1);
-  BEGIN(header_pretext);
+  BEGIN(header_text);
   return COMMAND;
 }
 
