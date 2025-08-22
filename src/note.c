@@ -29,6 +29,7 @@ double taco_event_detail_float(const taco_event *event) {
   switch (event->type) {
   case TACO_EVENT_BPM:    // bpm
   case TACO_EVENT_SCROLL: // scroll speed multiplier
+  case TACO_EVENT_DELAY:  // seconds
     return event->detail_float.value;
   default:
     return NAN;

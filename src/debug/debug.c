@@ -76,6 +76,10 @@ static void print_event_(const taco_event *restrict event,
   case TACO_EVENT_BPM:
     fprintf(file, "%d bpm tempo=%lg\n", event->time, event->detail_float.value);
     break;
+  case TACO_EVENT_DELAY:
+    fprintf(file, "%d delay time=%lg\n", event->time,
+            event->detail_float.value);
+    break;
   case TACO_EVENT_BRANCH_START:
     fprintf(
         file,
