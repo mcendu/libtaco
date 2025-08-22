@@ -12,6 +12,7 @@ struct tja_branched_ {
   int threshold_advanced;
   int threshold_master;
   int measures;
+  int line;
   unsigned char levelhold;
 };
 

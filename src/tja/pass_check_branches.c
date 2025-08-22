@@ -42,21 +42,29 @@ int tja_pass_check_branches_(tja_parser *parser, taco_course *course) {
       switch (taco_event_type(i)) {
       case TACO_EVENT_BPM:
       case TACO_EVENT_DELAY:
-        if (i->time != j->time || i->type != j->type ||
+        if (j == taco_section_end(timing) || i->time != j->time ||
+            i->type != j->type ||
             i->detail_float.value != j->detail_float.value) {
           tja_parser_diagnose_(parser, i->line, TJA_DIAG_ERROR,
                                "timing of branch %s diverges from master",
                                branch_names_[b]);
+          if (j != taco_section_end(timing))
+            tja_parser_diagnose_(parser, j->line, TJA_DIAG_NOTE,
+                                 "last timing event in master here");
           error = -1;
           goto check_loop_end;
         }
         j = taco_event_next(j);
         break;
       case TACO_EVENT_MEASURE:
-        if (i->time != j->time || i->type != j->type || !i->measure.real) {
+        if (j == taco_section_end(timing) || i->time != j->time ||
+            i->type != j->type || !i->measure.real) {
           tja_parser_diagnose_(parser, i->line, TJA_DIAG_ERROR,
                                "timing of branch %s diverges from master",
                                branch_names_[b]);
+          if (j != taco_section_end(timing))
+            tja_parser_diagnose_(parser, j->line, TJA_DIAG_NOTE,
+                                 "last timing event in master here");
           error = -1;
           goto check_loop_end;
         }
@@ -66,8 +74,8 @@ int tja_pass_check_branches_(tja_parser *parser, taco_course *course) {
     }
   check_loop_end:
     if (j != taco_section_end(timing)) {
-      tja_parser_diagnose_(parser, 0, TJA_DIAG_ERROR,
-                           "timing of branch %s diverges from master",
+      tja_parser_diagnose_(parser, j->line, TJA_DIAG_ERROR,
+                           "timing of branch master diverges from %s",
                            branch_names_[b]);
       error = -1;
     }

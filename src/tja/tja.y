@@ -489,6 +489,7 @@ branched_section:
 
     // record branch info
     $$.branchtype = $1.type;
+    $$.line = @1.first_line;
     $$.threshold_advanced = $1.advanced;
     $$.threshold_master = $1.master;
   }
@@ -535,14 +536,14 @@ measures:
     put_section_(parser, $1.events);
   }
   | measures ',' measurestart_events {
-    tja_segment_push_barline_(&$1, 0);
+    tja_segment_push_barline_(&$1, 0, @1.first_line);
     tja_segment_finish_measure_(&$1);
     tja_segment_push_events_(&$1, &$3);
     put_section_(parser, $3.events);
     $$ = $1;
   }
   | measures note_events ',' measurestart_events {
-    tja_segment_push_barline_(&$1, $2.units);
+    tja_segment_push_barline_(&$1, $2.units, @1.first_line);
     tja_segment_push_events_(&$1, &$2);
     put_section_(parser, $2.events);
     tja_segment_finish_measure_(&$1);
@@ -781,6 +782,7 @@ void tja_parser_diagnose_(tja_parser *parser, int line, int level,
     "%s:%d: fatal error: %s\n",
     "%s:%d: error: %s\n",
     "%s:%d: warning: %s\n",
+    "%s:%d: info: %s\n",
   };
   va_list ap;
 

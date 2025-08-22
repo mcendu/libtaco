@@ -10,6 +10,7 @@ typedef struct tja_parser_ tja_parser;
 #define TJA_DIAG_FATAL 0
 #define TJA_DIAG_ERROR 1
 #define TJA_DIAG_WARN 2
+#define TJA_DIAG_NOTE 3
 
 extern tja_parser *tja_parser_create_();
 extern tja_parser *tja_parser_create2_(taco_allocator *alloc);

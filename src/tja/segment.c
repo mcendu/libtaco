@@ -15,11 +15,12 @@ int tja_segment_init_(tja_segment *segment, taco_section *buf) {
   return buf != NULL;
 }
 
-int tja_segment_push_barline_(tja_segment *segment, int units) {
+int tja_segment_push_barline_(tja_segment *segment, int units, int line) {
   int retval = 0;
   taco_event barline = {
       .time = 0,
       .type = TACO_EVENT_MEASURE,
+      .line = line,
       .measure =
           {
               .real = true,

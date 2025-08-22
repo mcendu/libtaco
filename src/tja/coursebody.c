@@ -71,11 +71,13 @@ int tja_coursebody_append_branched_(tja_coursebody *restrict c,
           {
               .time = 0,
               .type = TACO_EVENT_TJA_BRANCH_TYPE,
+              .line = branched->line,
               .detail_int = {branched->branchtype},
           },
           {
               .time = 0,
               .type = TACO_EVENT_TJA_BRANCH_THRESHOLD,
+              .line = branched->line,
               .branch_cond =
                   {
                       .advanced = branched->threshold_advanced,

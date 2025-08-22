@@ -107,16 +107,19 @@ int tja_pass_compile_branches_(tja_parser *parser, taco_section *branch) {
           {
               .time = section_time,
               .type = TACO_EVENT_BRANCH_START,
+              .line = i->line,
               .branch_start = branch_scores[stats.branch_type],
           },
           {
               .time = check_time,
               .type = TACO_EVENT_BRANCH_CHECK,
+              .line = i->line,
               .branch_cond = {.advanced = threshold_a, .master = threshold_m},
           },
           {
               .time = taco_event_time(i),
               .type = TACO_EVENT_BRANCH_JUMP,
+              .line = i->line,
               .raw_params = {},
           },
       };

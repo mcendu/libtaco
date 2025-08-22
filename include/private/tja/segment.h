@@ -9,7 +9,7 @@
 typedef struct tja_segment_ tja_segment;
 
 extern int tja_segment_init_(tja_segment *segment, taco_section *buf);
-extern int tja_segment_push_barline_(tja_segment *segment, int units);
+extern int tja_segment_push_barline_(tja_segment *segment, int units, int line);
 extern void tja_segment_finish_measure_(tja_segment *segment);
 extern int tja_segment_push_events_(tja_segment *segment, tja_events *events);
 
