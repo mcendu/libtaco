@@ -242,18 +242,26 @@ set:
       // run post processing filters
       int branches = taco_course_branched($3) ? 3 : 1;
 
+      // per-branch post processing
       for (int i = 0; i < branches; ++i) {
         taco_section *branch =
             taco_course_get_branch_mut_($3, TACO_SIDE_LEFT, i);
 
-        error = error || tja_pass_convert_time_(parser, branch);
-        error = error || tja_pass_checkpoint_rolls_(parser, branch);
-        error = error || tja_pass_barlines_(parser, branch);
-        error = error || tja_pass_compile_branches_(parser, branch);
-        error = error || tja_pass_prepend_bgm_(parser, branch);
-        error = error || tja_pass_cleanup_(parser, branch);
-        error = error || tja_pass_annotate_(parser, branch);
+        int branch_err = 0;
+
+        branch_err = branch_err || tja_pass_convert_time_(parser, branch);
+        branch_err = branch_err || tja_pass_checkpoint_rolls_(parser, branch);
+        branch_err = branch_err || tja_pass_barlines_(parser, branch);
+        branch_err = branch_err || tja_pass_compile_branches_(parser, branch);
+        branch_err = branch_err || tja_pass_prepend_bgm_(parser, branch);
+        branch_err = branch_err || tja_pass_cleanup_(parser, branch);
+        branch_err = branch_err || tja_pass_annotate_(parser, branch);
+
+        error = error || branch_err;
       }
+
+      // course post processing
+      error = error || tja_pass_check_branches_(parser, $3);
     }
 
     // only adding course if no errors are found

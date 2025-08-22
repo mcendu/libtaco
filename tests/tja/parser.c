@@ -171,6 +171,7 @@ START_TEST(test_branch) {
 
   taco_courseset *set = taco_parser_parse_file(parser, "assets/branch.tja");
   const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  ck_assert_ptr_nonnull(c);
 
   const taco_section *s = taco_course_get_branch(c, TACO_SIDE_LEFT, _i);
   assert_section_eq(s, expected[_i], assert_section);
@@ -245,9 +246,17 @@ START_TEST(test_subtitle) {
 }
 END_TEST
 
+START_TEST(test_badbranch) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/badbranch.tja");
+  ck_assert_ptr_null(taco_courseset_get_course(set, TACO_CLASS_ONI));
+  taco_courseset_free(set);
+}
+END_TEST
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
+  tcase_add_test(c, test_badbranch);
   tcase_add_test(c, test_badmeasure);
   tcase_add_test(c, test_balloon);
   tcase_add_test(c, test_basic);
