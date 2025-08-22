@@ -1,0 +1,5 @@
+0 bpm tempo=100
+0 measure
+0 don annotation=don
+48 delay time=0.5
+48 don annotation=don

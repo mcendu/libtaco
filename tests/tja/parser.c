@@ -223,6 +223,14 @@ START_TEST(test_hand) {
   taco_courseset_free(set);
 }
 
+START_TEST(test_delay) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/delay.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s = taco_course_get_branch(c, 0, 0);
+  assert_section_eq(s, "assets/delay.txt", assert_section);
+  taco_courseset_free(set);
+}
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -234,6 +242,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_commands);
   tcase_add_test(c, test_checkpoint);
   tcase_add_test(c, test_crlf);
+  tcase_add_test(c, test_delay);
   tcase_add_test(c, test_division);
   tcase_add_loop_test(c, test_double, 0, 2);
   tcase_add_test(c, test_empty);

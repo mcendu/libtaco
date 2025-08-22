@@ -164,6 +164,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %type <note> gogoend_command
 %type <note> scroll_command
 %type <note> bpmchange_command
+%type <note> delay_command
 %type <note> unrecognized_command
 
 %type <real> real
@@ -212,6 +213,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token GOGOEND_CMD
 %token SCROLL_CMD
 %token BPMCHANGE_CMD
+%token DELAY_CMD
 
 %start set
 
@@ -565,6 +567,7 @@ note_command:
   | scroll_command
   | bpmchange_command
   | levelhold_command
+  | delay_command
   | unrecognized_command;
 
 measure_command:
@@ -612,6 +615,13 @@ bpmchange_command:
     $$.type = TACO_EVENT_BPM;
     $$.detail_float.value = $2;
   };
+
+delay_command:
+  DELAY_CMD real '\n' {
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_DELAY;
+    $$.detail_float.value = $2;
+  }
 
 unrecognized_command:
   COMMAND text '\n' {

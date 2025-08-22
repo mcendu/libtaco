@@ -236,6 +236,10 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(body_command);
   return BPMCHANGE_CMD;
 }
+<body>#DELAY {
+  BEGIN(body_command);
+  return DELAY_CMD;
+}
 
 <body_pretext>{SPACE}+ {
   BEGIN(body_text);
