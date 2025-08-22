@@ -233,14 +233,19 @@ set:
     tja_metadata_update_(parser->metadata, $2);
     tja_metadata_free_($2);
 
-    // run post processing filters that requires metadata availability
+    // run post processing filters
     int branches = taco_course_branched($3) ? 3 : 1;
 
     for (int i = 0; i < branches; ++i) {
       taco_section *branch =
           taco_course_get_branch_mut_($3, TACO_SIDE_LEFT, i);
+      tja_pass_convert_time_(parser, branch);
+      tja_pass_checkpoint_rolls_(parser, branch);
+      tja_pass_barlines_(parser, branch);
+      tja_pass_compile_branches_(parser, branch);
       tja_pass_prepend_bgm_(parser, branch);
       tja_pass_cleanup_(parser, branch);
+      tja_pass_annotate_(parser, branch);
     }
 
     // apply metadata
@@ -416,17 +421,6 @@ body:
     taco_course_set_style_($2.course, $1);
 
     int branches = taco_course_branched($2.course) ? 3 : 1;
-
-    for (int i = 0; i < branches; ++i) {
-      taco_section *branch =
-          taco_course_get_branch_mut_($2.course, TACO_SIDE_LEFT, i);
-      tja_pass_convert_time_(parser, branch);
-      tja_pass_checkpoint_rolls_(parser, branch);
-      tja_pass_barlines_(parser, branch);
-      tja_pass_compile_branches_(parser, branch);
-      tja_pass_cleanup_(parser, branch);
-      tja_pass_annotate_(parser, branch);
-    }
 
     $$ = $2.course;
   };
