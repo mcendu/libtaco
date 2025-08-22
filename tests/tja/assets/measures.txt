@@ -3,7 +3,11 @@
 0 don annotation=don
 96 measure
 96 kat annotation=kat
-192 measure hidden
-192 don_big
-288 measure
-288 kat_big
+168 measure hidden
+168 don_big
+264 measure
+264 kat_big
+360 measure
+384 measure fake
+408 measure fake
+432 measure fake

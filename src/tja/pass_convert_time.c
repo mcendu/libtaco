@@ -67,8 +67,9 @@ static void pass_convert(taco_section *branch) {
 
     if (i->type == TACO_EVENT_TJA_MEASURE_LENGTH) {
       assert((u == 0));
-      measure_ticks = (measure_ticks / i->tja_measure_length.divisor) *
-                      i->tja_measure_length.dividend;
+      measure_ticks =
+          (taco_section_tickrate(branch) / i->tja_measure_length.divisor) *
+          i->tja_measure_length.dividend;
       i->type = TACO_EVENT_NONE;
     }
 
