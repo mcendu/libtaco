@@ -36,6 +36,23 @@ double taco_event_detail_float(const taco_event *event) {
   }
 }
 
+int taco_event_scroll(const taco_event *restrict event, double *restrict x, double *restrict y) {
+  if (!x || !y)
+    return -1;
+
+  switch (event->type) {
+  case TACO_EVENT_SCROLL:
+    *x = event->detail_float.value;
+    *y = 0;
+    return 0;
+  case TACO_EVENT_SCROLL_COMPLEX:
+    *x = event->scroll_complex.x;
+    *y = event->scroll_complex.y;
+  default:
+    return -1;
+  }
+}
+
 int taco_event_branch_scoring(const taco_event *restrict event,
                               taco_branch_scoring *restrict scoring) {
   if (event->type != TACO_EVENT_BRANCH_START)

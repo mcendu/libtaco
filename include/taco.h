@@ -148,6 +148,7 @@
 #define TACO_EVENT_GOGOSTART (-17)
 #define TACO_EVENT_GOGOEND (-32)
 #define TACO_EVENT_SCROLL (-33)
+#define TACO_EVENT_SCROLL_COMPLEX (-34)
 #define TACO_EVENT_BPM (-49)
 #define TACO_EVENT_DELAY (-50)
 #define TACO_EVENT_BRANCH_START (-65)
@@ -358,6 +359,10 @@ taco_event_detail_int(const taco_event *restrict event) TACO_PURE;
 /* Gets the parameter of an event. */
 TACO_PUBLIC double
 taco_event_detail_float(const taco_event *restrict event) TACO_PURE;
+/* Get the scrolling multiplier of a scroll event. */
+TACO_PUBLIC int taco_event_scroll(const taco_event *restrict event,
+                                  double *restrict x,
+                                  double *restrict y) TACO_PURE;
 /* Gets the scoring parameters of a branching section. */
 TACO_PUBLIC int
 taco_event_branch_scoring(const taco_event *restrict event,

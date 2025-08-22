@@ -44,6 +44,11 @@ struct measure_length_event_ {
   int32_t divisor;
 };
 
+struct complex_scroll_event_ {
+  float x;
+  float y;
+};
+
 struct taco_event_ {
   uint32_t time;
   int16_t type;
@@ -56,6 +61,7 @@ struct taco_event_ {
     struct branch_condition_event_ branch_cond;
     struct measure_event_ measure;
     struct measure_length_event_ tja_measure_length;
+    struct complex_scroll_event_ scroll_complex;
   };
 };
 
