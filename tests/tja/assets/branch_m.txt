@@ -2,9 +2,10 @@
 0 bpm tempo=120
 0 measure
 0 don annotation=don
-48 kat annotation=kat
+48 don annotation=don
 96 branch_check advanced=20 master=30
 96 measure
+96 kat annotation=kat
 192 branch_jump
 192 measure
 192 don annotation=don
