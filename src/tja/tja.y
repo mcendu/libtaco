@@ -168,6 +168,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %type <note> unrecognized_command
 %type <note> barlineon_command
 %type <note> barlineoff_command
+%type <note> barline_command
 
 %type <real> real
 %type <text> text
@@ -218,6 +219,7 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token DELAY_CMD
 %token BARLINEON_CMD
 %token BARLINEOFF_CMD
+%token BARLINE_CMD
 
 %start set
 
@@ -569,6 +571,7 @@ note_command:
   | delay_command
   | barlineon_command
   | barlineoff_command
+  | barline_command
   | unrecognized_command;
 
 measure_command:
@@ -634,6 +637,13 @@ barlineoff_command:
   BARLINEOFF_CMD '\n' {
     memset(&$$, 0, sizeof(taco_event));
     $$.type = TACO_EVENT_TJA_BARLINEOFF;
+  }
+
+barline_command:
+  BARLINE_CMD '\n' {
+    memset(&$$, 0, sizeof(taco_event));
+    $$.type = TACO_EVENT_MEASURE;
+    $$.measure.real = false;
   }
 
 unrecognized_command:

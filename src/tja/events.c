@@ -42,6 +42,9 @@ int tja_events_push_event_(tja_events *restrict events,
   } else if (event->type == TACO_EVENT_TJA_LEVELHOLD) {
     events->levelhold = true;
     return 0;
+  } else if (events->units == 0 && event->type == TACO_EVENT_MEASURE) {
+    // no duplicate barlines
+    return 0;
   }
 
   taco_event e;

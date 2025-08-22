@@ -248,6 +248,10 @@ IDENTIFIER {IDSTART}{IDCONT}*
   BEGIN(body_command);
   return BARLINEOFF_CMD;
 }
+<body>#BARLINE {
+  BEGIN(body_command);
+  return BARLINE_CMD;
+}
 
 <body_pretext>{SPACE}+ {
   BEGIN(body_text);
