@@ -1,0 +1,9 @@
+0 bpm tempo=120
+0 measure
+0 don annotation=don
+24 don annotation=don
+48 kat annotation=kat
+96 measure
+96 don_big hand
+120 don_big hand
+144 kat_big hand

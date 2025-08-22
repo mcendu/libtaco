@@ -8,22 +8,27 @@
 #include "tja/timestamp.h"
 #include <string.h>
 
-static const short note_types_[128] = {
-    ['0'] = TACO_EVENT_NONE,     ['1'] = TACO_EVENT_DON,
-    ['2'] = TACO_EVENT_KAT,      ['3'] = TACO_EVENT_DON_BIG,
-    ['4'] = TACO_EVENT_KAT_BIG,  ['5'] = TACO_EVENT_ROLL,
-    ['6'] = TACO_EVENT_ROLL_BIG, ['7'] = TACO_EVENT_BALLOON,
-    ['8'] = TACO_EVENT_ROLL_END, ['9'] = TACO_EVENT_KUSUDAMA,
-    ['A'] = TACO_EVENT_DON_BIG,  ['B'] = TACO_EVENT_KAT_BIG,
-    ['C'] = TACO_EVENT_LANDMINE,
+static const taco_event note_types_[128] = {
+    ['0'] = {.type = TACO_EVENT_NONE},
+    ['1'] = {.type = TACO_EVENT_DON},
+    ['2'] = {.type = TACO_EVENT_KAT},
+    ['3'] = {.type = TACO_EVENT_DON_BIG},
+    ['4'] = {.type = TACO_EVENT_KAT_BIG},
+    ['5'] = {.type = TACO_EVENT_ROLL},
+    ['6'] = {.type = TACO_EVENT_ROLL_BIG},
+    ['7'] = {.type = TACO_EVENT_BALLOON},
+    ['8'] = {.type = TACO_EVENT_ROLL_END},
+    ['9'] = {.type = TACO_EVENT_KUSUDAMA},
+    ['A'] = {.type = TACO_EVENT_DON_BIG,
+             .detail_int = {.value = TACO_DETAIL_HAND}},
+    ['B'] = {.type = TACO_EVENT_KAT_BIG,
+             .detail_int = {.value = TACO_DETAIL_HAND}},
+    ['C'] = {.type = TACO_EVENT_LANDMINE},
 };
 
 int tja_events_push_note_(tja_events *restrict events, int note, int line) {
-  taco_event e = {
-      .time = 0,
-      .type = note < 128 ? note_types_[note] : 0,
-      .line = line,
-  };
+  taco_event e = note_types_[note >= 0 && note < 128 ? note : 0];
+  e.line = line;
 
   int result = tja_events_push_event_(events, &e);
   events->units += 1;

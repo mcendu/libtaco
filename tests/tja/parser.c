@@ -215,6 +215,14 @@ START_TEST(test_label) {
   taco_courseset_free(set);
 }
 
+START_TEST(test_hand) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/hand.tja");
+  const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  const taco_section *s = taco_course_get_branch(c, 0, 0);
+  assert_section_eq(s, "assets/hand.txt", assert_section);
+  taco_courseset_free(set);
+}
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -231,6 +239,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_empty);
   tcase_add_test(c, test_emptymeasures);
   tcase_add_test(c, test_eof);
+  tcase_add_test(c, test_hand);
   tcase_add_test(c, test_label);
   tcase_add_test(c, test_measures);
   tcase_add_test(c, test_whitespace);
