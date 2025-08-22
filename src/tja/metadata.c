@@ -8,7 +8,6 @@
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
 
 typedef int (*metadata_setter)(tja_metadata *meta, tja_metadata_field *field);
@@ -174,7 +173,6 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
 int SETTER_(unrecognized)(tja_metadata *m, tja_metadata_field *f) { return 0; }
 
 MAKE_SETTER_(title, text);
-MAKE_SETTER_(subtitle, text);
 MAKE_SETTER_(genre, text);
 MAKE_SETTER_(maker, text);
 MAKE_SETTER_(audio, text);
@@ -190,6 +188,22 @@ MAKE_SETTER_(balloon_a, balloon);
 MAKE_SETTER_(balloon_m, balloon);
 MAKE_SETTER_(scorediff, integer);
 MAKE_SETTER_(papamama, integer);
+
+static int SETTER_(subtitle)(tja_metadata *m, tja_metadata_field *f) {
+  if (strncmp("--", f->text, 2) == 0) {
+    char *subtitle = taco_strdup_(m->alloc, &f->text[2]);
+    taco_free_(m->alloc, f->text);
+    m->subtitle = subtitle;
+  } else if (strncmp("++", f->text, 2) == 0) {
+    char *subtitle = taco_strdup_(m->alloc, &f->text[2]);
+    taco_free_(m->alloc, f->text);
+    m->subtitle = subtitle;
+  } else {
+    m->subtitle = f->text;
+  }
+
+  return 0;
+}
 
 static int SETTER_(scoreinit)(tja_metadata *m, tja_metadata_field *f) {
   m->scoreinit = f->scoreinit.casual;

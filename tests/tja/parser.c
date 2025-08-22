@@ -198,6 +198,7 @@ END_TEST
 START_TEST(test_badmeasure) {
   ck_assert_ptr_null(taco_parser_parse_file(parser, "assets/badmeasure.tja"));
 }
+END_TEST
 
 START_TEST(test_checkpoint) {
   taco_courseset *set = taco_parser_parse_file(parser, "assets/checkpoint.tja");
@@ -206,6 +207,7 @@ START_TEST(test_checkpoint) {
   assert_section_eq(s, "assets/checkpoint.txt", assert_section);
   taco_courseset_free(set);
 }
+END_TEST
 
 START_TEST(test_label) {
   taco_courseset *set = taco_parser_parse_file(parser, "assets/label.tja");
@@ -214,6 +216,7 @@ START_TEST(test_label) {
   assert_section_eq(s, "assets/label.txt", assert_section);
   taco_courseset_free(set);
 }
+END_TEST
 
 START_TEST(test_hand) {
   taco_courseset *set = taco_parser_parse_file(parser, "assets/hand.tja");
@@ -222,6 +225,7 @@ START_TEST(test_hand) {
   assert_section_eq(s, "assets/hand.txt", assert_section);
   taco_courseset_free(set);
 }
+END_TEST
 
 START_TEST(test_delay) {
   taco_courseset *set = taco_parser_parse_file(parser, "assets/delay.tja");
@@ -230,6 +234,14 @@ START_TEST(test_delay) {
   assert_section_eq(s, "assets/delay.txt", assert_section);
   taco_courseset_free(set);
 }
+END_TEST
+
+START_TEST(test_subtitle) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/subtitle.tja");
+  ck_assert_str_eq(taco_courseset_subtitle(set), "Artist");
+  taco_courseset_free(set);
+}
+END_TEST
 
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
@@ -251,6 +263,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_hand);
   tcase_add_test(c, test_label);
   tcase_add_test(c, test_measures);
+  tcase_add_test(c, test_subtitle);
   tcase_add_test(c, test_whitespace);
   return c;
 }
