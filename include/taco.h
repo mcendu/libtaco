@@ -184,6 +184,8 @@ extern "C" {
 
 /* An object that allocates memory for other objects. */
 typedef struct taco_allocator_ taco_allocator;
+/* Provides I/O support for an object. */
+typedef struct taco_io_ taco_io;
 /* The scoring mode of a branched section. */
 typedef struct taco_branch_scoring_ taco_branch_scoring;
 
@@ -245,6 +247,20 @@ struct taco_allocator_ {
   taco_free_fn *free;
   taco_realloc_fn *realloc;
   void *heap;
+};
+
+struct taco_io_ {
+  /*
+   * Version field, for backwards compatibility. you should always say
+   * `sizeof(taco_io)` here.
+   */
+  size_t version;
+  taco_read_fn *read;
+  taco_write_fn *write;
+  taco_close_fn *close;
+  taco_printf_fn *printf;
+  taco_seek_fn *seek;
+  /* Do not modify any fields above. Add new fields below. */
 };
 
 /* Functions */

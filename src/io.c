@@ -17,9 +17,9 @@
 #include <stdio.h>
 
 #ifdef TACO_HAS_FSEEKO_
-#define stdio_seek fseeko
+#define stdio_seek ((taco_seek_fn *)fseeko)
 #else
-static int stdio_seek(FILE *file, uint64_t offset, int whence) {
+static int stdio_seek(void *file, uint64_t offset, int whence) {
   return fseek(file, (long)offset, whence);
 }
 #endif
@@ -28,17 +28,32 @@ struct taco_file_ {
   taco_allocator *alloc;
   void *stream;
   char *filename;
-  taco_read_fn *read;
-  taco_write_fn *write;
-  taco_close_fn *close;
-  taco_printf_fn *printf;
-  taco_seek_fn *seek;
+  const taco_io *callbacks;
+};
+
+static const taco_io stdio_owned_callbacks_ = {
+    .version = sizeof(taco_io),
+    .read = (taco_read_fn *)fread,
+    .write = (taco_write_fn *)fwrite,
+    .seek = stdio_seek,
+    .printf = (taco_printf_fn *)fprintf,
+    .close = (taco_close_fn *)fclose,
+};
+
+static const taco_io stdio_borrowed_callbacks_ = {
+    .version = sizeof(taco_io),
+    .read = (taco_read_fn *)fread,
+    .write = (taco_write_fn *)fwrite,
+    .seek = stdio_seek,
+    .printf = (taco_printf_fn *)fprintf,
+};
+
+static const taco_io null_callbacks_ = {
+    .version = sizeof(taco_io),
 };
 
 taco_file *taco_file_open_(taco_allocator *alloc, void *stream,
-                           const char *filename, taco_read_fn *read,
-                           taco_write_fn *write, taco_close_fn *close,
-                           taco_printf_fn *printf, taco_seek_fn *seek) {
+                           const char *filename, const taco_io *callbacks) {
   taco_file *f = taco_malloc_(alloc, sizeof(taco_file));
   if (!f)
     return NULL;
@@ -46,10 +61,7 @@ taco_file *taco_file_open_(taco_allocator *alloc, void *stream,
   f->alloc = alloc;
   f->stream = stream;
   f->filename = taco_strdup_(alloc, filename);
-  f->read = read;
-  f->write = write;
-  f->close = close;
-  f->printf = printf;
+  f->callbacks = callbacks;
   return f;
 }
 
@@ -58,10 +70,8 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
   if (!f)
     return NULL;
 
-  taco_file *result =
-      taco_file_open_(&taco_default_allocator_, f, path, (taco_read_fn *)fread,
-                      (taco_write_fn *)fwrite, (taco_close_fn *)fclose,
-                      (taco_printf_fn *)vfprintf, (taco_seek_fn *)stdio_seek);
+  taco_file *result = taco_file_open_(&taco_default_allocator_, f, path,
+                                      &stdio_owned_callbacks_);
   if (!result) {
     fclose(f);
     return NULL;
@@ -72,20 +82,20 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
 
 taco_file *taco_file_open_stdio_(FILE *file) {
   return taco_file_open_(&taco_default_allocator_, file, "<stream>",
-                         (taco_read_fn *)fread, (taco_write_fn *)fwrite, NULL,
-                         (taco_printf_fn *)vfprintf, (taco_seek_fn *)stdio_seek);
+                         &stdio_borrowed_callbacks_);
 }
 
 taco_file *taco_file_open_null_(taco_allocator *alloc) {
   if (!alloc)
     alloc = &taco_default_allocator_;
 
-  return taco_file_open_(alloc, NULL, "<null>", NULL, NULL, NULL, NULL, NULL);
+  return taco_file_open_(alloc, NULL, "<null>", &null_callbacks_);
 }
 
 void taco_file_close_(taco_file *file) {
-  if (file->close)
-    file->close(file->stream);
+  if (file->callbacks->version > offsetof(taco_io, close) &&
+      file->callbacks->close)
+    file->callbacks->close(file->stream);
 
   taco_free_(file->alloc, file->filename);
   taco_free_(file->alloc, file);
@@ -99,14 +109,16 @@ void taco_file_set_name_(taco_file *file, const char *filename) {
 }
 
 size_t taco_file_read_(taco_file *file, void *dst, size_t size) {
-  if (file->read)
-    return file->read(dst, 1, size, file->stream);
+  if (file->callbacks->version > offsetof(taco_io, read) &&
+      file->callbacks->read)
+    return file->callbacks->read(dst, 1, size, file->stream);
   return 0;
 }
 
 size_t taco_file_write_(taco_file *file, const void *src, size_t size) {
-  if (file->write)
-    return file->write(src, 1, size, file->stream);
+  if (file->callbacks->version > offsetof(taco_io, write) &&
+      file->callbacks->write)
+    return file->callbacks->write(src, 1, size, file->stream);
   return 0;
 }
 
@@ -120,8 +132,9 @@ int taco_file_printf_(taco_file *file, const char *format, ...) {
 }
 
 int taco_file_vprintf_(taco_file *file, const char *format, va_list arg) {
-  if (file->printf)
-    return file->printf(file->stream, format, arg);
+  if (file->callbacks->version > offsetof(taco_io, printf) &&
+      file->callbacks->printf)
+    return file->callbacks->printf(file->stream, format, arg);
 
   // without a dedicated printf, format in memory and dump to stream
   va_list ap_lencheck;
@@ -137,7 +150,8 @@ int taco_file_vprintf_(taco_file *file, const char *format, va_list arg) {
 }
 
 int taco_file_seek_(taco_file *file, uint64_t offset, int whence) {
-  if (file->read)
-    return file->seek(file, offset, whence);
+  if (file->callbacks->version > offsetof(taco_io, seek) &&
+      file->callbacks->seek)
+    return file->callbacks->seek(file, offset, whence);
   return -1;
 }
