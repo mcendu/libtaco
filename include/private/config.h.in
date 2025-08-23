@@ -1,0 +1,8 @@
+/* SPDX-License-Identifier: BSD-2-Clause */
+#ifndef TACO_CONFIG_H_
+#define TACO_CONFIG_H_
+
+/* Is fseeko available on the system? */
+#mesondefine TACO_HAS_FSEEKO_
+
+#endif /* !TACO_CONFIG_H_ */

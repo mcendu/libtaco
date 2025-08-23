@@ -1,4 +1,13 @@
 // SPDX-License-Identifier: BSD-2-Clause
+#include "config.h"
+
+#ifdef TACO_HAS_FSEEKO_
+#undef _FILE_OFFSET_BITS
+#define _FILE_OFFSET_BITS 64
+
+#define _POSIX_C_SOURCE 200112L
+#endif
+
 #include "io.h"
 
 #include "alloc.h"
@@ -6,6 +15,14 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
+
+#ifdef TACO_HAS_FSEEKO_
+#define stdio_seek fseeko
+#else
+static int stdio_seek(FILE *file, uint64_t offset, int whence) {
+  return fseek(file, (long)offset, whence);
+}
+#endif
 
 struct taco_file_ {
   taco_allocator *alloc;
@@ -15,12 +32,13 @@ struct taco_file_ {
   taco_write_fn *write;
   taco_close_fn *close;
   taco_printf_fn *printf;
+  taco_seek_fn *seek;
 };
 
 taco_file *taco_file_open_(taco_allocator *alloc, void *stream,
                            const char *filename, taco_read_fn *read,
                            taco_write_fn *write, taco_close_fn *close,
-                           taco_printf_fn *printf) {
+                           taco_printf_fn *printf, taco_seek_fn *seek) {
   taco_file *f = taco_malloc_(alloc, sizeof(taco_file));
   if (!f)
     return NULL;
@@ -43,7 +61,7 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
   taco_file *result =
       taco_file_open_(&taco_default_allocator_, f, path, (taco_read_fn *)fread,
                       (taco_write_fn *)fwrite, (taco_close_fn *)fclose,
-                      (taco_printf_fn *)vfprintf);
+                      (taco_printf_fn *)vfprintf, (taco_seek_fn *)stdio_seek);
   if (!result) {
     fclose(f);
     return NULL;
@@ -55,14 +73,14 @@ taco_file *taco_file_open_path_(const char *path, const char *mode) {
 taco_file *taco_file_open_stdio_(FILE *file) {
   return taco_file_open_(&taco_default_allocator_, file, "<stream>",
                          (taco_read_fn *)fread, (taco_write_fn *)fwrite, NULL,
-                         (taco_printf_fn *)vfprintf);
+                         (taco_printf_fn *)vfprintf, (taco_seek_fn *)stdio_seek);
 }
 
 taco_file *taco_file_open_null_(taco_allocator *alloc) {
   if (!alloc)
     alloc = &taco_default_allocator_;
 
-  return taco_file_open_(alloc, NULL, "<null>", NULL, NULL, NULL, NULL);
+  return taco_file_open_(alloc, NULL, "<null>", NULL, NULL, NULL, NULL, NULL);
 }
 
 void taco_file_close_(taco_file *file) {
@@ -116,4 +134,10 @@ int taco_file_vprintf_(taco_file *file, const char *format, va_list arg) {
   int result = taco_file_write_(file, str, len);
   taco_free_(file->alloc, str);
   return result;
+}
+
+int taco_file_seek_(taco_file *file, uint64_t offset, int whence) {
+  if (file->read)
+    return file->seek(file, offset, whence);
+  return -1;
 }

@@ -3,6 +3,8 @@ libtaco_headers = files(
   'taco.h',
 )
 
+subdir('private')
+
 libtaco_include = include_directories('.')
 libtaco_include_private = include_directories('private')
 

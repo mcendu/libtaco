@@ -32,6 +32,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 
 /* ## Attribute macros */
@@ -225,6 +226,8 @@ typedef int taco_close_fn(void *stream);
 /* Write formatted output to stream. (cf. vfprintf) */
 typedef int taco_printf_fn(void *restrict stream, const char *restrict format,
                            va_list ap);
+/* Change the position of a stream. (cf. fseek) */
+typedef int taco_seek_fn(void *restrict stream, uint64_t offset, int whence);
 
 /* ## Struct definitions */
 
