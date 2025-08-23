@@ -285,54 +285,54 @@ TACO_PUBLIC int taco_parser_set_error_stdio(taco_parser *restrict parser,
 TACO_PUBLIC void taco_courseset_free(taco_courseset *set);
 
 /* Gets the song title. */
-TACO_PUBLIC const char *
-taco_courseset_title(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_title(const taco_courseset *restrict set);
 /* Gets the song subtitle or artist info. */
-TACO_PUBLIC const char *
-taco_courseset_subtitle(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_subtitle(const taco_courseset *restrict set);
 /* Gets the song genre. */
-TACO_PUBLIC const char *
-taco_courseset_genre(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_genre(const taco_courseset *restrict set);
 /* Gets the maker of the courseset. */
-TACO_PUBLIC const char *
-taco_courseset_maker(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_maker(const taco_courseset *restrict set);
 /* Gets the filename of the set. (e.g. rot.tja) */
-TACO_PUBLIC const char *
-taco_courseset_filename(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_filename(const taco_courseset *restrict set);
 /* Gets the path to the audio, relative to the set's directory. */
-TACO_PUBLIC const char *
-taco_courseset_audio(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC const char *
+taco_courseset_audio(const taco_courseset *restrict set);
 /* Gets the start time of the song's preview, in seconds.. */
-TACO_PUBLIC double
-taco_courseset_demo_time(const taco_courseset *restrict set) TACO_PURE;
+TACO_PURE TACO_PUBLIC double
+taco_courseset_demo_time(const taco_courseset *restrict set);
 /* Gets a course with the difficulty class specified. */
-TACO_PUBLIC const taco_course *
+TACO_PURE TACO_PUBLIC const taco_course *
 taco_courseset_get_course(const taco_courseset *restrict set,
-                          int diffclass) TACO_PURE;
+                          int diffclass);
 
 /* Gets difficulty info. */
 TACO_PUBLIC void taco_course_difficulty(const taco_course *restrict course,
                                         int *restrict diffclass,
                                         int *restrict level);
 /* Gets the difficulty class. */
-TACO_PUBLIC int taco_course_class(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_course_class(const taco_course *restrict course);
 /* Gets the level. */
-TACO_PUBLIC double
-taco_course_level(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC double
+taco_course_level(const taco_course *restrict course);
 /* Gets the playstyle. */
-TACO_PUBLIC int taco_course_style(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_course_style(const taco_course *restrict course);
 /* Gets the main tempo. */
-TACO_PUBLIC double
-taco_course_bpm(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC double
+taco_course_bpm(const taco_course *restrict course);
 /* Gets when the audio should start playing in seconds. */
-TACO_PUBLIC double
-taco_course_offset(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC double
+taco_course_offset(const taco_course *restrict course);
 /* Gets whether multiple players can play the same side of a course. */
-TACO_PUBLIC int
-taco_course_papamama(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC int
+taco_course_papamama(const taco_course *restrict course);
 /* Gets whether the course branch into different variants. */
-TACO_PUBLIC int
-taco_course_branched(const taco_course *restrict course) TACO_PURE;
+TACO_PURE TACO_PUBLIC int
+taco_course_branched(const taco_course *restrict course);
 /* Gets the base component of the per-note score. */
 TACO_PUBLIC int taco_course_score_base(const taco_course *restrict course);
 /* Gets the bonus component of the per note score. */
@@ -342,46 +342,46 @@ TACO_PUBLIC int
 taco_course_score_tournament(const taco_course *restrict course);
 
 /* Gets the branch of a course. */
-TACO_PUBLIC const taco_section *
+TACO_PURE TACO_PUBLIC const taco_section *
 taco_course_get_branch(const taco_course *restrict course, int side,
-                       int branch) TACO_PURE;
+                       int branch);
 
 /* Gets the count of events. */
-TACO_PUBLIC size_t
-taco_section_size(const taco_section *restrict section) TACO_PURE;
+TACO_PURE TACO_PUBLIC size_t
+taco_section_size(const taco_section *restrict section);
 /* Gets the number of ticks per 4/4 measure. */
-TACO_PUBLIC int
-taco_section_tickrate(const taco_section *restrict section) TACO_PURE;
+TACO_PURE TACO_PUBLIC int
+taco_section_tickrate(const taco_section *restrict section);
 
 /* Gets an iterator to the first event. */
-TACO_PUBLIC const taco_event *
-taco_section_begin(const taco_section *restrict section) TACO_PURE;
+TACO_PURE TACO_PUBLIC const taco_event *
+taco_section_begin(const taco_section *restrict section);
 /* Gets an iterator to after the last event. It cannot be dereferenced. */
-TACO_PUBLIC const taco_event *
-taco_section_end(const taco_section *restrict section) TACO_PURE;
+TACO_PURE TACO_PUBLIC const taco_event *
+taco_section_end(const taco_section *restrict section);
 /* Gets an iterator to an arbitrary event. Returns NULL if out of bounds. */
-TACO_PUBLIC const taco_event *
+TACO_PURE TACO_PUBLIC const taco_event *
 taco_section_locate(const taco_section *restrict section,
-                    size_t index) TACO_PURE;
+                    size_t index);
 
 /* Print a section in an unstable, human-readable format. */
 TACO_PUBLIC void taco_section_print(const taco_section *restrict section,
                                     FILE *restrict file);
 
 /* Gets the time of an event in ticks. */
-TACO_PUBLIC int taco_event_time(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_event_time(const taco_event *restrict event);
 /* Gets the event type. */
-TACO_PUBLIC int taco_event_type(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_event_type(const taco_event *restrict event);
 /* Gets the annotation and appearance of a normal note. */
-TACO_PUBLIC int
-taco_event_detail_int(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int
+taco_event_detail_int(const taco_event *restrict event);
 /* Gets the parameter of an event. */
-TACO_PUBLIC double
-taco_event_detail_float(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC double
+taco_event_detail_float(const taco_event *restrict event);
 /* Get the scrolling multiplier of a scroll event. */
 TACO_PUBLIC int taco_event_scroll(const taco_event *restrict event,
                                   double *restrict x,
-                                  double *restrict y) TACO_PURE;
+                                  double *restrict y);
 /* Gets the scoring parameters of a branching section. */
 TACO_PUBLIC int
 taco_event_branch_scoring(const taco_event *restrict event,
@@ -392,28 +392,28 @@ TACO_PUBLIC int taco_event_branch_thresholds(const taco_event *restrict event,
                                              int *restrict master);
 
 /* Check if the event is interactive, e.g. like a Don/Kat or a drum roll. */
-TACO_PUBLIC int taco_event_is_note(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_event_is_note(const taco_event *restrict event);
 /* Check if the event is a Don or a Kat. */
-TACO_PUBLIC int
-taco_event_is_normal_note(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int
+taco_event_is_normal_note(const taco_event *restrict event);
 /* Check if the event starts a drumroll. */
-TACO_PUBLIC int taco_event_is_roll(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_event_is_roll(const taco_event *restrict event);
 
 /* Compares two events for sorting. */
-TACO_PUBLIC int taco_event_compare(const taco_event *restrict a,
-                                   const taco_event *restrict b) TACO_PURE;
+TACO_PURE TACO_PUBLIC int taco_event_compare(const taco_event *restrict a,
+                                   const taco_event *restrict b);
 
 /* Gets the time of an event in seconds. */
-TACO_PUBLIC double
+TACO_PURE TACO_PUBLIC double
 taco_event_seconds(const taco_event *restrict event,
-                   const taco_section *restrict section) TACO_PURE;
+                   const taco_section *restrict section);
 
 /* Gets the next event. */
-TACO_PUBLIC const taco_event *
-taco_event_next(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC const taco_event *
+taco_event_next(const taco_event *restrict event);
 /* Gets the previous event. */
-TACO_PUBLIC const taco_event *
-taco_event_prev(const taco_event *restrict event) TACO_PURE;
+TACO_PURE TACO_PUBLIC const taco_event *
+taco_event_prev(const taco_event *restrict event);
 
 /* ## Aliases */
 

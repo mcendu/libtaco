@@ -12,17 +12,6 @@ libtaco_src = files(
 subdir('debug')
 subdir('tja')
 
-libc_deps = []
-
-# link libm for math functions, if separate library
-cc = meson.get_compiler('c')
-libm_dep = cc.find_library('m', required: false)
-if libm_dep.found()
-  libc_deps += libm_dep
-endif
-
-libtaco_deps = [libc_deps]
-
 libtaco_lib = library(
   'taco',
   libtaco_src,

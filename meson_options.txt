@@ -1,0 +1,6 @@
+option(
+  'taco_use_simdutf',
+  type: 'feature',
+  value: 'auto',
+  description: 'Use simdutf for fast UTF-8 validation'
+)

@@ -36,7 +36,7 @@ static const taco_io stdio_owned_callbacks_ = {
     .read = (taco_read_fn *)fread,
     .write = (taco_write_fn *)fwrite,
     .seek = stdio_seek,
-    .printf = (taco_printf_fn *)fprintf,
+    .printf = (taco_printf_fn *)vfprintf,
     .close = (taco_close_fn *)fclose,
 };
 
@@ -45,7 +45,7 @@ static const taco_io stdio_borrowed_callbacks_ = {
     .read = (taco_read_fn *)fread,
     .write = (taco_write_fn *)fwrite,
     .seek = stdio_seek,
-    .printf = (taco_printf_fn *)fprintf,
+    .printf = (taco_printf_fn *)vfprintf,
 };
 
 static const taco_io null_callbacks_ = {
@@ -93,6 +93,9 @@ taco_file *taco_file_open_null_(taco_allocator *alloc) {
 }
 
 void taco_file_close_(taco_file *file) {
+  if (!file)
+    return;
+
   if (file->callbacks->version > offsetof(taco_io, close) &&
       file->callbacks->close)
     file->callbacks->close(file->stream);
@@ -152,6 +155,6 @@ int taco_file_vprintf_(taco_file *file, const char *format, va_list arg) {
 int taco_file_seek_(taco_file *file, uint64_t offset, int whence) {
   if (file->callbacks->version > offsetof(taco_io, seek) &&
       file->callbacks->seek)
-    return file->callbacks->seek(file, offset, whence);
+    return file->callbacks->seek(file->stream, offset, whence);
   return -1;
 }

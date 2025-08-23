@@ -253,6 +253,15 @@ START_TEST(test_badbranch) {
 }
 END_TEST
 
+START_TEST(test_shiftjis) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/shiftjis.tja");
+  ck_assert_str_eq(taco_courseset_title(set), "東京テディベア");
+  ck_assert_str_eq(taco_courseset_subtitle(set), "Neru feat.鏡音リン");
+  ck_assert_ptr_nonnull(taco_courseset_get_course(set, TACO_CLASS_ONI));
+  taco_courseset_free(set);
+}
+END_TEST
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -274,6 +283,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_hand);
   tcase_add_test(c, test_label);
   tcase_add_test(c, test_measures);
+  tcase_add_test(c, test_shiftjis);
   tcase_add_test(c, test_subtitle);
   tcase_add_test(c, test_whitespace);
   return c;

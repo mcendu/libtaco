@@ -20,5 +20,13 @@ libtaco_src += files(
   'timestamp.c',
 )
 
+if cfg.get('TACO_HAS_ICONV_')
+  libtaco_src += files('shiftjis.c')
+
+  if simdutf_dep.found()
+    libtaco_src += files('shiftjis.simdutf.cc')
+  endif
+endif
+
 libtaco_src += bison_gen.process('tja.y')
 libtaco_src += flex_gen.process('tja.l')

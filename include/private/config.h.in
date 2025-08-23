@@ -5,4 +5,7 @@
 /* Is fseeko available on the system? */
 #mesondefine TACO_HAS_FSEEKO_
 
+/* Is iconv available on the system or in an external library? */
+#mesondefine TACO_HAS_ICONV_
+
 #endif /* !TACO_CONFIG_H_ */
