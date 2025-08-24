@@ -52,6 +52,7 @@ if not simdutf_dep.found() and get_option('taco_use_simdutf').allowed()
       'SIMDUTF_TOOLS': 'OFF',
     },
   )
+  simdutf_options.set_install(false)
   bundled_simdutf = cmake.subproject(
     'simdutf',
     required: false,
