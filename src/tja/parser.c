@@ -111,9 +111,8 @@ taco_courseset *tja_parser_parse_(tja_parser *parser, taco_file *file) {
   } else {
     filter = tja_iconv_open_(parser->alloc, file, "Shift_JIS");
     if (!filter) {
-      tja_parser_diagnose_(
-          parser, 0, TJA_DIAG_FATAL,
-          "failed to create character set conversion filter");
+      tja_parser_diagnose_(parser, 0, TJA_DIAG_FATAL,
+                           "failed to create character set conversion filter");
       return NULL;
     }
     parser->input = filter;

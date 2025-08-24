@@ -118,7 +118,7 @@ static int place_fffd(char **restrict inbuf, size_t *restrict inbytesleft,
     return -1;
   }
 
-  strncpy(*outbuf, (char[]){0xef, 0xbf, 0xbd}, 3);
+  memcpy(*outbuf, (char[]){0xef, 0xbf, 0xbd}, 3);
 
   *outbuf += 3;
   *outbytesleft -= 3;

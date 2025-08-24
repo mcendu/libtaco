@@ -307,8 +307,7 @@ TACO_PURE TACO_PUBLIC double
 taco_courseset_demo_time(const taco_courseset *restrict set);
 /* Gets a course with the difficulty class specified. */
 TACO_PURE TACO_PUBLIC const taco_course *
-taco_courseset_get_course(const taco_courseset *restrict set,
-                          int diffclass);
+taco_courseset_get_course(const taco_courseset *restrict set, int diffclass);
 
 /* Gets difficulty info. */
 TACO_PUBLIC void taco_course_difficulty(const taco_course *restrict course,
@@ -361,8 +360,7 @@ TACO_PURE TACO_PUBLIC const taco_event *
 taco_section_end(const taco_section *restrict section);
 /* Gets an iterator to an arbitrary event. Returns NULL if out of bounds. */
 TACO_PURE TACO_PUBLIC const taco_event *
-taco_section_locate(const taco_section *restrict section,
-                    size_t index);
+taco_section_locate(const taco_section *restrict section, size_t index);
 
 /* Print a section in an unstable, human-readable format. */
 TACO_PUBLIC void taco_section_print(const taco_section *restrict section,
@@ -380,8 +378,7 @@ TACO_PURE TACO_PUBLIC double
 taco_event_detail_float(const taco_event *restrict event);
 /* Get the scrolling multiplier of a scroll event. */
 TACO_PUBLIC int taco_event_scroll(const taco_event *restrict event,
-                                  double *restrict x,
-                                  double *restrict y);
+                                  double *restrict x, double *restrict y);
 /* Gets the scoring parameters of a branching section. */
 TACO_PUBLIC int
 taco_event_branch_scoring(const taco_event *restrict event,
@@ -401,7 +398,7 @@ TACO_PURE TACO_PUBLIC int taco_event_is_roll(const taco_event *restrict event);
 
 /* Compares two events for sorting. */
 TACO_PURE TACO_PUBLIC int taco_event_compare(const taco_event *restrict a,
-                                   const taco_event *restrict b);
+                                             const taco_event *restrict b);
 
 /* Gets the time of an event in seconds. */
 TACO_PURE TACO_PUBLIC double
