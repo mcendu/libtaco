@@ -2,10 +2,10 @@
 #include "tja/shiftjis.h"
 
 #include "alloc.h"
-#include "errno.h"
 #include "iconv.h"
 #include "taco.h"
 #include <assert.h>
+#include <errno.h>
 #include <string.h>
 
 #define BUFFER_SIZE 16384 // page size of Apple silicon

@@ -4,7 +4,6 @@
 #include "alloc.h"
 #include "io.h"
 #include "taco.h"
-#include <asm-generic/errno-base.h>
 #include <errno.h>
 #include <iconv.h>
 #include <stdbool.h>
