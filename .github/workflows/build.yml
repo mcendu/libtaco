@@ -156,27 +156,27 @@ jobs:
             short: gcc-o2
             msystem: ucrt64
             meson-cfg: --optimization=2
-            ldflags:
+            ldflags: ""
           - name: gcc -O2 -flto
             short: gcc-o2-lto
             msystem: ucrt64
             meson-cfg: --optimization=2 -Db_lto=true
-            ldflags:
+            ldflags: ""
           - name: gcc -O3
             short: gcc-o3
             msystem: ucrt64
             meson-cfg: --optimization=3
-            ldflags:
+            ldflags: ""
           - name: gcc -O3 -flto
             short: gcc-o3-lto
             msystem: ucrt64
             meson-cfg: --optimization=3 -Db_lto=true
-            ldflags:
+            ldflags: ""
           - name: gcc -Os
             short: gcc-os
             msystem: ucrt64
             meson-cfg: --optimization=s
-            ldflags:
+            ldflags: ""
           - name: clang -O2
             short: clang-o2
             msystem: clang64
@@ -212,6 +212,8 @@ jobs:
             meson:p
             ninja:p
             check:p
+            cmake:p
+            libiconv:p
             bison:
             flex:
       - name: Configure project

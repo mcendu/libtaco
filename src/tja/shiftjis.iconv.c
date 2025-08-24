@@ -26,8 +26,8 @@ bool tja_is_file_utf8_(taco_file *file, taco_allocator *alloc) {
   taco_file_seek_(file, 0, SEEK_SET);
 
   while (1) {
-    size_t count = taco_file_read_(file, read_head,
-                                   BUFFER_SIZE - (read_head - in));
+    size_t count =
+        taco_file_read_(file, read_head, BUFFER_SIZE - (read_head - in));
     if (count == 0) {
       // ensure there is no truncated characters at the end
       result = read_head == in;
