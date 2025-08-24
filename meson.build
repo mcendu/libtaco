@@ -22,6 +22,8 @@ project(
   ],
 )
 
+cmake = import('cmake')
+
 bison_gen = generator(
   find_program('bison'),
   arguments: ['-d', '-o', '@OUTPUT0@', '@INPUT@'],
@@ -38,6 +40,11 @@ flex_gen = generator(
   arguments: flex_args,
   output: ['@BASENAME@.yy.c'],
 )
+
+simdutf_dep = dependency('simdutf', required: get_option('taco_use_simdutf'))
+if not simdutf_dep.found() and get_option('taco_use_simdutf').allowed()
+  simdutf_dep = cmake.subproject('simdutf', required: false).dependency('simdutf')
+endif
 
 subdir('include')
 subdir('src')

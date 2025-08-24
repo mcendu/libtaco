@@ -23,7 +23,6 @@ endif
 
 libtaco_deps = [libc_deps, iconv_dep]
 
-simdutf_dep = dependency('simdutf', required: get_option('taco_use_simdutf'))
 if simdutf_dep.found()
   libtaco_deps += simdutf_dep
 endif
