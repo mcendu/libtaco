@@ -25,6 +25,8 @@ if cfg.get('TACO_HAS_ICONV_')
 
   if simdutf_dep.found()
     libtaco_src += files('shiftjis.simdutf.cc')
+  else
+    libtaco_src += files('shiftjis.iconv.c')
   endif
 endif
 

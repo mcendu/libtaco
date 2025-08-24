@@ -144,7 +144,7 @@ static size_t tja_iconv_read_(char *restrict buf, size_t reserved, size_t count,
   while (1) {
     size_t result =
         iconv(self->iconv, &self->head, &inbytesleft, &head, &outbytesleft);
-    if (result != (size_t)-1 || errno == EINVAL) {
+    if (result != (size_t)-1 || /* result == (size_t)-1 && */ errno == EINVAL) {
       // input buffer ran out of data, refilling
       buffer_input(self);
       if (self->eof)

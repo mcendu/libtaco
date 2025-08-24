@@ -106,7 +106,7 @@ taco_courseset *tja_parser_parse_(tja_parser *parser, taco_file *file) {
   //     files will appear as mojibake.
   taco_file *filter = NULL;
 
-  if (tja_is_file_utf8_(file)) {
+  if (tja_is_file_utf8_(file, parser->alloc)) {
     parser->input = file;
   } else {
     filter = tja_iconv_open_(parser->alloc, file, "Shift_JIS");

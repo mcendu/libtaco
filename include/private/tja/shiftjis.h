@@ -21,7 +21,7 @@ extern taco_file *tja_iconv_open_(taco_allocator *alloc, taco_file *file,
                                   const char *src_charset);
 
 /* Check if the stream is valid UTF-8. */
-extern bool tja_is_file_utf8_(taco_file *file);
+extern bool tja_is_file_utf8_(taco_file *file, taco_allocator *alloc);
 
 #ifdef __cplusplus
 }
