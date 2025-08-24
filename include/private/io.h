@@ -22,10 +22,10 @@ extern void taco_file_set_name_(taco_file *file, const char *filename);
 
 extern size_t taco_file_read_(taco_file *file, void *dst, size_t size);
 extern size_t taco_file_write_(taco_file *file, const void *src, size_t size);
-extern int taco_file_printf_(taco_file *file, const char *format, ...)
-    TACO_PRINTF(2, 3);
-extern int taco_file_vprintf_(taco_file *file, const char *format, va_list arg)
-    TACO_PRINTF(2, 0);
+TACO_PRINTF(2, 3)
+extern int taco_file_printf_(taco_file *file, const char *format, ...);
+TACO_PRINTF(2, 0)
+extern int taco_file_vprintf_(taco_file *file, const char *format, va_list arg);
 extern int taco_file_seek_(taco_file *file, uint64_t offset, int whence);
 
 extern taco_file *taco_get_stderr_();

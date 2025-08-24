@@ -4,9 +4,9 @@
 
 #include "taco.h"
 
-extern taco_courseset *taco_courseset_create_() TACO_MALLOC;
-extern taco_courseset *
-taco_courseset_create2_(taco_allocator *alloc) TACO_MALLOC;
+TACO_MALLOC extern taco_courseset *taco_courseset_create_();
+TACO_MALLOC extern taco_courseset *
+taco_courseset_create2_(taco_allocator *alloc);
 
 extern int taco_courseset_set_title_(taco_courseset *restrict set,
                                      const char *restrict title);

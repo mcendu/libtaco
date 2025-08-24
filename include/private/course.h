@@ -4,8 +4,8 @@
 
 #include "taco.h"
 
-extern taco_course *taco_course_create_() TACO_MALLOC;
-extern taco_course *taco_course_create2_(taco_allocator *alloc) TACO_MALLOC;
+TACO_MALLOC extern taco_course *taco_course_create_();
+TACO_MALLOC extern taco_course *taco_course_create2_(taco_allocator *alloc);
 extern void taco_course_free_(taco_course *restrict course);
 
 extern void taco_course_set_class_(taco_course *restrict course, int class);

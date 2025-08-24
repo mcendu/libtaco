@@ -209,13 +209,13 @@ typedef struct taco_event_ taco_event;
 /* ## Callbacks */
 
 /* Allocates memory. */
-typedef void *taco_malloc_fn(size_t size, void *restrict heap)
-    TACO_ALLOC_SIZE(1);
+TACO_ALLOC_SIZE(1)
+typedef void *taco_malloc_fn(size_t size, void *restrict heap);
 /* Frees memory. */
 typedef void taco_free_fn(void *ptr, void *restrict heap);
 /* Moves and resizes memory */
-typedef void *taco_realloc_fn(void *ptr, size_t size, void *restrict heap)
-    TACO_ALLOC_SIZE(2);
+TACO_ALLOC_SIZE(2)
+typedef void *taco_realloc_fn(void *ptr, size_t size, void *restrict heap);
 
 /* Read data from stream. (cf. fread) */
 typedef size_t taco_read_fn(void *restrict dst, size_t size, size_t count,

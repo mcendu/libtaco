@@ -5,10 +5,10 @@
 #include "note.h" /* IWYU pragma: keep; required by macros */
 #include "taco.h"
 
-extern taco_section *taco_section_create_() TACO_MALLOC;
-extern taco_section *taco_section_create2_(taco_allocator *alloc) TACO_MALLOC;
-extern taco_section *
-taco_section_clone_(const taco_section *restrict other) TACO_MALLOC;
+TACO_MALLOC extern taco_section *taco_section_create_();
+TACO_MALLOC extern taco_section *taco_section_create2_(taco_allocator *alloc);
+TACO_MALLOC extern taco_section *
+taco_section_clone_(const taco_section *restrict other);
 extern void taco_section_free_(taco_section *section);
 
 extern taco_event *taco_section_begin_mut_(taco_section *restrict section);

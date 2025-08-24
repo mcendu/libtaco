@@ -19,8 +19,9 @@ extern void tja_parser_free_(tja_parser *parser);
 extern taco_courseset *tja_parser_parse_(tja_parser *parser, taco_file *file);
 
 extern int tja_parser_set_error_(tja_parser *parser, taco_file *file);
+TACO_PRINTF(4, 5)
 extern void tja_parser_diagnose_(tja_parser *parser, int line, int level,
-                                 const char *format, ...) TACO_PRINTF(4, 5);
+                                 const char *format, ...);
 
 extern taco_allocator *tja_parser_allocator_(tja_parser *parser);
 
