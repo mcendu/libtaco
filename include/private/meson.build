@@ -11,7 +11,12 @@ endif
 
 cfg.set(
   'TACO_HAS_FSEEKO_',
-  cc.has_header_symbol('stdio.h', 'fseeko', args: ['-D_POSIX_C_SOURCE=200112L']),
+  cc.has_header_symbol('stdio.h', 'fseeko', args: ['-D_POSIX_C_SOURCE=200112L'])
+  and cc.compute_int(
+    'sizeof(off_t)',
+    prefix: ['#include <stdio.h>'],
+    args: ['-D_POSIX_C_SOURCE=200112L', '-D_FILE_OFFSET_BITS=64'],
+  ) == 8,
 )
 
 iconv_dep = []
