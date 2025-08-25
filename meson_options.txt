@@ -4,3 +4,9 @@ option(
   value: 'auto',
   description: 'Use simdutf for fast UTF-8 validation'
 )
+option(
+  'taco_force_bundled_simdutf',
+  type: 'boolean',
+  value: false,
+  description: 'Always use bundled simdutf'
+)

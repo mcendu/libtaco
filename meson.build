@@ -41,7 +41,7 @@ flex_gen = generator(
   output: ['@BASENAME@.yy.c'],
 )
 
-simdutf_dep = dependency('simdutf', required: get_option('taco_use_simdutf'))
+simdutf_dep = get_option('taco_force_bundled_simdutf') ? disabler() : dependency('simdutf', required: get_option('taco_use_simdutf'))
 
 if not simdutf_dep.found() and get_option('taco_use_simdutf').allowed()
   simdutf_options = cmake.subproject_options()
