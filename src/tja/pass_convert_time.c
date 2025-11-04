@@ -38,7 +38,7 @@ static int pass_extract_tickrate(tja_parser *parser, taco_section *branch) {
     }
 
     if (i->type == TACO_EVENT_TJA_MEASURE_LENGTH) {
-      if (divisor != 0) {
+      if (i->tja_measure_length.divisor != 0) {
         // update measure length
         dividend = i->tja_measure_length.dividend;
         divisor = i->tja_measure_length.divisor;

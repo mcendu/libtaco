@@ -262,6 +262,13 @@ START_TEST(test_shiftjis) {
 }
 END_TEST
 
+START_TEST(test_div0) {
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/div0.tja");
+  ck_assert_ptr_null(taco_courseset_get_course(set, TACO_CLASS_ONI));
+  taco_courseset_free(set);
+}
+END_TEST
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -275,6 +282,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_checkpoint);
   tcase_add_test(c, test_crlf);
   tcase_add_test(c, test_delay);
+  tcase_add_test(c, test_div0);
   tcase_add_test(c, test_division);
   tcase_add_loop_test(c, test_double, 0, 2);
   tcase_add_test(c, test_empty);
