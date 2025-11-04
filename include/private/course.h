@@ -8,6 +8,8 @@ TACO_MALLOC extern taco_course *taco_course_create_();
 TACO_MALLOC extern taco_course *taco_course_create2_(taco_allocator *alloc);
 extern void taco_course_free_(taco_course *restrict course);
 
+extern int taco_course_set_maker_(taco_course *restrict course,
+                                  const char *maker);
 extern void taco_course_set_class_(taco_course *restrict course, int class);
 extern void taco_course_set_level_(taco_course *restrict course, double level);
 extern void taco_course_set_style_(taco_course *restrict course, int style);

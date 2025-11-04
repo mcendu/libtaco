@@ -13,6 +13,12 @@ enum tja_metadata_enum_ {
   TJA_METADATA_GENRE,
   TJA_METADATA_MAKER,
   TJA_METADATA_AUDIO,
+  TJA_METADATA_NOTESDESIGNER,
+  TJA_METADATA_NOTESDESIGNER0,
+  TJA_METADATA_NOTESDESIGNER1,
+  TJA_METADATA_NOTESDESIGNER2,
+  TJA_METADATA_NOTESDESIGNER3,
+  TJA_METADATA_NOTESDESIGNER4,
   TJA_METADATA_BPM,
   TJA_METADATA_OFFSET,
   TJA_METADATA_DEMOSTART,
@@ -44,6 +50,8 @@ struct tja_metadata_ {
   char *genre;
   char *maker;
   char *audio;
+  char *course_maker;
+  char *course_makers[8];
   tja_balloon *balloon_n;
   tja_balloon *balloon_a;
   tja_balloon *balloon_m;

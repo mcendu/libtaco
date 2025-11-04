@@ -42,6 +42,9 @@ void tja_metadata_free_(tja_metadata *meta) {
   taco_free_(meta->alloc, meta->genre);
   taco_free_(meta->alloc, meta->maker);
   taco_free_(meta->alloc, meta->audio);
+  taco_free_(meta->alloc, meta->course_maker);
+  for (int i = 0; i < 8; ++i)
+    taco_free_(meta->alloc, meta->course_makers[i]);
   taco_free_(meta->alloc, meta->balloon_n);
   taco_free_(meta->alloc, meta->balloon_a);
   taco_free_(meta->alloc, meta->balloon_m);
@@ -64,6 +67,19 @@ static inline void add_text_field_fn_(taco_allocator *alloc, char **dst,
 
 #define add_text_field(meta, updates, field)                                   \
   add_text_field_fn_((meta)->alloc, &(meta)->field, &(updates)->field)
+
+static inline void add_persistent_text_field_fn_(taco_allocator *alloc,
+                                                 char **dst, char **src) {
+  if (!(*src)) return;
+
+  taco_free_(alloc, *dst);
+  *dst = *src;
+  *src = NULL;
+}
+
+#define add_persistent_text_field(meta, updates, field)                        \
+  add_persistent_text_field_fn_((meta)->alloc, &(meta)->field,                 \
+                                &(updates)->field)
 
 static inline void move_balloon_fn_(taco_allocator *alloc, tja_balloon **dst,
                                     tja_balloon **src) {
@@ -89,6 +105,9 @@ int tja_metadata_update_(tja_metadata *meta, tja_metadata *updates) {
   add_text_field(meta, updates, genre);
   add_text_field(meta, updates, maker);
   add_text_field(meta, updates, audio);
+  add_text_field(meta, updates, course_maker);
+  for (int i = 0; i < 8; ++i)
+    add_persistent_text_field(meta, updates, course_makers[i]);
   update_real(meta, updates, demostart);
   update_real(meta, updates, bpm);
   update_real(meta, updates, offset);
@@ -120,16 +139,23 @@ int tja_courseset_apply_metadata_(taco_courseset *set, tja_metadata *meta) {
     taco_courseset_set_maker_(set, meta->maker);
   if (meta->audio)
     taco_courseset_set_audio_(set, meta->audio);
-  if (isnan(taco_courseset_demo_time(set)))
+  if (!isnan(meta->demostart))
     taco_courseset_set_demo_time_(set, meta->demostart);
   return 0;
 }
 
 int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
-  taco_course_set_class_(course, meta->course);
+  if (meta->course != -1 && meta->course >= 0 && meta->course < 8)
+    taco_course_set_class_(course, meta->course);
   if (!isnan(meta->level))
     taco_course_set_level_(course, meta->level);
   taco_course_set_papamama_(course, meta->papamama);
+
+  if (meta->course_makers[taco_course_class(course)])
+    taco_course_set_maker_(course,
+                           meta->course_makers[taco_course_class(course)]);
+  else if (meta->course_maker)
+    taco_course_set_maker_(course, meta->course_maker);
 
   if (meta->scoreinit != -1) {
     taco_course_set_score_base_(course, meta->scoreinit);
@@ -169,6 +195,12 @@ int tja_course_apply_metadata_(taco_course *course, tja_metadata *meta) {
     return 0;                                                                  \
   }                                                                            \
   static int set_##field##_(tja_metadata *, tja_metadata_field *)
+#define MAKE_SETTER_ARRAY(field, sub, type)                                    \
+  static int set_##field##sub##_(tja_metadata *m, tja_metadata_field *f) {     \
+    m->field[sub] = f->type;                                                   \
+    return 0;                                                                  \
+  }                                                                            \
+  static int set_##field##sub##_(tja_metadata *, tja_metadata_field *)
 
 int SETTER_(unrecognized)(tja_metadata *m, tja_metadata_field *f) { return 0; }
 
@@ -176,6 +208,12 @@ MAKE_SETTER_(title, text);
 MAKE_SETTER_(genre, text);
 MAKE_SETTER_(maker, text);
 MAKE_SETTER_(audio, text);
+MAKE_SETTER_(course_maker, text);
+MAKE_SETTER_ARRAY(course_makers, 0, text);
+MAKE_SETTER_ARRAY(course_makers, 1, text);
+MAKE_SETTER_ARRAY(course_makers, 2, text);
+MAKE_SETTER_ARRAY(course_makers, 3, text);
+MAKE_SETTER_ARRAY(course_makers, 7, text);
 MAKE_SETTER_(bpm, real);
 MAKE_SETTER_(offset, real);
 MAKE_SETTER_(demostart, real);
@@ -218,6 +256,12 @@ static const metadata_setter setters[] = {
     [TJA_METADATA_GENRE] = SETTER_(genre),
     [TJA_METADATA_MAKER] = SETTER_(maker),
     [TJA_METADATA_AUDIO] = SETTER_(audio),
+    [TJA_METADATA_NOTESDESIGNER] = SETTER_(course_maker),
+    [TJA_METADATA_NOTESDESIGNER0] = SETTER_(course_makers0),
+    [TJA_METADATA_NOTESDESIGNER1] = SETTER_(course_makers1),
+    [TJA_METADATA_NOTESDESIGNER2] = SETTER_(course_makers2),
+    [TJA_METADATA_NOTESDESIGNER3] = SETTER_(course_makers3),
+    [TJA_METADATA_NOTESDESIGNER4] = SETTER_(course_makers7),
     [TJA_METADATA_BPM] = SETTER_(bpm),
     [TJA_METADATA_OFFSET] = SETTER_(offset),
     [TJA_METADATA_DEMOSTART] = SETTER_(demostart),

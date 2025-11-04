@@ -18,6 +18,8 @@ struct balloon_data_ {
 struct taco_course_ {
   taco_allocator *alloc;
 
+  char *maker;
+
   double basebpm;
   double offset;
   double level;
@@ -56,6 +58,8 @@ void taco_course_free_(taco_course *restrict c) {
   if (!c)
     return;
 
+  taco_free_(c->alloc, c->maker);
+
   for (int i = 0; i < 2; ++i) {
     for (int j = 0; j < 3; ++j) {
       taco_section_free_(c->branches[i][j]);
@@ -64,6 +68,10 @@ void taco_course_free_(taco_course *restrict c) {
   }
 
   taco_free_(c->alloc, c);
+}
+
+const char *taco_course_maker(const taco_course *restrict course) {
+  return course->maker;
 }
 
 void taco_course_difficulty(const taco_course *restrict course,
@@ -112,6 +120,17 @@ int taco_course_score_tournament(const taco_course *restrict course) {
 
 int taco_course_score_bonus(const taco_course *restrict course) {
   return course->score_bonus;
+}
+
+int taco_course_set_maker_(taco_course *restrict course, const char *maker) {
+  char *m = taco_strdup_(course->alloc, maker);
+  if (!m)
+    return -1;
+
+  taco_free_(course->alloc, course->maker);
+  course->maker = m;
+
+  return 0;
 }
 
 void taco_course_set_class_(taco_course *restrict course, int class) {

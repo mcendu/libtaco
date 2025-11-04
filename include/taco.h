@@ -337,10 +337,15 @@ taco_course_papamama(const taco_course *restrict course);
 /* Gets whether the course branch into different variants. */
 TACO_PURE TACO_PUBLIC int
 taco_course_branched(const taco_course *restrict course);
+/* Gets the creator. */
+TACO_PURE TACO_PUBLIC const char *
+taco_course_maker(const taco_course *restrict course);
 /* Gets the base component of the per-note score. */
-TACO_PUBLIC int taco_course_score_base(const taco_course *restrict course);
+TACO_PURE TACO_PUBLIC int
+taco_course_score_base(const taco_course *restrict course);
 /* Gets the bonus component of the per note score. */
-TACO_PUBLIC int taco_course_score_bonus(const taco_course *restrict course);
+TACO_PURE TACO_PUBLIC int
+taco_course_score_bonus(const taco_course *restrict course);
 /* Gets the per-note score under tournament scoring. */
 TACO_PUBLIC int
 taco_course_score_tournament(const taco_course *restrict course);

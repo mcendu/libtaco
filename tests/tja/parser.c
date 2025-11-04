@@ -289,6 +289,21 @@ START_TEST(test_badroll) {
 }
 END_TEST
 
+START_TEST(test_notesdesigner) {
+  taco_courseset *set =
+      taco_parser_parse_file(parser, "assets/notesdesigner.tja");
+  const taco_course *c;
+  const char *expected = "\xe6\xb2\xa1\xe7\x9c\x8b\xe6\x87\x82";
+
+  c = taco_courseset_get_course(set, TACO_CLASS_ONI);
+  ck_assert_str_eq(taco_course_maker(c), expected);
+  c = taco_courseset_get_course(set, TACO_CLASS_EX);
+  ck_assert_str_eq(taco_course_maker(c), expected);
+  c = taco_courseset_get_course(set, TACO_CLASS_EASY);
+  ck_assert_str_eq(taco_course_maker(c), expected);
+}
+END_TEST
+
 TCase *case_parser(void) {
   TCase *c = tcase_create("parser");
   tcase_add_checked_fixture(c, setup, teardown);
@@ -312,6 +327,7 @@ TCase *case_parser(void) {
   tcase_add_test(c, test_hand);
   tcase_add_test(c, test_label);
   tcase_add_test(c, test_measures);
+  tcase_add_test(c, test_notesdesigner);
   tcase_add_test(c, test_opentaiko_ext);
   tcase_add_test(c, test_shiftjis);
   tcase_add_test(c, test_subtitle);

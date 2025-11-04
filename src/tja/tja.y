@@ -124,6 +124,12 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %type <field> subtitle_header
 %type <field> genre_header
 %type <field> maker_header
+%type <field> notesdesigner_header
+%type <field> notesdesigner0_header
+%type <field> notesdesigner1_header
+%type <field> notesdesigner2_header
+%type <field> notesdesigner3_header
+%type <field> notesdesigner4_header
 %type <field> audio_header
 %type <field> bpm_header
 %type <field> offset_header
@@ -190,6 +196,12 @@ extern void tja_yyerror(TJA_YYLTYPE *llocp, tja_parser *parser, yyscan_t lexer,
 %token BPM
 %token OFFSET
 %token DEMOSTART
+%token NOTESDESIGNER
+%token NOTESDESIGNER0
+%token NOTESDESIGNER1
+%token NOTESDESIGNER2
+%token NOTESDESIGNER3
+%token NOTESDESIGNER4
 
 %token SIDE
 %token COURSE
@@ -295,6 +307,12 @@ header:
   | genre_header
   | maker_header
   | audio_header
+  | notesdesigner_header
+  | notesdesigner0_header
+  | notesdesigner1_header
+  | notesdesigner2_header
+  | notesdesigner3_header
+  | notesdesigner4_header
   | bpm_header
   | offset_header
   | demostart_header
@@ -335,6 +353,42 @@ maker_header:
 audio_header:
   AUDIO text '\n' {
     $$.key = TJA_METADATA_AUDIO;
+    $$.text = $2;
+  };
+
+notesdesigner_header:
+  NOTESDESIGNER text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER;
+    $$.text = $2;
+  };
+
+notesdesigner0_header:
+  NOTESDESIGNER0 text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER0;
+    $$.text = $2;
+  };
+
+notesdesigner1_header:
+  NOTESDESIGNER1 text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER1;
+    $$.text = $2;
+  };
+
+notesdesigner2_header:
+  NOTESDESIGNER2 text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER2;
+    $$.text = $2;
+  };
+
+notesdesigner3_header:
+  NOTESDESIGNER3 text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER3;
+    $$.text = $2;
+  };
+
+notesdesigner4_header:
+  NOTESDESIGNER4 text '\n' {
+    $$.key = TJA_METADATA_NOTESDESIGNER4;
     $$.text = $2;
   };
 
