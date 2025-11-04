@@ -558,15 +558,15 @@ note_events:
     $$.units = 0;
     $$.levelhold = false;
 
-    tja_events_push_note_(&$$, $1, @1.first_line);
+    tja_events_push_note_(parser, &$$, $1, @1.first_line);
   }
   | note_events NOTE {
-    tja_events_push_note_(&$1, $2, @1.first_line);
+    tja_events_push_note_(parser, &$1, $2, @1.first_line);
     $$ = $1;
   }
   | note_events note_command {
     $2.line = @2.first_line;
-    tja_events_push_event_(&$1, &$2);
+    tja_events_push_event_(parser, &$1, &$2);
     $$ = $1;
   };
 
@@ -578,7 +578,7 @@ measurestart_events:
   }
   | measurestart_events measurestart_command {
     $2.line = @2.first_line;
-    tja_events_push_event_(&$1, &$2);
+    tja_events_push_event_(parser, &$1, &$2);
     $$ = $1;
   };
 

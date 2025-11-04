@@ -8,8 +8,10 @@
 #include "tja/timestamp.h"
 #include <string.h>
 
+#define ACTUAL_NONE UINT32_MAX
+
 static const taco_event note_types_[128] = {
-    ['0'] = {.type = TACO_EVENT_NONE},
+    ['0'] = {.type = TACO_EVENT_NONE, .detail_int = {.value = ACTUAL_NONE}},
     ['1'] = {.type = TACO_EVENT_DON},
     ['2'] = {.type = TACO_EVENT_KAT},
     ['3'] = {.type = TACO_EVENT_DON_BIG},
@@ -26,16 +28,23 @@ static const taco_event note_types_[128] = {
     ['C'] = {.type = TACO_EVENT_LANDMINE},
 };
 
-int tja_events_push_note_(tja_events *restrict events, int note, int line) {
-  taco_event e = note_types_[note >= 0 && note < 128 ? note : 0];
+int tja_events_push_note_(tja_parser *restrict parser,
+                          tja_events *restrict events, int note, int line) {
+  taco_event e = note_types_[note >= 0 && note < 128 ? note : 127];
   e.line = line;
 
-  int result = tja_events_push_event_(events, &e);
+  if (e.type == TACO_EVENT_NONE && e.detail_int.value != ACTUAL_NONE) {
+    tja_parser_diagnose_(parser, line, TJA_DIAG_WARN,
+                         "unrecognized note type '%c'", note);
+  }
+
+  int result = tja_events_push_event_(parser, events, &e);
   events->units += 1;
   return result;
 }
 
-int tja_events_push_event_(tja_events *restrict events,
+int tja_events_push_event_(tja_parser *restrict parser,
+                           tja_events *restrict events,
                            const taco_event *restrict event) {
   if (event->type == TACO_EVENT_NONE) {
     return 0;

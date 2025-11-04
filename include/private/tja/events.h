@@ -5,11 +5,15 @@
 #include "taco.h"
 #include <stdbool.h>
 
+#include "parser.h"
+
 typedef struct tja_events_ tja_events;
 
-extern int tja_events_push_note_(tja_events *restrict events, int note,
+extern int tja_events_push_note_(tja_parser *restrict parser,
+                                 tja_events *restrict events, int note,
                                  int line);
-extern int tja_events_push_event_(tja_events *restrict events,
+extern int tja_events_push_event_(tja_parser *restrict parser,
+                                  tja_events *restrict events,
                                   const taco_event *restrict event);
 
 struct tja_events_ {
