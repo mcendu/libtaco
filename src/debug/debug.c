@@ -57,6 +57,22 @@ static void print_event_(const taco_event *restrict event,
     fprintf(file, "%d landmine annotation=%s\n", event->time,
             annotations[TACO_TEXT(event->detail_int.value)]);
     break;
+  case TACO_EVENT_LANDMINE_ROLL:
+    fprintf(file, "%d landmine_roll\n", event->time);
+    break;
+  case TACO_EVENT_ADLIB:
+    fprintf(file, "%d adlib\n", event->time);
+    break;
+  case TACO_EVENT_KADON:
+    fprintf(file, "%d kadon%s\n", event->time,
+            FLAG("hand", event->detail_int.value & TACO_DETAIL_HAND));
+    break;
+  case TACO_EVENT_DONROLL:
+    fprintf(file, "%d donroll\n", event->time);
+    break;
+  case TACO_EVENT_KATROLL:
+    fprintf(file, "%d katroll\n", event->time);
+    break;
 
   case TACO_EVENT_MEASURE:
     fprintf(file, "%d measure%s%s\n", event->time,

@@ -1,0 +1,20 @@
+0 bpm tempo=120
+0 measure
+0 don_big hand
+96 measure
+96 kat_big hand
+192 measure
+192 landmine annotation=do
+288 measure
+288 landmine_roll
+336 roll_end
+384 measure
+384 adlib
+480 measure
+480 kadon
+576 measure
+576 donroll
+624 roll_end
+672 measure
+672 katroll
+720 roll_end

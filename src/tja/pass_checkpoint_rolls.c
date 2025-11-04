@@ -18,6 +18,9 @@ int tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
       case TACO_EVENT_ROLL:
       case TACO_EVENT_ROLL_BIG:
       case TACO_EVENT_BALLOON:
+      case TACO_EVENT_LANDMINE_ROLL:
+      case TACO_EVENT_DONROLL:
+      case TACO_EVENT_KATROLL:
         i->type = TACO_EVENT_NONE;
         break;
       case TACO_EVENT_ROLL_CHECKPOINT:
@@ -41,6 +44,9 @@ int tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
       case TACO_EVENT_ROLL_BIG:
       case TACO_EVENT_BALLOON:
       case TACO_EVENT_KUSUDAMA:
+      case TACO_EVENT_LANDMINE_ROLL:
+      case TACO_EVENT_DONROLL:
+      case TACO_EVENT_KATROLL:
         head = i;
         break;
       }

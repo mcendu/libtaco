@@ -26,6 +26,11 @@ static const taco_event note_types_[128] = {
     ['B'] = {.type = TACO_EVENT_KAT_BIG,
              .detail_int = {.value = TACO_DETAIL_HAND}},
     ['C'] = {.type = TACO_EVENT_LANDMINE},
+    ['D'] = {.type = TACO_EVENT_LANDMINE_ROLL},
+    ['F'] = {.type = TACO_EVENT_ADLIB},
+    ['G'] = {.type = TACO_EVENT_KADON},
+    ['H'] = {.type = TACO_EVENT_DONROLL},
+    ['I'] = {.type = TACO_EVENT_KATROLL},
 };
 
 int tja_events_push_note_(tja_parser *restrict parser,
