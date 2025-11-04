@@ -1,0 +1,8 @@
+0 bpm tempo=120
+0 measure
+0 roll
+96 measure
+144 roll_end
+192 measure
+240 don annotation=don
+288 measure

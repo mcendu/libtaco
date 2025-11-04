@@ -53,5 +53,12 @@ int tja_pass_checkpoint_rolls_(tja_parser *parser, taco_section *branch) {
     }
   }
 
+  if (head) {
+    // warn and delete the drum roll head
+    tja_parser_diagnose_(parser, head->line, TJA_DIAG_WARN,
+                         "drum roll does not terminate");
+    head->type = TACO_EVENT_NONE;
+  }
+
   return 0;
 }
