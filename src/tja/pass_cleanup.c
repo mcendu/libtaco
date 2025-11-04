@@ -28,5 +28,8 @@ int tja_pass_cleanup_(tja_parser *parser, taco_section *branch) {
     none_count += 1;
   taco_section_pop_(branch, none_count);
 
+  // set up data to allow lookup of time in seconds
+  taco_section_cache_seconds_(branch);
+
   return 0;
 }

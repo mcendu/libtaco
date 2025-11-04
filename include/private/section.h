@@ -34,6 +34,9 @@ extern int taco_section_set_balloons_(taco_section *restrict section,
                                       const int *restrict balloons,
                                       size_t count);
 
+// generate a sorted tick-to-time array for binary search
+extern int taco_section_cache_seconds_(taco_section *restrict s);
+
 #define taco_section_foreach_mut_(i, s)                                        \
   for (taco_event *i = taco_section_begin_mut_(s); i != taco_section_end(s);   \
        i = taco_event_next_mut_(i))

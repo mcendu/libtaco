@@ -163,6 +163,7 @@ START_TEST(test_time) {
 
   taco_section *s = taco_section_create_();
   taco_section_push_many_(s, events, 8);
+  taco_section_cache_seconds_(s);
 
   const taco_event *i = taco_section_locate(s, 1);
   ck_assert_double_eq(taco_event_seconds(i, s), 0.0);
@@ -192,6 +193,7 @@ START_TEST(test_delay) {
 
   taco_section *s = taco_section_create_();
   taco_section_push_many_(s, events, 9);
+  taco_section_cache_seconds_(s);
 
   const taco_event *i;
   i = taco_section_locate(s, 1);

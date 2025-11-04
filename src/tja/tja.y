@@ -5,6 +5,7 @@
 %code requires {
 #include "tja/parser.h"
 
+#include "section.h"
 #include "tja/branched.h"
 #include "tja/coursebody.h"
 #include "tja/events.h"
