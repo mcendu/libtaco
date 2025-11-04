@@ -7,7 +7,9 @@
 #include <assert.h>
 #include <limits.h>
 #include <math.h>
+#include <stdatomic.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 
 #define INITIAL_CAPACITY (4096 / sizeof(taco_event))
@@ -27,8 +29,8 @@ struct taco_section_ {
   int tickrate;
   taco_event *events;
 
-  bpm_entry *bpm_times;
-  size_t bpms;
+  _Atomic(bpm_entry *) bpm_times;
+  size_t time_events;
 };
 
 static inline void invalidate_bpm_times_(taco_section *restrict s);
@@ -54,7 +56,7 @@ taco_section *taco_section_create2_(taco_allocator *a) {
   section->capacity = INITIAL_CAPACITY;
   section->tickrate = 96;
   section->bpm_times = NULL;
-  section->bpms = 0;
+  section->time_events = 0;
   return section;
 }
 
@@ -78,7 +80,7 @@ taco_section *taco_section_clone_(const taco_section *restrict other) {
   section->capacity = other->capacity;
   section->tickrate = other->tickrate;
   section->bpm_times = NULL;
-  section->bpms = 0;
+  section->time_events = 0;
   return section;
 }
 
@@ -239,36 +241,53 @@ int taco_section_set_balloons_(taco_section *restrict section,
   ((60.0 / (double)(bpm) * 4.0) * ((double)(ticks) / (double)(tickrate)))
 
 // generate a sorted tick-to-time array for binary search
-static int init_bpm_times_(taco_section *restrict s) {
-  assert((!s->bpm_times));
+static const bpm_entry *init_bpm_times_(taco_section *restrict s) {
+  // spin lock the bpm_times pointer
+  bpm_entry *old =
+      atomic_exchange_explicit(&s->bpm_times, (void *)1, memory_order_acq_rel);
 
   // scan
-  int bpms = 0;
+  int time_events = 0;
   taco_section_foreach(i, s) {
     if (taco_event_type(i) == TACO_EVENT_BPM)
-      bpms += 1;
+      time_events += 1;
+    if (taco_event_type(i) == TACO_EVENT_DELAY)
+      time_events += 1;
   }
 
-  if (bpms == 0)
-    return 0;
+  if (time_events == 0) {
+    atomic_store_explicit(&s->bpm_times, NULL, memory_order_release);
+    return NULL;
+  }
 
-  s->bpm_times = taco_malloc_(s->alloc, bpms * sizeof(bpm_entry));
-  if (!s->bpm_times)
-    return -1;
-  s->bpms = bpms;
+  bpm_entry *bpm_times =
+      taco_malloc_(s->alloc, time_events * sizeof(bpm_entry));
+  if (!bpm_times) {
+    atomic_store_explicit(&s->bpm_times, NULL, memory_order_release);
+    return NULL;
+  }
 
   int ticks = 0;
   double time = 0;
-  bpm_entry *entry = s->bpm_times;
+  bpm_entry *entry = bpm_times;
   double bpm = 120; // sane default for initial bpm
 
-  // calculate time for _BPM events
+  // calculate time for events affecting timing
   taco_section_foreach(i, s) {
-    if (taco_event_type(i) == TACO_EVENT_BPM) {
-      int delta = taco_event_time(i) - ticks;
+    if (i->type == TACO_EVENT_BPM || i->type == TACO_EVENT_DELAY) {
+      int delta = i->time - ticks;
       time += TIME(bpm, delta, s->tickrate);
-      ticks = taco_event_time(i);
-      bpm = taco_event_bpm(i);
+      ticks = i->time;
+
+      if (i->type == TACO_EVENT_BPM)
+        bpm = i->detail_float.value;
+      if (i->type == TACO_EVENT_DELAY)
+        time += i->detail_float.value;
+
+      if (entry > bpm_times && delta == 0) {
+        entry -= 1;
+        time_events -= 1;
+      }
 
       entry->ticks = ticks;
       entry->time = time;
@@ -277,11 +296,17 @@ static int init_bpm_times_(taco_section *restrict s) {
     }
   }
 
-  return 0;
+  s->time_events = time_events;
+  atomic_store_explicit(&s->bpm_times, bpm_times, memory_order_release);
+  taco_free_(s->alloc, old);
+
+  return bpm_times;
 }
 
 static inline void invalidate_bpm_times_(taco_section *restrict s) {
-  taco_free_(s->alloc, s->bpm_times);
+  bpm_entry *old =
+      atomic_exchange_explicit(&s->bpm_times, NULL, memory_order_acq_rel);
+  taco_free_(s->alloc, old);
 }
 
 static const bpm_entry *find_bpm_section_start_(int ticks,
@@ -302,11 +327,19 @@ TACO_PUBLIC double taco_event_seconds(const taco_event *restrict e,
   if (e < s->events || e >= s->events + s->size)
     return NAN;
 
-  if (!s->bpm_times)
-    init_bpm_times_((taco_section *)s);
+  const bpm_entry *bpm_times =
+      atomic_load_explicit(&s->bpm_times, memory_order_acquire);
+
+  while (bpm_times == (void *)1) {
+    bpm_times = atomic_load_explicit(&s->bpm_times, memory_order_acquire);
+  }
+
+  if (!bpm_times) {
+    bpm_times = init_bpm_times_((taco_section *)s);
+  }
 
   const bpm_entry *entry = find_bpm_section_start_(
-      taco_event_time(e), s->bpm_times, s->bpm_times + s->bpms);
+      taco_event_time(e), bpm_times, bpm_times + s->time_events);
   double start = entry->time;
   int delta = taco_event_time(e) - entry->ticks;
   return start + TIME(entry->bpm, delta, s->tickrate);

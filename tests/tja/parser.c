@@ -281,8 +281,7 @@ END_TEST
 
 START_TEST(test_badroll) {
   // bad drum rolls should get deleted
-  taco_courseset *set =
-      taco_parser_parse_file(parser, "assets/badroll.tja");
+  taco_courseset *set = taco_parser_parse_file(parser, "assets/badroll.tja");
   const taco_course *c = taco_courseset_get_course(set, TACO_CLASS_ONI);
   const taco_section *s = taco_course_get_branch(c, 0, 0);
   assert_section_eq(s, "assets/badroll.txt", assert_section);

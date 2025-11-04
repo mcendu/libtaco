@@ -177,6 +177,36 @@ START_TEST(test_time) {
 }
 END_TEST
 
+START_TEST(test_delay) {
+  static const taco_event events[] = {
+      {0, TACO_EVENT_BPM, .detail_float = {120.0}},
+      {0, TACO_EVENT_MEASURE},
+      {96, TACO_EVENT_MEASURE},
+      {192, TACO_EVENT_DELAY, .detail_float = {1.0}},
+      {192, TACO_EVENT_BPM, .detail_float = {180.0}},
+      {192, TACO_EVENT_MEASURE},
+      {288, TACO_EVENT_MEASURE},
+      {384, TACO_EVENT_MEASURE},
+      {480, TACO_EVENT_MEASURE},
+  };
+
+  taco_section *s = taco_section_create_();
+  taco_section_push_many_(s, events, 9);
+
+  const taco_event *i;
+  i = taco_section_locate(s, 1);
+  ck_assert_double_eq(taco_event_seconds(i, s), 0.0);
+  i = taco_section_locate(s, 2);
+  ck_assert_double_eq(taco_event_seconds(i, s), 2.0);
+  i = taco_section_locate(s, 5);
+  ck_assert_double_eq(taco_event_seconds(i, s), 5.0);
+  i = taco_section_locate(s, 8);
+  ck_assert_double_eq(taco_event_seconds(i, s), 9.0);
+
+  taco_section_free_(s);
+}
+END_TEST
+
 TCase *case_section(void) {
   TCase *c = tcase_create("section");
   tcase_add_test(c, test_create);
@@ -188,5 +218,6 @@ TCase *case_section(void) {
   tcase_add_test(c, test_trim);
   tcase_add_test(c, test_balloons);
   tcase_add_test(c, test_time);
+  tcase_add_test(c, test_delay);
   return c;
 }
