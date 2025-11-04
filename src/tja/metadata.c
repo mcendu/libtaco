@@ -70,7 +70,8 @@ static inline void add_text_field_fn_(taco_allocator *alloc, char **dst,
 
 static inline void add_persistent_text_field_fn_(taco_allocator *alloc,
                                                  char **dst, char **src) {
-  if (!(*src)) return;
+  if (!(*src))
+    return;
 
   taco_free_(alloc, *dst);
   *dst = *src;

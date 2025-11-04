@@ -301,6 +301,8 @@ START_TEST(test_notesdesigner) {
   ck_assert_str_eq(taco_course_maker(c), expected);
   c = taco_courseset_get_course(set, TACO_CLASS_EASY);
   ck_assert_str_eq(taco_course_maker(c), expected);
+
+  taco_courseset_free(set);
 }
 END_TEST
 
